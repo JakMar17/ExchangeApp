@@ -1,0 +1,280 @@
+<div style="min-height: 90vh">
+  <app-navbar></app-navbar>
+  <div class="columns">
+    <app-sidemenu style="min-height: 100%"></app-sidemenu>
+    <div class="column">
+      <div class="box">
+        <h1 class="title is-2">Dodajanje novega predmeta</h1>
+      </div>
+
+      <!-- user has rights to view or edit class -->
+      <div class="box">
+        <h1 class="title is-3">Osnovni podatki</h1>
+        <div class="field">
+          <label class="label">Ime predmeta</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="Ime predmeta"
+              required
+            />
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Povezava do predmeta na eučilnici</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="https://ucilnica.fri.uni-lj.si"
+            />
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Opis predmeta</label>
+          <div class="control">
+            <textarea
+              class="textarea"
+              placeholder="Kratek opis predmeta"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h1 class="title is-3">Dostop do predmeta</h1>
+        <div class="tabs">
+          <ul *ngFor="let element of securityLevels">
+            <li
+              [ngClass]="{
+                'is-active':
+                  element.securityLevelTitle ==
+                  selectedSecurityLevel.securityLevelTitle
+              }"
+            >
+              <a (click)="onSecurityLevelSelected(element)">
+                <span>{{ element.securityLevelTitle }}</span></a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="info-notification">
+          {{ selectedSecurityLevel.securityLevelDescription }}
+        </div>
+
+        <div
+          *ngIf="
+            selectedSecurityLevel.securityLevelTitle == 'zaščiten z geslom'
+          "
+        >
+          <div class="field">
+            <label class="label">Geslo za dostop</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Geslo" required />
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="
+            selectedSecurityLevel.securityLevelTitle ==
+              'omejen z vpisno številko' ||
+            selectedSecurityLevel.securityLevelTitle == 'omejen z epošto'
+          "
+        >
+          <div class="columns">
+            <div class="column is-9">
+              <div class="table-container">
+                <table class="table table is-fullwidth table is-hoverable">
+                  <thead>
+                    <tr>
+                      <th>Ime in priimek</th>
+                      <th>Vpisna številka</th>
+                      <th>Epošta</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Mojca Pokraculja</td>
+                      <td>6314520</td>
+                      <td>mp5412@student.uni-lj.si</td>
+                      <td>
+                        <div class="columns">
+                          <div class="column">
+                            <a class="button is-warning is-small is-outlined">
+                              <i class="ri-delete-bin-line"></i>
+                            </a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Mojca Pokraculja</td>
+                      <td>6314520</td>
+                      <td>mp5412@student.uni-lj.si</td>
+                      <td>
+                        <div class="columns">
+                          <div class="column">
+                            <a class="button is-warning is-small is-outlined">
+                              <i class="ri-delete-bin-line"></i>
+                            </a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="column is-3">
+              <button
+                class="button-bottom-margin is-success is-outlined has-icons-left is-fullwidth"
+              >
+                <span class="icon is-small">
+                  <i class="ri-add-line"></i>
+                </span>
+                <span> Dodaj novega </span>
+              </button>
+              <button
+                class="button-bottom-margin is-info is-outlined has-icons-left is-fullwidth"
+              >
+                <span class="icon is-small">
+                  <i class="ri-file-line"></i>
+                </span>
+                <span> Dodaj iz datoteke </span>
+              </button>
+              <button
+                class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"
+              >
+                <span class="icon is-small">
+                  <i class="ri-delete-bin-line"></i>
+                </span>
+                <span> Izbriši vse </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2 class="title is-3">Soizvajalci predmeta</h2>
+        <div class="info-notification">
+          <p>
+            Soizvajalci predmeta bodo imeli enake pravice kot jih ima skrbnik
+            predmeta.
+          </p>
+        </div>
+        <div class="columns">
+          <div class="column is-9">
+            <div class="table-container">
+              <table class="table table is-fullwidth table is-hoverable">
+                <thead>
+                  <tr>
+                    <th>Ime in priimek</th>
+                    <th>Epošta</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Prosto Prosto</td>
+                    <td>prosto.prosto@fri1.uni-lj.si</td>
+                    <td>
+                      <div class="columns">
+                        <div class="column">
+                          <a class="button is-warning is-small is-outlined">
+                            <i class="ri-delete-bin-line"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="column is-3">
+            <button
+              class="button-bottom-margin is-success is-outlined has-icons-left is-fullwidth"
+            >
+              <span class="icon is-small">
+                <i class="ri-add-line"></i>
+              </span>
+              <span> Dodaj novega </span>
+            </button>
+            <button
+              class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"
+            >
+              <span class="icon is-small">
+                <i class="ri-delete-bin-line"></i>
+              </span>
+              <span> Izbriši vse </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h1 class="title is-3">Začetno stanje žetonov</h1>
+        <div class="info-notification">
+          Začetno stanje, ki jih pridobi vsak udeleženec predmeta.
+        </div>
+
+        <div class="field">
+          <label class="label">Število žetonov</label>
+          <div class="control">
+            <input class="input" type="number" placeholder="3" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="columns">
+          <div class="column">
+            <button
+              class="button-bottom-margin is-success has-icons-left is-fullwidth"
+            >
+              <span class="icon is-small">
+                <i class="ri-save-line"></i>
+              </span>
+              <span> Shrani spremembe </span>
+            </button>
+          </div>
+          <div class="column">
+            <button
+              class="button-bottom-margin is-warning is-outlined has-icons-left is-fullwidth"
+            >
+              <span class="icon is-small">
+                <i class="ri-close-line"></i>
+              </span>
+              <span> Zavrzi spremembe </span>
+            </button>
+          </div>
+          <div class="column">
+            <button
+              class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"
+            >
+              <span class="icon is-small">
+                <i class="ri-archive-line"></i>
+              </span>
+              <span> Arhiviraj predmet </span>
+            </button>
+          </div>
+          <div class="column">
+            <button
+              class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"
+            >
+              <span class="icon is-small">
+                <i class="ri-delete-bin-line"></i>
+              </span>
+              <span> Izbriši predmet </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

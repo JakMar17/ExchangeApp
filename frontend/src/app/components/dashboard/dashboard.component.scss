@@ -1,0 +1,7 @@
+@import '/src/styles.scss';
+
+.obvestilo-administratorja {
+    @extend .message, .is-danger;
+    margin-left: 2vw;
+    margin-right: 2vw;
+}

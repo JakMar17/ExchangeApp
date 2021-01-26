@@ -1,0 +1,125 @@
+<div class="columns">
+  <div class="column">
+    <a>
+      <button class="button-back" (click)="onBackButtonClick()">
+        <span class="icon is-small">
+          <i class="ri-arrow-left-s-line"></i>
+        </span>
+        <span> Nazaj </span>
+      </button>
+    </a>
+  </div>
+  <div class="column">
+    <h1 class="title-centered is-3">Registracija</h1>
+  </div>
+  <div class="column"></div>
+</div>
+
+<div class="opomba" *ngIf="typeOfRegistration == loginPanelEnum.REGISTER_OTHER">
+  <div class="notification is-warning column" style="margin-bottom: 2vh">
+    Pri registraciji brez študentskega oz. univerzitetnega epoštnega naslova je
+    potrebna ročna odobritev registracije s strani administratorja sistema.
+    Preverjanje lahko traja do 5 dni.
+  </div>
+</div>
+
+<div
+  class="tabs is-centered"
+  *ngIf="typeOfRegistration == loginPanelEnum.REGISTER_OTHER"
+>
+  <ul>
+    <li
+      (click)="setOtherRegistrationType(loginPanelEnum.REGISTER_PROF)"
+      [ngClass]="{
+        'is-active': typeOfOtherRegistration == loginPanelEnum.REGISTER_PROF
+      }"
+    >
+      <a>
+        <span class="icon is-small"><i class="ri-briefcase-2-line"></i></span>
+        <span>Pedagog</span>
+      </a>
+    </li>
+    <li
+      (click)="setOtherRegistrationType(loginPanelEnum.REGISTER_STUDENT)"
+      [ngClass]="{
+        'is-active': typeOfOtherRegistration == loginPanelEnum.REGISTER_STUDENT
+      }"
+    >
+      <a>
+        <span class="icon is-small"><i class="ri-artboard-line"></i></span>
+        <span>Študent</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<div class="field">
+  <div class="columns is-gapless">
+    <div class="column">
+      <p class="control has-icons-left has-icons-right">
+        <input class="input" type="text" placeholder="Ime" />
+        <span class="icon is-small is-left">
+          <i class="ri-user-line"></i>
+        </span>
+      </p>
+    </div>
+    <div class="column">
+      <p class="control has-icons-left has-icons-right">
+        <input class="input" type="text" placeholder="Priimek" />
+        <span class="icon is-small is-left">
+          <i class="ri-user-line"></i>
+        </span>
+      </p>
+    </div>
+  </div>
+</div>
+<div
+  class="field has-addons"
+  *ngIf="typeOfRegistration != loginPanelEnum.REGISTER_OTHER"
+>
+  <p class="control">
+    <input class="input" type="text" placeholder="Epošta" />
+  </p>
+  <p class="control">
+    <a class="button is-static"> {{ emailDomain }} </a>
+  </p>
+</div>
+<div class="field" *ngIf="typeOfRegistration == loginPanelEnum.REGISTER_OTHER">
+  <input class="input" type="text" placeholder="Epošta" />
+</div>
+<div
+  class="field"
+  *ngIf="
+    typeOfRegistration == loginPanelEnum.REGISTER_STUDENT ||
+    (typeOfRegistration == loginPanelEnum.REGISTER_OTHER &&
+      typeOfOtherRegistration == loginPanelEnum.REGISTER_STUDENT)
+  "
+>
+  <p class="control has-icons-left">
+    <input class="input" type="text" placeholder="Vpisna številka" />
+    <span class="icon is-small is-left">
+      <i class="ri-file-list-3-line"></i>
+    </span>
+  </p>
+</div>
+<div class="field">
+  <p class="control has-icons-left">
+    <input class="input" type="password" placeholder="Geslo" />
+    <span class="icon is-small is-left">
+      <i class="ri-key-line"></i>
+    </span>
+  </p>
+</div>
+<div class="field">
+  <p class="control has-icons-left">
+    <input class="input" type="password" placeholder="Ponovi geslo" />
+    <span class="icon is-small is-left">
+      <i class="ri-key-line"></i>
+    </span>
+  </p>
+</div>
+<textarea
+  class="textarea"
+  placeholder="Razlog za neuporabo univerzitetnega emaila (pomembno pri obravnavi vloge)"
+></textarea>
+<button class="button is-primary">Registracija</button>

@@ -1,0 +1,19 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-start">
+    <div class="navbar-item">
+      <button class="button" (click)="onMenuBarsButtonClick()">
+        <i class="ri-menu-line"></i>
+      </button>
+    </div>
+    <div class="navbar-item title is-4 is-clickable" (click)="onLogoClick()">ExchangeApp</div>
+  </div>
+  <div class="navbar-end">
+    <div class="navbar-item">
+      Jakob Marušič (
+      <a class="has-text-danger" (click)="onLogOffButtonClick()">odjavi</a>)
+    </div>
+    <div class="navbar-item">
+      <a> <i class="ri-user-line"></i></a>
+    </div>
+  </div>
+</nav>

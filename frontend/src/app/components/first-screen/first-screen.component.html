@@ -1,0 +1,20 @@
+<div class="outside-box">
+  <div
+    class="box column"
+    style="margin-left: 5vw; margin-right: 5vh; padding: 2vw"
+  >
+    <h2 class="title-centered is-2" style="padding-bottom: 5vh">
+      Dobrodošli na ExchangeApp
+    </h2>
+    <div class="columns">
+      <div class="column">
+        <app-app-description></app-app-description>
+      </div>
+      <div class="divider is-vertical is-right"></div>
+      <div class="column">
+        <app-login-menu *ngIf="loginPanel == loginPanelEnum.LOGIN" (registerButtonEvent)="onRegisterButtonClick($event)"></app-login-menu>
+        <app-register *ngIf="loginPanel != loginPanelEnum.LOGIN" (backButtonEvent)="onRegisterButtonClick($event)" [typeOfRegistration]="loginPanel"></app-register>
+      </div>
+    </div>
+  </div>
+</div>

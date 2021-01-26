@@ -1,0 +1,5 @@
+export enum ClassViewEnum {
+    CLASS_LOCKED_PASSWORD,
+    CLASS_LOCKED_WHITELIST,
+    CLASS_UNLOCKED
+}

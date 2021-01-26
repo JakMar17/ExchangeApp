@@ -1,0 +1,52 @@
+<div *ngIf="globalNavigationService.showSideBar">
+  <div class="column box is-narrow">
+    <aside class="menu" style="min-height: 80vh; min-width: 12vw">
+      <p class="menu-label">Nadzorna plošča</p>
+      <ul class="menu-list">
+        <li>
+          <a class="is-active"
+            ><span class="icon"><i class="ri-dashboard-line"></i></span
+            >Pregled</a
+          >
+        </li>
+      </ul>
+      <p class="menu-label">Moji predmeti</p>
+      <ul class="menu-list">
+        <li><a>Programiranje 1 (UNI)</a></li>
+        <li><a>Programiranje 1 (UNI)</a></li>
+        <li><a>Programiranje 1 (UNI)</a></li>
+        <li><a>Programiranje 1 (UNI)</a></li>
+      </ul>
+      <p class="menu-label">Upravljanje s predmeti</p>
+      <ul class="menu-list">
+        <li>
+          <a (click)="onAddNewClassButtonClick()"
+            ><span class="icon"><i class="ri-add-line"></i></span>Dodaj
+            predmet</a
+          >
+        </li>
+      </ul>
+      <p class="menu-label">Uporabniške nastavitve</p>
+      <ul class="menu-list">
+        <li>
+          <a
+            ><span class="icon"><i class="ri-user-line"></i></span>Pregled
+            profila</a
+          >
+        </li>
+        <li>
+          <a
+            ><span class="icon"><i class="ri-exchange-line"></i></span>Pregled
+            transakcij</a
+          >
+        </li>
+        <li>
+          <a
+            ><span class="icon"><i class="ri-tools-fill"></i></span
+            >Nastavitve</a
+          >
+        </li>
+      </ul>
+    </aside>
+  </div>
+</div>

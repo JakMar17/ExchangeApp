@@ -1,0 +1,88 @@
+<div style="min-height: 90vh">
+  <app-navbar></app-navbar>
+  <div class="columns">
+    <app-sidemenu style="min-height: 100%"></app-sidemenu>
+    <div class="column">
+      <div class="box">
+        <h1 class="title is-2">Programiranje 1 (UNI)</h1>
+        <h2 class="subtitle is-4">skrbnik: Jakob Marušič</h2>
+        <p>
+          Cilj predmeta je seznaniti študente s ključnimi koncepti
+          proceduralnega in objektno usmerjenega programiranja v enem izmed
+          splošno namenskih programskih jezikov tretje generacije in jih
+          usposobiti za samostojen razvoj enostavnih računalniških programov.
+        </p>
+      </div>
+
+      <!-- user does not have rights to see class, class requires password -->
+      <div *ngIf="classView == classViewEnum.CLASS_LOCKED_PASSWORD">
+        <div class="box">
+          <h1 class="title is-3">Vstop v predmet</h1>
+          <p>Predmet do katerega želite dostopate je omejen z geslo.</p>
+          <p>
+            Pred dostopom do predmeta vpišite geslo, ki vam ga je posredoval
+            skrbnik predmeta.
+          </p>
+          <div class="container" style="margin-top: 5vh;">
+            <div class="field has-addons">
+              <div class="control has-icons-left">
+                <span class="icon is-small is-left">
+                  <i class="ri-lock-password-line"></i>
+                </span>
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Geslo za dostop"
+                  [(ngModel)]="classPasswordInput"
+                />
+              </div>
+              <div class="control">
+                <a (click)="onPasswordInputClick()" class="button is-success"> Vstop </a>
+              </div>
+            </div>
+            <p class="help is-danger" *ngIf="showClassPasswordError">Geslo za dostop ni pravilno.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- user does not have rights to see class, class requires password -->
+      <div *ngIf="classView == classViewEnum.CLASS_LOCKED_WHITELIST">
+        <div class="box">
+          <h1 class="title is-3">Vstop v predmet</h1>
+          <p class="has-text-danger">Predmet do katerega želite dostopate je omejen.</p>
+          <p class="has-text-danger">
+            Skrbnik predmeta vas ni dodal med uporabnike predmeta. Preden lahko nadaljujete kontaktirajte skrbnika.
+          </p>
+        </div>
+      </div>
+
+      <!-- user has rights to view or edit class -->
+      <div *ngIf="classView == classViewEnum.CLASS_UNLOCKED">
+        <app-class-notifications class="box"></app-class-notifications>
+        <div class="box">
+          <h1 class="title is-3">Naloge</h1>
+          <div class="field has-addons">
+            <div class="control">
+              <input class="input" type="text" placeholder="Iskanje" />
+            </div>
+            <div class="control">
+              <a class="button is-info"> Išči </a>
+            </div>
+          </div>
+          <app-assignment class="box"></app-assignment>
+          <app-assignment class="box"></app-assignment>
+          <app-assignment class="box"></app-assignment>
+          <app-assignment class="box"></app-assignment>
+          <app-assignment class="box"></app-assignment>
+          <app-assignment class="box"></app-assignment>
+          <app-assignment class="box"></app-assignment>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="footer" style="height: 5vh">
+  <div class="content has-text-centered">
+    <p>2021</p>
+  </div>
+</footer>

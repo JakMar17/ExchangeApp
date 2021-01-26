@@ -1,0 +1,10 @@
+@import '/src/styles.scss';
+
+.naloga-title {
+    @extend .title, .is-3;
+    color: white;
+}
+
+.is-right-align {
+    text-align: end;
+}

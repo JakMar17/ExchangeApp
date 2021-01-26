@@ -1,0 +1,16 @@
+// Set your brand colors
+$primary: #0A2463;
+$info: #3E92CC;
+$success: #32936F;
+$warning: #F2BB05;
+$danger: #D8315B;
+$light: #FFFAFF;
+$dark: #1E1B18;
+
+// Update font family
+$family-sans-serif: "Calibri", "Arial";
+
+// Import the Bulma-fluent
+@import "bulma-fluent/bulma.sass";
+@import "~@creativebulma/bulma-divider";
+@import 'remixicon/fonts/remixicon.css';

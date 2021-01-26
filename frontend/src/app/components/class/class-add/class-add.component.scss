@@ -1,0 +1,11 @@
+@import '../class.component.scss';
+
+.button-bottom-margin {
+    @extend .button;
+    margin-bottom: 1vh;
+}
+
+.info-notification{
+    @extend .notification, .is-info;
+    padding: 2vh;
+}
