@@ -4,7 +4,18 @@
     <app-sidemenu style="min-height: 100%"></app-sidemenu>
     <div class="column">
       <div class="box">
-        <h1 class="title is-2">Programiranje 1 (UNI)</h1>
+        <div class="columns is-vcentered">
+          <div class="column is-narrow">
+            <button class="button is-small is-warning is-outlined has-icons-left">
+              <span class="icon is-small">
+                <i class="ri-pencil-line"></i>
+              </span>
+            </button>
+          </div>
+          <div class="column">
+            <h1 class="title is-2">Programiranje 1 (UNI)</h1>
+          </div>
+        </div>
         <h2 class="subtitle is-4">skrbnik: Jakob Marušič</h2>
         <p>
           Cilj predmeta je seznaniti študente s ključnimi koncepti
@@ -60,7 +71,16 @@
       <div *ngIf="classView == classViewEnum.CLASS_UNLOCKED">
         <app-class-notifications class="box"></app-class-notifications>
         <div class="box">
-          <h1 class="title is-3">Naloge</h1>
+          <div class="columns is-vcentered">
+            <div class="column is-narrow">
+              <button class="button is-small is-success is-outlined has-icons-left">
+                <span class="icon is-small">
+                  <i class="ri-add-line"></i>
+                </span>
+              </button>
+            </div>
+            <h1 class="column title is-3">Naloge</h1>
+          </div>
           <div class="field has-addons">
             <div class="control">
               <input class="input" type="text" placeholder="Iskanje" />

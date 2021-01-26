@@ -54,7 +54,7 @@ export class RegisterComponent implements OnInit {
    * switch view to other type of registration form
    * @param switchTo which register view to switch to
    */
-  private setOtherRegistrationType(switchTo: LoginPanelEnum): void {
+  public setOtherRegistrationType(switchTo: LoginPanelEnum): void {
     this.typeOfOtherRegistration = switchTo;
   }
 

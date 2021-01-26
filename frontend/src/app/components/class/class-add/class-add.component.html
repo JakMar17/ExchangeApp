@@ -50,7 +50,7 @@
               [ngClass]="{
                 'is-active':
                   element.securityLevelTitle ==
-                  selectedSecurityLevel.securityLevelTitle
+                  selectedSecurityLevel?.securityLevelTitle
               }"
             >
               <a (click)="onSecurityLevelSelected(element)">
@@ -60,12 +60,12 @@
           </ul>
         </div>
         <div class="info-notification">
-          {{ selectedSecurityLevel.securityLevelDescription }}
+          {{ selectedSecurityLevel?.securityLevelDescription }}
         </div>
 
         <div
           *ngIf="
-            selectedSecurityLevel.securityLevelTitle == 'zaščiten z geslom'
+            selectedSecurityLevel?.securityLevelTitle == 'zaščiten z geslom'
           "
         >
           <div class="field">

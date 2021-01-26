@@ -1,1 +1,12 @@
 @import '../class.component.scss';
+
+.has-no-border-danger {
+  border: none;
+  border-color: transparent;
+  color: transparent;
+  background-color: transparent;
+  background: none;
+  i {
+    color: $danger;
+  }
+}

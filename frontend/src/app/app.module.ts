@@ -18,6 +18,7 @@ import { ClassNotificationsComponent } from './components/class/class-notificati
 import { FormsModule } from '@angular/forms';
 import { ClassAddComponent } from './components/class/class-add/class-add.component';
 import { FooterComponent } from './components/navigation/footer/footer.component';
+import { AssignmentAddComponent } from './components/assignment/assignment-add/assignment-add.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { FooterComponent } from './components/navigation/footer/footer.component
     ClassNotificationsComponent,
     ClassAddComponent,
     FooterComponent,
+    AssignmentAddComponent,
   ],
   imports: [
     BrowserModule,

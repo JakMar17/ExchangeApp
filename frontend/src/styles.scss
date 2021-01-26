@@ -14,3 +14,12 @@ $family-sans-serif: "Calibri", "Arial";
 @import "bulma-fluent/bulma.sass";
 @import "~@creativebulma/bulma-divider";
 @import 'remixicon/fonts/remixicon.css';
+
+// for small buttons without border and color
+.has-no-border {
+  border: none;
+  border-color: transparent;
+  color: transparent;
+  background-color: transparent;
+  background: none;
+}
