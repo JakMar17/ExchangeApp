@@ -1,0 +1,322 @@
+<div style="min-height: 90vh">
+  <app-navbar></app-navbar>
+  <div class="columns">
+    <app-sidemenu style="min-height: 100%"></app-sidemenu>
+    <div class="column">
+      <div class="box">
+        <h1 class="title is-2">Dodajanje nove naloge</h1>
+      </div>
+
+      <!-- user has rights to view or edit class -->
+      <div class="box">
+        <h1 class="title is-3">Osnovni podatki</h1>
+        <div class="field">
+          <label class="label">Ime naloge</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="Ime predmeta"
+              required
+            />
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Povezava do naloge na eučilnici</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="https://ucilnica.fri.uni-lj.si"
+            />
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Kratka navodila ali opis naloge</label>
+          <div class="control">
+            <textarea
+              class="textarea"
+              placeholder="Kratek opis predmeta"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h1 class="title is-3">Trajanje naloge</h1>
+        <div class="info-notification">
+          Začetni in končni čas omejuje časovno obdobje v katerem lahko študenti
+          oddajajo testne primere. Kot začetna ura velja 00:00 izbranega
+          začetnega datuma, kot končna ura pa 23:59 končnega datuma.
+        </div>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Začetni datum</label>
+              <div class="control">
+                <input class="input" type="date" placeholder="dd.mm.yyyy" />
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">Končni datum</label>
+              <div class="control">
+                <input class="input" type="date" placeholder="dd.mm.yyyy" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h1 class="title is-3">Omejitve oddaj</h1>
+        <div class="info-notification">
+          <p>
+            <b>Skupno število oddaj</b> definira maksimalno možno število vseh
+            oddaj vseh udeležencev.
+          </p>
+          <p>
+            <b>Število oddaj udeleženca</b> definira maksimalno možno število
+            oddaj posameznega udeleženca.
+          </p>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label">Skupno število oddaj</label>
+              <div class="control">
+                <input class="input" type="number" placeholder="65" />
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">Število oddaj udeleženca</label>
+              <div class="control">
+                <input class="input" type="number" placeholder="5" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h1 class="title is-3">Nastavitev žetonov</h1>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label"
+                >Nagrada za oddajo (število žetonov na uspešno oddan tesni
+                primer)</label
+              >
+              <div class="control">
+                <input class="input" type="number" placeholder="1" />
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label">Cena na testni primer</label>
+              <div class="control">
+                <input class="input" type="number" placeholder="1" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h1 class="title is-3">Tip datotek za oddajo</h1>
+        <div class="info-notification">
+          Končnice datoteke naj bodo z začetko piko (npr. .java)
+        </div>
+        <div class="columns">
+          <div class="column">
+            <div class="field">
+              <label class="label"
+                >Končnica datoteke vhodnega testnega primera</label
+              >
+              <div class="control">
+                <input class="input" type="text" placeholder=".txt" />
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label class="label"
+                >Končnica datoteke izhodnega testnega primera</label
+              >
+              <div class="control">
+                <input class="input" type="text" placeholder=".txt" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h1 class="title is-3">Testiranje pravilnosti oddaje</h1>
+        <div class="tabs is-centered">
+          <ul>
+            <li class="is-active">
+              <a>Brez</a>
+            </li>
+            <li><a>Ročno testiranje</a></li>
+            <li><a>Avtomatsko testiranje</a></li>
+          </ul>
+        </div>
+        <label class="checkbox is-success">
+          <input type="checkbox" />
+          Ob novi oddaji me obvesti po epošti.
+        </label>
+      </div>
+
+      <div class="box">
+        <h1 class="title is-3">Testiranje plagiatorstva oddaje</h1>
+        <div class="notification is-warning">
+          Pri avtomatskem testiranju plagiatorstva je potrebna pozornost, saj
+          lahko sistem zazna visoko podobnost pri vsebinsko različnih oddajah.
+        </div>
+        <h2 class="title is-4">Opozorilna stopnja</h2>
+        <div class="info-notification">
+          Opozorilna stopnja definira stopnjo podobnosti pri čemer ste kot
+          skrbnik predmeta obveščen o podobnosti.
+        </div>
+        <label class="checkbox is-success">
+          <input type="checkbox" />
+          Nastavi opozorilno stopnjo
+        </label>
+
+        <div class="field">
+          <label class="label">Odstotek podobnosti</label>
+          <div class="control">
+            <input class="input" type="number" placeholder="75" />
+          </div>
+        </div>
+        <h2 class="title is-4">Stopnja zavrnitve</h2>
+        <div class="info-notification">
+          Stopnja zavrnitve definira stopnjo podobnosti pri kateri se oddaja
+          obravnava kot plagiat.
+        </div>
+        <label class="checkbox is-success">
+          <input type="checkbox" />
+          Nastavi stopnjo zavrnitve
+        </label>
+        <div class="field">
+          <label class="label">Odstotek podobnosti</label>
+          <div class="control">
+            <input class="input" type="number" placeholder="75" />
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h1 class="title is-3">Pregled oddaj</h1>
+        <div class="table-container">
+          <table class="table table is-fullwidth table is-hoverable">
+            <thead>
+              <tr>
+                <th>Oznaka oddaje</th>
+                <th>Ime in priimek</th>
+                <th>Vpisna številka</th>
+                <th>Status oddaje</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>12-458</td>
+                <td>Mojca Pokraculja</td>
+                <td>6314520</td>
+                <td>Oddano</td>
+                <td class="is-narrow">
+                  <div class="columns">
+                    <div class="column"></div>
+                    <div class="column"></div>
+                    <div class="column is-narrow">
+                      <a class="button is-info is-small is-outlined">
+                        <i class="ri-eye-line"></i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>12-458</td>
+                <td>Mojca Pokraculja</td>
+                <td>6314520</td>
+                <td>V pregledu</td>
+                <td class="is-narrow">
+                  <div class="columns">
+                    <div class="column is-narrow">
+                      <a class="button is-success is-small is-outlined">
+                        <i class="ri-check-line"></i>
+                      </a>
+                    </div>
+                    <div class="column is-narrow">
+                      <a class="button is-danger is-small is-outlined">
+                        <i class="ri-close-line"></i>
+                      </a>
+                    </div>
+                    <div class="column is-narrow">
+                      <a class="button is-info is-small is-outlined">
+                        <i class="ri-eye-line"></i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="columns">
+          <div class="column">
+            <button
+              class="button-bottom-margin is-success has-icons-left is-fullwidth"
+            >
+              <span class="icon is-small">
+                <i class="ri-save-line"></i>
+              </span>
+              <span> Shrani spremembe </span>
+            </button>
+          </div>
+          <div class="column">
+            <button
+              class="button-bottom-margin is-warning is-outlined has-icons-left is-fullwidth"
+            >
+              <span class="icon is-small">
+                <i class="ri-close-line"></i>
+              </span>
+              <span> Zavrzi spremembe </span>
+            </button>
+          </div>
+          <div class="column">
+            <button
+              class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"
+            >
+              <span class="icon is-small">
+                <i class="ri-archive-line"></i>
+              </span>
+              <span> Arhiviraj nalogo </span>
+            </button>
+          </div>
+          <div class="column">
+            <button
+              class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"
+            >
+              <span class="icon is-small">
+                <i class="ri-delete-bin-line"></i>
+              </span>
+              <span> Izbriši nalogo </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

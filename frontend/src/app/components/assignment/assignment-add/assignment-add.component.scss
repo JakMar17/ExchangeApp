@@ -1,0 +1,15 @@
+@import '/src/styles.scss';
+
+.info-notification{
+  @extend .notification, .is-info;
+  padding: 1vh;
+}
+
+.checkbox {
+  margin-bottom: 2vh;
+}
+
+.button-bottom-margin {
+  @extend .button;
+  margin-bottom: 1vh;
+}
