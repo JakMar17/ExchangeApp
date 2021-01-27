@@ -1,25 +1,20 @@
 <div style="min-height: 90vh">
   <app-navbar></app-navbar>
   <div class="columns">
-      <app-sidemenu style="min-height: 100%"></app-sidemenu>
+    <app-sidemenu style="min-height: 100%"></app-sidemenu>
     <div class="column">
-      <div class="box"><h1 class="title is-3">Obvestila administratorja</h1>
-        <article class="obvestilo-administratorja">
-          <div class="message-header">
-            <p>Testni sistem</p>
-            <button class="delete" aria-label="delete"></button>
-          </div>
-          <div class="message-body">
-            <p>Trenutno se nahajate na testnem sistemu.</p>
-            <p>Tako se bodo pokazala obvestila za uporabnike pravega sistema</p>
-          </div>
-        </article></div>
-        <div class="box">
-          <h1 class="title is-3">Moji predmeti</h1>
-          <app-dashboard-class class="box card"></app-dashboard-class>
-          <app-dashboard-class class="box card"></app-dashboard-class>
-          <app-dashboard-class class="box card"></app-dashboard-class>
-        </div>
+      <app-notifications
+        [boxTitle]="'Obvestila izvajalca'"
+        [hasRightToEdit]="false"
+        [notifications] = "notifications"
+      ></app-notifications>
+
+      <div class="box">
+        <h1 class="title is-3">Moji predmeti</h1>
+        <app-dashboard-class class="box card"></app-dashboard-class>
+        <app-dashboard-class class="box card"></app-dashboard-class>
+        <app-dashboard-class class="box card"></app-dashboard-class>
+      </div>
       <div class="box">
         <h1 class="title is-3">Vsi predmeti</h1>
         <div class="field has-addons">

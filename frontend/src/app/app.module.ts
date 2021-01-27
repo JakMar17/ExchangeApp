@@ -14,11 +14,11 @@ import { DashboardClassComponent } from './components/dashboard/dashboard-class/
 import { LoadingComponent } from './components/loading/loading.component';
 import { ClassComponent } from './components/class/class.component';
 import { AssignmentComponent } from './components/class/assignment/assignment.component';
-import { ClassNotificationsComponent } from './components/class/class-notifications/class-notifications.component';
 import { FormsModule } from '@angular/forms';
 import { ClassAddComponent } from './components/class/class-add/class-add.component';
 import { FooterComponent } from './components/navigation/footer/footer.component';
 import { AssignmentAddComponent } from './components/assignment/assignment-add/assignment-add.component';
+import { NotificationsComponent } from './components/notifications/notifications.component';
 
 @NgModule({
   declarations: [
@@ -34,10 +34,10 @@ import { AssignmentAddComponent } from './components/assignment/assignment-add/a
     LoadingComponent,
     ClassComponent,
     AssignmentComponent,
-    ClassNotificationsComponent,
     ClassAddComponent,
     FooterComponent,
     AssignmentAddComponent,
+    NotificationsComponent,
   ],
   imports: [
     BrowserModule,

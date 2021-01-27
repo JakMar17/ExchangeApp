@@ -23,3 +23,7 @@ $family-sans-serif: "Calibri", "Arial";
   background-color: transparent;
   background: none;
 }
+
+app-notifications {
+  @extend .box;
+}

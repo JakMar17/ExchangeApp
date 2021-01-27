@@ -12,6 +12,9 @@ export class ClassComponent implements OnInit {
   public classPasswordInput: string = '';
   public showClassPasswordError: boolean = false;
 
+  //zamenjej
+  public hasRightToEdit: boolean = true;
+
   constructor() {}
 
   ngOnInit(): void {}

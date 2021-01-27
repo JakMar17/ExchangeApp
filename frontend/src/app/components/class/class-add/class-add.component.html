@@ -49,7 +49,7 @@
             <li
               [ngClass]="{
                 'is-active':
-                  element.securityLevelTitle ==
+                  element?.securityLevelTitle ==
                   selectedSecurityLevel?.securityLevelTitle
               }"
             >
@@ -78,9 +78,9 @@
 
         <div
           *ngIf="
-            selectedSecurityLevel.securityLevelTitle ==
+            selectedSecurityLevel?.securityLevelTitle ==
               'omejen z vpisno številko' ||
-            selectedSecurityLevel.securityLevelTitle == 'omejen z epošto'
+            selectedSecurityLevel?.securityLevelTitle == 'omejen z epošto'
           "
         >
           <div class="columns">
