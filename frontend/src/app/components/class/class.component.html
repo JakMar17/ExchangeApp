@@ -111,6 +111,7 @@
           <div class="columns is-vcentered">
             <div *ngIf="userCanEdit" class="column is-narrow">
               <button
+                (click)="onAssignmentNewButtonClick()"
                 class="button is-small is-success is-outlined has-icons-left"
               >
                 <span class="icon is-small">
@@ -129,7 +130,11 @@
             </div>
           </div>
           <div *ngFor="let element of course?.assignments">
-            <app-assignment class="box" [canEdit]="userCanEdit" [assignment]="element"></app-assignment>
+            <app-assignment
+              [canEdit]="userCanEdit"
+              [assignment]="element"
+              [courseId]="course.courseId"
+            ></app-assignment>
           </div>
         </div>
       </div>

@@ -1,12 +1,12 @@
 <div class="columns is-vcentered">
-  <div *ngIf="canEdit" class="column is-narrow">
+  <div *ngIf="canEdit" (click)="onEditButtonClick()" class="column is-narrow">
     <button class="button is-outlined is-warning is-small">
       <i class="ri-pencil-line"></i>
     </button>
   </div>
   <div *ngIf="canEdit" class="column is-narrow">
     <button class="button is-outlined is-info is-small">
-      <i class="ri-eye-line"></i>0
+      <i class="ri-eye-line"></i>
     </button>
   </div>
   <div *ngIf="canEdit" class="column is-narrow">

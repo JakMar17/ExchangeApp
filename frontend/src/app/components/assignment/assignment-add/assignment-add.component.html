@@ -21,7 +21,7 @@
               class="input"
               [ngClass]="{ 'is-danger': assignment.title.length == 0 }"
               type="text"
-              placeholder="Ime predmeta"
+              placeholder="Ime naloge"
               required
             />
           </div>
@@ -62,11 +62,11 @@
               <label class="label">Začetni datum</label>
               <div class="control">
                 <input
-                  class="input"
-                  [(ngModel)]="assignment.startDate"
                   type="date"
-                  placeholder="dd.mm.yyyy"
-                  datetime="dd.MM.yyyy"
+                  class="input is-disabled"
+                  [ngModel]="assignment.startDate | date: 'yyyy-MM-dd'"
+                  (ngModelChange)="onStartDateInputChange($event)"
+                  
                 />
               </div>
             </div>
@@ -76,11 +76,10 @@
               <label class="label">Končni datum</label>
               <div class="control">
                 <input
-                  class="input"
                   type="date"
-                  [(ngModel)]="assignment.endDate"
-                  placeholder="dd.mm.yyyy"
-                  datetime="dd.MM.yyyy"
+                  class="input"
+                  [ngModel]="assignment.endDate | date: 'yyyy-MM-dd'"
+                  (ngModelChange)="onEndDateInputChange($event)"
                 />
               </div>
             </div>
@@ -214,16 +213,17 @@
         <h1 class="title is-3">Testiranje pravilnosti oddaje</h1>
         <div class="tabs is-centered">
           <ul>
-            <li>
-              <a
-                [ngClass]="{
-                  'is-active':
-                    assignment.submissionCheck == submissionCheckEnum.NONE
-                }"
-                >Brez</a
-              >
+            <li
+              (click)="onSubmissionCheckTabChange(submissionCheckEnum.NONE)"
+              [ngClass]="{
+                'is-active':
+                  assignment.submissionCheck == submissionCheckEnum.NONE
+              }"
+            >
+              <a>Brez</a>
             </li>
             <li
+              (click)="onSubmissionCheckTabChange(submissionCheckEnum.MANUAL)"
               [ngClass]="{
                 'is-active':
                   assignment.submissionCheck == submissionCheckEnum.MANUAL
@@ -232,6 +232,9 @@
               <a>Ročno testiranje</a>
             </li>
             <li
+              (click)="
+                onSubmissionCheckTabChange(submissionCheckEnum.AUTOMATIC)
+              "
               [ngClass]="{
                 'is-active':
                   assignment.submissionCheck == submissionCheckEnum.AUTOMATIC
@@ -242,7 +245,13 @@
           </ul>
         </div>
         <label class="checkbox is-success">
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            [checked]="assignment.submissionNotify"
+            (change)="
+              assignment.submissionNotify = !assignment.submissionNotify
+            "
+          />
           Ob novi oddaji me obvesti po epošti.
         </label>
       </div>
@@ -259,11 +268,11 @@
           skrbnik predmeta obveščen o podobnosti.
         </div>
         <label class="checkbox is-success">
-          <input type="checkbox" />
+          <input (click)="onPlagiarismWarningCheckboxClick()" type="checkbox" />
           Nastavi opozorilno stopnjo
         </label>
 
-        <div class="field">
+        <div *ngIf="assignment.plagiarismWarning" class="field">
           <label class="label">Odstotek podobnosti</label>
           <div class="control">
             <input
@@ -280,10 +289,10 @@
           obravnava kot plagiat.
         </div>
         <label class="checkbox is-success">
-          <input type="checkbox" />
+          <input (click)="onPlagiarismLevelCheckboxClick()" type="checkbox" />
           Nastavi stopnjo zavrnitve
         </label>
-        <div class="field">
+        <div *ngIf="assignment.plagiarismLevel" class="field">
           <label class="label">Odstotek podobnosti</label>
           <div class="control">
             <input
