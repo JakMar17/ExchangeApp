@@ -32,7 +32,7 @@ export class SidemenuComponent implements OnInit {
    * navigates to page for creating new class
    */
   public onAddNewClassButtonClick(): void {
-    this.router.navigate(['/class/add']);
+    this.router.navigate(['/course/add']);
   }
 
   private setAccesFields(): void {

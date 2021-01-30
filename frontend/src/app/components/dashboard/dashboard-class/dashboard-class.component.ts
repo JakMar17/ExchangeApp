@@ -23,6 +23,6 @@ export class DashboardClassComponent implements OnInit {
    * navigate to selected class
    */
   public onClick(): void {
-    this.router.navigate(['/class/' + this.course?.courseId]);
+    this.router.navigate(['/course/' + this.course?.courseId]);
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Course, CourseAccess } from 'src/app/models/class-model';
 import { User } from 'src/app/models/user-model';
 import { AccessService } from 'src/app/services/access-service/access.service';
@@ -24,6 +24,7 @@ export class ClassComponent implements OnInit {
   public userCanEdit: boolean = false;
 
   constructor(
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private coursesService: CoursesService,
     private userService: UserServiceService,
@@ -88,5 +89,11 @@ export class ClassComponent implements OnInit {
 
       console.log(this.userCanView);
     }
+  }
+
+  public onAssignmentNewButtonClick(): void {
+    this.router.navigate([
+      '/course/' + this.course.courseId + '/assignment/add',
+    ]);
   }
 }
