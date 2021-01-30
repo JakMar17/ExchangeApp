@@ -19,6 +19,8 @@ import { ClassAddComponent } from './components/class/class-add/class-add.compon
 import { FooterComponent } from './components/navigation/footer/footer.component';
 import { AssignmentAddComponent } from './components/assignment/assignment-add/assignment-add.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { UserToStringPipe } from './pipes/user-pipes/user-to-string.pipe';
+import { AssignmentStatusPipe } from './pipes/assignment-status/assignment-status.pipe';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import { NotificationsComponent } from './components/notifications/notifications
     FooterComponent,
     AssignmentAddComponent,
     NotificationsComponent,
+    UserToStringPipe,
+    AssignmentStatusPipe,
   ],
   imports: [
     BrowserModule,

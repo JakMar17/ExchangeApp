@@ -8,33 +8,37 @@ import { FirstScreenComponent } from './components/first-screen/first-screen.com
 
 const routes: Routes = [
   {
-    path: "",
-    component: FirstScreenComponent
+    path: '',
+    component: FirstScreenComponent,
   },
   {
-    path: "dashboard",
-    component: DashboardComponent
+    path: 'dashboard',
+    component: DashboardComponent,
   },
   {
-    path: "class/add",
-    component: ClassAddComponent
+    path: 'class/add',
+    component: ClassAddComponent,
   },
   {
-    path: "class/edit/:classID",
-    component: ClassAddComponent
+    path: 'class/edit/:classID',
+    component: ClassAddComponent,
   },
   {
-    path: "class/:classID",
-    component: ClassComponent
+    path: 'class/:classID',
+    component: ClassComponent,
   },
   {
-    path: "assignment/add",
-    component: AssignmentAddComponent
+    path: 'assignment/add',
+    component: AssignmentAddComponent,
+  },
+  {
+    path: 'assignment/edit/:courseId/:assignmentId',
+    component: AssignmentAddComponent,
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
