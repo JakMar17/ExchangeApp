@@ -1,38 +1,43 @@
 <div class="columns is-vcentered">
-  <div class="column is-narrow">
+  <div *ngIf="canEdit" class="column is-narrow">
     <button class="button is-outlined is-warning is-small">
       <i class="ri-pencil-line"></i>
     </button>
   </div>
-  <div class="column is-narrow">
+  <div *ngIf="canEdit" class="column is-narrow">
     <button class="button is-outlined is-info is-small">
-      <i class="ri-eye-line"></i>
+      <i class="ri-eye-line"></i>0
     </button>
   </div>
-  <div class="column is-narrow">
+  <div *ngIf="canEdit" class="column is-narrow">
     <button class="button is-outlined is-info is-small">
       <i class="ri-eye-off-line"></i>
     </button>
   </div>
-  <div class="column is-narrow">
+  <div *ngIf="canEdit" class="column is-narrow">
     <button class="button is-outlined is-danger is-small">
       <i class="ri-delete-bin-7-line"></i>
     </button>
   </div>
   <div class="column">
-    <h1 class="title">Domača naloga 1 - krmilni konstrukti</h1>
+    <h1 class="title">{{ assignment.title }}</h1>
   </div>
 </div>
-<p>Tole je opis domače naloge, mogoče celo samo link do učilnice.</p>
+<p>{{ assignment.description }}</p>
 <table class="table is-fullwidth is-hoverable">
   <tbody>
     <tr>
       <td>Status naloge</td>
-      <td style="text-align: end">aktivna (do 21.12.2021)</td>
+      <td style="text-align: end">
+        {{
+          assignment.status
+            | assignmentStatus: assignment.startDate:assignment.endDate
+        }}
+      </td>
     </tr>
     <tr>
       <td>Število oddanih testnih primerov</td>
-      <td style="text-align: end">50</td>
+      <td style="text-align: end">{{ assignment.noOfSubmisions }}</td>
     </tr>
     <tr>
       <td>Omejitev oddaj</td>
@@ -40,16 +45,22 @@
     </tr>
     <tr>
       <td>Število pridobljenih žetonov (na uspešno oddajo)</td>
-      <td style="text-align: end">2</td>
+      <td style="text-align: end">{{ assignment.coinsPerSubmission }}</td>
     </tr>
     <tr>
       <td>Cena testnega primera</td>
-      <td style="text-align: end">5</td>
+      <td style="text-align: end">{{ assignment.coinsPrice }}</td>
     </tr>
   </tbody>
 </table>
 <h6 class="title is-5">Moje oddaje</h6>
-<div class="table-container">
+<div
+  *ngIf="
+    assignment.studentSubmissions != null &&
+    assignment.studentSubmissions.length > 0
+  "
+  class="table-container"
+>
   <table class="table is-fullwidth is-hoverable">
     <thead>
       <tr>
@@ -105,6 +116,82 @@
     <button class="button is-primary">Oddaj testni primer</button>
   </div>
   <div class="column is-narrow">
-    <button class="button is-info">Kupi testne primere</button>
+    <button class="button is-success is-outlined">Prenesi vse oddane</button>
+  </div>
+</div>
+<h6 class="title is-5">Kupljeni testni primeri</h6>
+<div
+  *ngIf="
+    assignment.boughtSubmissions != null &&
+    assignment.boughtSubmissions.length > 0
+  "
+  class="table-container"
+>
+  <table class="table is-fullwidth is-hoverable">
+    <thead>
+      <tr>
+        <th>Datum nakupa</th>
+        <th>Oznaka transakcije</th>
+        <th>Oznaka testnega primera</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>12.10.2020</td>
+        <td>g34ra</td>
+        <td>41524db2</td>
+        <td class="is-narrow">
+          <div class="columns">
+            <div class="column"></div>
+            <div class="column is-narrow">
+              <a class="button has-no-border has-text-success">
+                <i class="ri-download-line"></i>
+              </a>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>12.10.2020</td>
+        <td>g34ra</td>
+        <td>41524db2</td>
+        <td class="is-narrow">
+          <div class="columns">
+            <div class="column"></div>
+            <div class="column is-narrow">
+              <a class="button has-no-border has-text-success">
+                <i class="ri-download-line"></i>
+              </a>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="columns">
+  <div class="column is-narrow">
+    <button class="button is-primary" (click)="showBuyingBox = !showBuyingBox">
+      Kupi testne primere
+    </button>
+  </div>
+  <div class="column is-narrow">
+    <button class="button is-success is-outlined">Prenesi vse kupljene</button>
+  </div>
+</div>
+
+<div class="box" *ngIf="showBuyingBox">
+  <div class="notification is-warning">
+    <p>Trenutno število žetonov: 45</p>
+  </div>
+  <label class="label">Število testnih primerov</label>
+  <div class="field has-addons">
+    <div class="control">
+      <input class="input" type="number" min="1" />
+    </div>
+    <div class="control">
+      <a class="button is-success is-outlined"> Kupi </a>
+    </div>
   </div>
 </div>

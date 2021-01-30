@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Course } from 'src/app/models/class-model';
 
 @Component({
   selector: 'app-dashboard-class',
@@ -8,9 +9,13 @@ import { Router } from '@angular/router';
 })
 export class DashboardClassComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  @Input() course: Course | null = null;
+
+  constructor(private router: Router) {
+  }
 
   ngOnInit(): void {
+
   }
 
   /**
@@ -18,6 +23,6 @@ export class DashboardClassComponent implements OnInit {
    * navigate to selected class
    */
   public onClick(): void {
-    this.router.navigate(['/class/6']);
+    this.router.navigate(['/class/' + this.course?.courseId]);
   }
 }

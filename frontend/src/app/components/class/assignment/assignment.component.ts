@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Assignment } from 'src/app/models/assignment-model';
 
 @Component({
   selector: 'app-assignment',
@@ -6,6 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./assignment.component.scss']
 })
 export class AssignmentComponent implements OnInit {
+
+  @Input() canEdit: boolean = false;
+  @Input() assignment: Assignment | null = null;
+  public showBuyingBox: boolean = false;
 
   constructor() { }
 

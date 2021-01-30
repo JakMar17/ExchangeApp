@@ -10,15 +10,16 @@
           >
         </li>
       </ul>
-      <p class="menu-label">Moji predmeti</p>
-      <ul class="menu-list">
-        <li><a>Programiranje 1 (UNI)</a></li>
+
+      <p *ngIf="user?.courses" class="menu-label">Moji predmeti</p>
+      <ul *ngIf="user?.courses" class="menu-list">
+        <li *ngFor=""><a>Programiranje 1 (UNI)</a></li>
         <li><a>Programiranje 1 (UNI)</a></li>
         <li><a>Programiranje 1 (UNI)</a></li>
         <li><a>Programiranje 1 (UNI)</a></li>
       </ul>
-      <p class="menu-label">Upravljanje s predmeti</p>
-      <ul class="menu-list">
+      <p *ngIf="showClassManagmentFields" class="menu-label">Upravljanje s predmeti</p>
+      <ul *ngIf="showClassManagmentFields" class="menu-list">
         <li>
           <a (click)="onAddNewClassButtonClick()"
             ><span class="icon"><i class="ri-add-line"></i></span>Dodaj

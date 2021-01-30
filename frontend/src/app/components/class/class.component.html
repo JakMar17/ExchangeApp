@@ -5,18 +5,22 @@
     <div class="column">
       <div class="box">
         <div class="columns is-vcentered">
-          <div class="column is-narrow">
-            <button class="button is-small is-warning is-outlined has-icons-left">
+          <div *ngIf="userCanEdit" class="column is-narrow">
+            <button
+              class="button is-small is-warning is-outlined has-icons-left"
+            >
               <span class="icon is-small">
                 <i class="ri-pencil-line"></i>
               </span>
             </button>
           </div>
           <div class="column">
-            <h1 class="title is-2">Programiranje 1 (UNI)</h1>
+            <h1 class="title is-2">{{ course?.title }}</h1>
           </div>
         </div>
-        <h2 class="subtitle is-4">skrbnik: Jakob Marušič</h2>
+        <h2 class="subtitle is-4">
+          skrbnik: {{ course?.guardianMain | userToString }}
+        </h2>
         <p>
           Cilj predmeta je seznaniti študente s ključnimi koncepti
           proceduralnega in objektno usmerjenega programiranja v enem izmed
@@ -26,7 +30,11 @@
       </div>
 
       <!-- user does not have rights to see class, class requires password -->
-      <div *ngIf="classView == classViewEnum.CLASS_LOCKED_PASSWORD">
+      <div
+        *ngIf="
+          course?.accessLevel == courseAccess.SECURED_PASSWORD && !userCanView
+        "
+      >
         <div class="box">
           <h1 class="title is-3">Vstop v predmet</h1>
           <p>Predmet do katerega želite dostopate je omejen z geslo.</p>
@@ -34,7 +42,7 @@
             Pred dostopom do predmeta vpišite geslo, ki vam ga je posredoval
             skrbnik predmeta.
           </p>
-          <div class="container" style="margin-top: 5vh;">
+          <div class="container" style="margin-top: 5vh">
             <div class="field has-addons">
               <div class="control has-icons-left">
                 <span class="icon is-small is-left">
@@ -48,32 +56,63 @@
                 />
               </div>
               <div class="control">
-                <a (click)="onPasswordInputClick()" class="button is-success"> Vstop </a>
+                <a (click)="onPasswordInputClick()" class="button is-success">
+                  Vstop
+                </a>
               </div>
             </div>
-            <p class="help is-danger" *ngIf="showClassPasswordError">Geslo za dostop ni pravilno.</p>
+            <p class="help is-danger" *ngIf="showClassPasswordError">
+              Geslo za dostop ni pravilno.
+            </p>
           </div>
         </div>
       </div>
 
       <!-- user does not have rights to see class, class requires password -->
-      <div *ngIf="classView == classViewEnum.CLASS_LOCKED_WHITELIST">
+      <div
+        *ngIf="
+          course?.accessLevel == courseAccess.SECURED_WHITELIST && !userCanView
+        "
+      >
         <div class="box">
           <h1 class="title is-3">Vstop v predmet</h1>
-          <p class="has-text-danger">Predmet do katerega želite dostopate je omejen.</p>
           <p class="has-text-danger">
-            Skrbnik predmeta vas ni dodal med uporabnike predmeta. Preden lahko nadaljujete kontaktirajte skrbnika.
+            Predmet do katerega želite dostopate je omejen.
+          </p>
+          <p class="has-text-danger">
+            Skrbnik predmeta vas ni dodal med uporabnike predmeta. Preden lahko
+            nadaljujete kontaktirajte skrbnika.
+          </p>
+        </div>
+      </div>
+
+      <!-- user does not have rights to see class, probably is blacklisted -->
+      <div
+        *ngIf="
+          course?.accessLevel != courseAccess.SECURED_PASSWORD && !userCanView
+        "
+      >
+        <div class="box">
+          <h1 class="title is-3">Vstop v predmet</h1>
+          <p class="has-text-danger">
+            Predmet do katerega želite dostopate je omejen.
           </p>
         </div>
       </div>
 
       <!-- user has rights to view or edit class -->
-      <div *ngIf="classView == classViewEnum.CLASS_UNLOCKED">
-        <app-notifications [boxTitle]="'Obvestila izvajlaca'" [hasRightToEdit]="hasRightToEdit"></app-notifications>
+      <div *ngIf="userCanView">
+        <app-notifications
+          [boxTitle]="'Obvestila izvajalca'"
+          [hasRightToEdit]="userCanEdit"
+          [notifications]="course?.notifications"
+        ></app-notifications>
         <div class="box">
           <div class="columns is-vcentered">
-            <div class="column is-narrow">
-              <button class="button is-small is-success is-outlined has-icons-left">
+            <div *ngIf="userCanEdit" class="column is-narrow">
+              <button
+                class="button is-small is-success is-outlined has-icons-left"
+              >
                 <span class="icon is-small">
                   <i class="ri-add-line"></i>
                 </span>
@@ -89,13 +128,9 @@
               <a class="button is-info"> Išči </a>
             </div>
           </div>
-          <app-assignment class="box"></app-assignment>
-          <app-assignment class="box"></app-assignment>
-          <app-assignment class="box"></app-assignment>
-          <app-assignment class="box"></app-assignment>
-          <app-assignment class="box"></app-assignment>
-          <app-assignment class="box"></app-assignment>
-          <app-assignment class="box"></app-assignment>
+          <div *ngFor="let element of course?.assignments">
+            <app-assignment class="box" [canEdit]="userCanEdit" [assignment]="element"></app-assignment>
+          </div>
         </div>
       </div>
     </div>

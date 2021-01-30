@@ -1,40 +1,68 @@
-<div class="columns is-vcentered">
+<app-loading *ngIf="notifications == null"></app-loading>
+
+<div *ngIf="notifications != null" class="columns is-vcentered">
   <div *ngIf="hasRightToEdit" class="column is-narrow">
-    <button (click)="openNewNotificationDialog()" class="button is-small is-success is-outlined has-icons-left">
+    <button
+      (click)="openNewNotificationDialog()"
+      class="button is-small is-success is-outlined has-icons-left"
+    >
       <span class="icon is-small">
         <i class="ri-add-line"></i>
       </span>
     </button>
   </div>
-  <h1 class="column title is-3">{{boxTitle}}</h1>
+  <div class="column">
+    <h1 class="title is-3">{{ boxTitle }}</h1>
+  </div>
 </div>
 <div class="box" *ngIf="addingNotification">
   <div class="field">
     <label class="label">Naslov objave</label>
     <div class="control">
-      <input [(ngModel)]="newNotificationTitle" class="input" type="text" placeholder="Naslov objave" required />
+      <input
+        [(ngModel)]="newNotificationTitle"
+        class="input"
+        type="text"
+        placeholder="Naslov objave"
+        required
+      />
     </div>
   </div>
   <div class="field">
     <label class="label">Telo objave</label>
     <div class="control">
-      <textarea [(ngModel)]="newNotificationBody" class="textarea" placeholder="Telo objave"></textarea>
+      <textarea
+        [(ngModel)]="newNotificationBody"
+        class="textarea"
+        placeholder="Telo objave"
+      ></textarea>
     </div>
   </div>
   <div class="columns">
     <div class="column is-narrow">
-      <button (click)="addNewNotification()" class="button is-success">Objavi</button>
+      <button (click)="addNewNotification()" class="button is-success">
+        Objavi
+      </button>
     </div>
     <div class="column is-narrow">
-      <button (click)="closeNewNotificationDialog()" class="button is-danger is-outlined">Zavrzi</button>
+      <button
+        (click)="closeNewNotificationDialog()"
+        class="button is-danger is-outlined"
+      >
+        Zavrzi
+      </button>
     </div>
   </div>
 </div>
 
 <article class="message" *ngFor="let element of notifications">
   <div class="message-header">
-    <p>{{element.title}}</p>
-    <button (click)="deleteNotification(element)" *ngIf="hasRightToEdit" class="button is-small is-danger is-outlined">
+    <p>{{ element.title }}</p>
+    <button
+      (click)="deleteNotification(element)"
+      *ngIf="hasRightToEdit"
+      class="button is-small is-danger is-outlined"
+    >
       <span class="icon is-small">
         <i class="ri-delete-bin-7-line"></i>
       </span>
@@ -42,7 +70,11 @@
   </div>
 
   <div class="message-body">
-    <p>{{element.body}}</p>
-    <p class="author-text">Objavil {{element.author}} ({{element.dateCreated | date: 'dd.MM.yyyy'}})</p>
+    <p>{{ element.body }}</p>
+    <p class="author-text">
+      Objavil {{ element.author }} ({{
+        element.dateCreated | date: "dd.MM.yyyy"
+      }})
+    </p>
   </div>
 </article>

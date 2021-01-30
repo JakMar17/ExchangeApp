@@ -5,15 +5,18 @@
     <div class="column">
       <app-notifications
         [boxTitle]="'Obvestila izvajalca'"
-        [hasRightToEdit]="false"
-        [notifications] = "notifications"
+        [hasRightToEdit]="
+          user == null ? false : accessService.adminAccess(user)
+        "
+        [notifications]="notifications"
       ></app-notifications>
 
-      <div class="box">
+      <div class="box" *ngIf="showMyCourses">
         <h1 class="title is-3">Moji predmeti</h1>
-        <app-dashboard-class class="box card"></app-dashboard-class>
-        <app-dashboard-class class="box card"></app-dashboard-class>
-        <app-dashboard-class class="box card"></app-dashboard-class>
+        <app-dashboard-class
+          *ngFor="let element of user?.courses"
+          class="box card"
+        ></app-dashboard-class>
       </div>
       <div class="box">
         <h1 class="title is-3">Vsi predmeti</h1>
@@ -25,29 +28,11 @@
             <a class="button is-info"> Išči </a>
           </div>
         </div>
-        <h2 class="title is-4">Univerzitetni študij</h2>
-        <h2 class="subtitle is-4">1. letnik</h2>
-        <app-loading></app-loading>
-        <h2 class="subtitle is-4">2. letnik</h2>
-        <app-dashboard-class class="box card"></app-dashboard-class>
-        <app-dashboard-class class="box card"></app-dashboard-class>
-        <app-dashboard-class class="box card"></app-dashboard-class>
-        <app-dashboard-class class="box card"></app-dashboard-class>
-        <h2 class="subtitle is-4">3. letnik</h2>
-        <app-dashboard-class class="box card"></app-dashboard-class>
-        <app-dashboard-class class="box card"></app-dashboard-class>
-
-        <h2 class="title is-4">Visokošolski študij</h2>
-        <h2 class="subtitle is-4">1. letnik</h2>
-        <app-loading></app-loading>
-        <h2 class="subtitle is-4">2. letnik</h2>
-        <app-dashboard-class class="box card"></app-dashboard-class>
-        <app-dashboard-class class="box card"></app-dashboard-class>
-        <app-dashboard-class class="box card"></app-dashboard-class>
-        <app-dashboard-class class="box card"></app-dashboard-class>
-        <h2 class="subtitle is-4">3. letnik</h2>
-        <app-dashboard-class class="box card"></app-dashboard-class>
-        <app-dashboard-class class="box card"></app-dashboard-class>
+        <div *ngIf="courses != null">
+          <div *ngFor="let element of courses" class="box card">
+            <app-dashboard-class [course]="element"></app-dashboard-class>
+          </div>
+        </div>
       </div>
     </div>
   </div>

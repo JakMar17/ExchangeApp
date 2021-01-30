@@ -1,22 +1,27 @@
-import { Component, OnInit, Output, EventEmitter  } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserServiceService } from 'src/app/services/user-service/user-service.service';
 import { LoginPanelEnum } from '../models/login-panel-enum';
 
 @Component({
   selector: 'app-login-menu',
   templateUrl: './login-menu.component.html',
-  styleUrls: ['./login-menu.component.scss']
+  styleUrls: ['./login-menu.component.scss'],
 })
 export class LoginMenuComponent implements OnInit {
+  @Output()
+  registerButtonEvent: EventEmitter<LoginPanelEnum> = new EventEmitter<LoginPanelEnum>();
+  public email: string = '';
+  public password: string = '';
 
-  @Output() registerButtonEvent: EventEmitter<LoginPanelEnum> = new EventEmitter<LoginPanelEnum>();
-  public email: string = "";
-  public password: string = "";
+  public userLoginError: string | null = null;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private userService: UserServiceService
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   /**
    * template selector for enum
@@ -39,7 +44,13 @@ export class LoginMenuComponent implements OnInit {
    * validates user credentions, login user into system and redirect user to dashboard
    */
   public onLoginButtonPressed(): void {
-    //check login credentions
-    this.router.navigate(['/dashboard']);
+    this.userLoginError = null;
+    this.userService.loginUserIn(this.email, this.password).subscribe(
+      (user) => {
+        this.userService.userLoggedIn = user;
+        this.router.navigate(['/dashboard']);
+      },
+      (err) => (this.userLoginError = 'Epošta ali geslo nista pravilna')
+    );
   }
 }

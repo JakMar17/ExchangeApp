@@ -3,6 +3,9 @@
     <h1 class="title-centered is-3">Prijava obstoječi uporabniki</h1>
   </div>
 </div>
+<div class="notification is-danger" *ngIf="userLoginError">
+  {{userLoginError}}
+</div>
 <div class="field">
   <p class="control has-icons-left has-icons-right">
     <input class="input" type="email" placeholder="Email" [(ngModel)]="email"/>

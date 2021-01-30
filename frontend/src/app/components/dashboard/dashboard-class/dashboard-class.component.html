@@ -1,10 +1,10 @@
 <div class="is-clickable" (click)="onClick()">
-  <h1 class="title is-4">Programiranje 1</h1>
-  <h2 class="subtitle is-5">skrbnik: Jakob Marušič</h2>
+  <h1 class="title is-4">{{ course?.title }}</h1>
+  <h2 class="subtitle is-5">
+    skrbnik: {{ course?.guardianMain?.name }}
+    {{ course?.guardianMain?.surname }}
+  </h2>
   <p>
-    Cilj predmeta je seznaniti študente s ključnimi koncepti proceduralnega in
-    objektno usmerjenega programiranja v enem izmed splošno namenskih
-    programskih jezikov tretje generacije in jih usposobiti za samostojen razvoj
-    enostavnih računalniških programov.
+    {{ course?.description }}
   </p>
 </div>

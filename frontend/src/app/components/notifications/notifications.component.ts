@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NotificationInterface } from './models/notification-interface';
+import { Notification } from './models/notification-interface';
 
 @Component({
   selector: 'app-notifications',
@@ -7,22 +7,14 @@ import { NotificationInterface } from './models/notification-interface';
   styleUrls: ['./notifications.component.scss'],
 })
 export class NotificationsComponent implements OnInit {
-  @Input() boxTitle: string = 'Obvestila';
-  @Input() notifications: NotificationInterface[] = [
-    {
-      title: 'Testni sistem',
-      body:
-        'Trenutno se nahajate na testnem sistemu. Zaradi velikega števila mogočih plagiatorstev, ki jih je zasledil avtomatski sistem za plagiatorstvo, bomo do nadaljnega vse oddaje ročno preverjali, plagiatorje pa brezmilostno kaznovali.',
-      author: 'Karleto Špacapan',
-      dateCreated: new Date(),
-    },
-  ];
-  @Input() hasRightToEdit: boolean = false;
+  @Input() boxTitle = 'Obvestila';
+  @Input() notifications: Notification[] | null = null;
+  @Input() hasRightToEdit = false;
 
-  public addingNotification: boolean = false;
+  public addingNotification = false;
 
-  public newNotificationTitle: string = '';
-  public newNotificationBody: string = '';
+  public newNotificationTitle = '';
+  public newNotificationBody = '';
 
   constructor() {}
 
@@ -39,6 +31,9 @@ export class NotificationsComponent implements OnInit {
   }
 
   public addNewNotification(): void {
+    if (this.notifications == null) {
+      this.notifications = [];
+    }
     this.notifications.push({
       author: 'Karleto Špacapan',
       dateCreated: new Date(),
@@ -53,8 +48,10 @@ export class NotificationsComponent implements OnInit {
    * creates new array of notifications without given notification and deletes given notification
    * @param notification notification to be deleted
    */
-  public deleteNotification(notification: NotificationInterface): void {
-    this.notifications = this.notifications.filter((e) => e != notification);
+  public deleteNotification(notification: Notification): void {
+    if (this.notifications) {
+      this.notifications = this.notifications.filter((e) => e != notification);
+    }
   }
 
   private cleanInputFields(): void {

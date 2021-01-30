@@ -4,7 +4,10 @@
     <app-sidemenu style="min-height: 100%"></app-sidemenu>
     <div class="column">
       <div class="box">
-        <h1 class="title is-2">Dodajanje nove naloge</h1>
+        <h1 *ngIf="!editing" class="title is-2">Dodajanje nove naloge</h1>
+        <h1 *ngIf="editing" class="title is-2">
+          Urejanje naloge ({{ assignment.assignmentId }})
+        </h1>
       </div>
 
       <!-- user has rights to view or edit class -->
@@ -14,7 +17,9 @@
           <label class="label">Ime naloge</label>
           <div class="control">
             <input
+              [(ngModel)]="assignment.title"
               class="input"
+              [ngClass]="{ 'is-danger': assignment.title.length == 0 }"
               type="text"
               placeholder="Ime predmeta"
               required
@@ -25,6 +30,7 @@
           <label class="label">Povezava do naloge na eučilnici</label>
           <div class="control">
             <input
+              [(ngModel)]="assignment.classromUrl"
               class="input"
               type="text"
               placeholder="https://ucilnica.fri.uni-lj.si"
@@ -35,6 +41,7 @@
           <label class="label">Kratka navodila ali opis naloge</label>
           <div class="control">
             <textarea
+              [(ngModel)]="assignment.description"
               class="textarea"
               placeholder="Kratek opis predmeta"
             ></textarea>
@@ -54,7 +61,13 @@
             <div class="field">
               <label class="label">Začetni datum</label>
               <div class="control">
-                <input class="input" type="date" placeholder="dd.mm.yyyy" />
+                <input
+                  class="input"
+                  [(ngModel)]="assignment.startDate"
+                  type="date"
+                  placeholder="dd.mm.yyyy"
+                  datetime="dd.MM.yyyy"
+                />
               </div>
             </div>
           </div>
@@ -62,7 +75,13 @@
             <div class="field">
               <label class="label">Končni datum</label>
               <div class="control">
-                <input class="input" type="date" placeholder="dd.mm.yyyy" />
+                <input
+                  class="input"
+                  type="date"
+                  [(ngModel)]="assignment.endDate"
+                  placeholder="dd.mm.yyyy"
+                  datetime="dd.MM.yyyy"
+                />
               </div>
             </div>
           </div>
@@ -86,7 +105,12 @@
             <div class="field">
               <label class="label">Skupno število oddaj</label>
               <div class="control">
-                <input class="input" type="number" placeholder="65" />
+                <input
+                  [(ngModel)]="assignment.maxSubmissionsTotal"
+                  class="input"
+                  type="number"
+                  placeholder="65"
+                />
               </div>
             </div>
           </div>
@@ -94,7 +118,12 @@
             <div class="field">
               <label class="label">Število oddaj udeleženca</label>
               <div class="control">
-                <input class="input" type="number" placeholder="5" />
+                <input
+                  [(ngModel)]="assignment.maxSubmissionsStudent"
+                  class="input"
+                  type="number"
+                  placeholder="5"
+                />
               </div>
             </div>
           </div>
@@ -111,7 +140,12 @@
                 primer)</label
               >
               <div class="control">
-                <input class="input" type="number" placeholder="1" />
+                <input
+                  [(ngModel)]="assignment.coinsPerSubmission"
+                  class="input"
+                  type="number"
+                  placeholder="1"
+                />
               </div>
             </div>
           </div>
@@ -119,7 +153,12 @@
             <div class="field">
               <label class="label">Cena na testni primer</label>
               <div class="control">
-                <input class="input" type="number" placeholder="1" />
+                <input
+                  [(ngModel)]="assignment.coinsPrice"
+                  class="input"
+                  type="number"
+                  placeholder="1"
+                />
               </div>
             </div>
           </div>
@@ -138,7 +177,15 @@
                 >Končnica datoteke vhodnega testnega primera</label
               >
               <div class="control">
-                <input class="input" type="text" placeholder=".txt" />
+                <input
+                  [ngClass]="{
+                    'is-danger': assignment.inputDataType == null
+                  }"
+                  [(ngModel)]="assignment.inputDataType"
+                  class="input"
+                  type="text"
+                  placeholder=".txt"
+                />
               </div>
             </div>
           </div>
@@ -148,7 +195,15 @@
                 >Končnica datoteke izhodnega testnega primera</label
               >
               <div class="control">
-                <input class="input" type="text" placeholder=".txt" />
+                <input
+                  [ngClass]="{
+                    'is-danger': assignment.outputDataType == null
+                  }"
+                  [(ngModel)]="assignment.outputDataType"
+                  class="input"
+                  type="text"
+                  placeholder=".txt"
+                />
               </div>
             </div>
           </div>
@@ -159,11 +214,31 @@
         <h1 class="title is-3">Testiranje pravilnosti oddaje</h1>
         <div class="tabs is-centered">
           <ul>
-            <li class="is-active">
-              <a>Brez</a>
+            <li>
+              <a
+                [ngClass]="{
+                  'is-active':
+                    assignment.submissionCheck == submissionCheckEnum.NONE
+                }"
+                >Brez</a
+              >
             </li>
-            <li><a>Ročno testiranje</a></li>
-            <li><a>Avtomatsko testiranje</a></li>
+            <li
+              [ngClass]="{
+                'is-active':
+                  assignment.submissionCheck == submissionCheckEnum.MANUAL
+              }"
+            >
+              <a>Ročno testiranje</a>
+            </li>
+            <li
+              [ngClass]="{
+                'is-active':
+                  assignment.submissionCheck == submissionCheckEnum.AUTOMATIC
+              }"
+            >
+              <a>Avtomatsko testiranje</a>
+            </li>
           </ul>
         </div>
         <label class="checkbox is-success">
@@ -191,7 +266,12 @@
         <div class="field">
           <label class="label">Odstotek podobnosti</label>
           <div class="control">
-            <input class="input" type="number" placeholder="75" />
+            <input
+              [(ngModel)]="assignment.plagiarismWarning"
+              class="input"
+              type="number"
+              placeholder="75"
+            />
           </div>
         </div>
         <h2 class="title is-4">Stopnja zavrnitve</h2>
@@ -206,12 +286,17 @@
         <div class="field">
           <label class="label">Odstotek podobnosti</label>
           <div class="control">
-            <input class="input" type="number" placeholder="75" />
+            <input
+              [(ngModel)]="assignment.plagiarismLevel"
+              class="input"
+              type="number"
+              placeholder="75"
+            />
           </div>
         </div>
       </div>
 
-      <div class="box">
+      <div class="box" *ngIf="assignment.studentSubmissions != null">
         <h1 class="title is-3">Pregled oddaj</h1>
         <div class="table-container">
           <table class="table table is-fullwidth table is-hoverable">
@@ -273,9 +358,14 @@
       </div>
 
       <div class="box">
+        <div *ngIf="errorMessage != null" class="notification is-danger">
+          {{ errorMessage }}
+        </div>
+
         <div class="columns">
           <div class="column">
             <button
+              (click)="saveAssignment()"
               class="button-bottom-margin is-success has-icons-left is-fullwidth"
             >
               <span class="icon is-small">
@@ -286,6 +376,7 @@
           </div>
           <div class="column">
             <button
+              (click)="exitWithoutSave()"
               class="button-bottom-margin is-warning is-outlined has-icons-left is-fullwidth"
             >
               <span class="icon is-small">
@@ -296,6 +387,7 @@
           </div>
           <div class="column">
             <button
+              (click)="archiveAssignment()"
               class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"
             >
               <span class="icon is-small">
@@ -306,6 +398,7 @@
           </div>
           <div class="column">
             <button
+              (click)="deleteAssignment()"
               class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"
             >
               <span class="icon is-small">
