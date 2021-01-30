@@ -28,3 +28,8 @@ $family-sans-serif: "Calibri", "Arial";
 app-notifications {
   @extend .box;
 }
+
+app-assignment {
+  @extend .box;
+  margin-bottom: 3vh;
+}
