@@ -40,8 +40,16 @@
       <td style="text-align: end">{{ assignment.noOfSubmisions }}</td>
     </tr>
     <tr>
-      <td>Omejitev oddaj</td>
-      <td style="text-align: end">brez</td>
+      <td>Omejitev oddaj na študenta</td>
+      <td style="text-align: end">
+        {{ assignment.maxSubmissionsStudent | assignmentLimitSubmissions }}
+      </td>
+    </tr>
+    <tr>
+      <td>Skupna omejitev oddaj</td>
+      <td style="text-align: end">
+        {{ assignment.maxSubmissionsTotal | assignmentLimitSubmissions }}
+      </td>
     </tr>
     <tr>
       <td>Število pridobljenih žetonov (na uspešno oddajo)</td>

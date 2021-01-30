@@ -21,6 +21,7 @@ import { AssignmentAddComponent } from './components/assignment/assignment-add/a
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { UserToStringPipe } from './pipes/user-pipes/user-to-string.pipe';
 import { AssignmentStatusPipe } from './pipes/assignment-status/assignment-status.pipe';
+import { AssignmentLimitSubmissionsPipe } from './pipes/assignment-limit-submissions/assignment-limit-submissions.pipe';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { AssignmentStatusPipe } from './pipes/assignment-status/assignment-statu
     NotificationsComponent,
     UserToStringPipe,
     AssignmentStatusPipe,
+    AssignmentLimitSubmissionsPipe,
   ],
   imports: [
     BrowserModule,
