@@ -16,23 +16,23 @@ const routes: Routes = [
     component: DashboardComponent,
   },
   {
-    path: 'class/add',
+    path: 'course/add',
     component: ClassAddComponent,
   },
   {
-    path: 'class/edit/:classID',
+    path: 'course/edit/:classID',
     component: ClassAddComponent,
   },
   {
-    path: 'class/:classID',
+    path: 'course/:classID',
     component: ClassComponent,
   },
   {
-    path: 'assignment/add',
+    path: 'course/:courseId/assignment/add',
     component: AssignmentAddComponent,
   },
   {
-    path: 'assignment/edit/:courseId/:assignmentId',
+    path: 'course/:courseId/assignment/edit/:assignmentId',
     component: AssignmentAddComponent,
   },
 ];
