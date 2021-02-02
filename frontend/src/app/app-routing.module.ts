@@ -35,6 +35,10 @@ const routes: Routes = [
     path: 'course/:courseId/assignment/edit/:assignmentId',
     component: AssignmentAddComponent,
   },
+  {
+    path: 'user/:userId/profile',
+    component: UserProfileComponent
+  }
 ];
 
 @NgModule({
