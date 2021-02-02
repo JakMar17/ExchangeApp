@@ -1,0 +1,122 @@
+<div style="min-height: 90vh">
+  <app-navbar></app-navbar>
+  <div class="columns">
+    <app-sidemenu style="min-height: 100%"></app-sidemenu>
+    <div class="column">
+      <div class="box">
+        <h1 class="title is-2">Dodajanje nove oddaje</h1>
+      </div>
+
+      <div class="box">
+        <div class="notification is-warning">
+          <p>
+            Oddate lahko poljubno število dvojic datotek (do omejitve oddaj).
+          </p>
+          <p>
+            Dvojice naj bodo poimenovane kot pari vhodXX.java in izhodXX.java,
+            kjer je XX številska oznaka primera.
+          </p>
+        </div>
+
+        <div class="file is-boxed is-fullwidth">
+          <label class="file-label">
+            <input class="file-input" type="file" multiple="multiple" />
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="ri-upload-line"></i>
+              </span>
+              <span class="file-icon"> Naloži datoteke </span>
+            </span>
+          </label>
+        </div>
+
+        <h3 class="title is-4">Izbrane datoteke</h3>
+        <div class="table-container">
+          <table class="table is-fullwidth is-hoverable">
+            <thead>
+              <tr>
+                <th>Vhodna datoteka</th>
+                <th>Izhodna datoteka</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>vhod01.txt</td>
+                <td>izhod01.txt</td>
+                <td>pripravljeno za prenos</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>vhod02.txt</td>
+                <td>izhod02.txt</td>
+                <td>v pregledu</td>
+                <td></td>
+              </tr>
+              <tr class="has-background-success-light">
+                <td>vhod03.txt</td>
+                <td>izhod03.txt</td>
+                <td class="has-text-success">testirano OK (oddaja uspešna)</td>
+                <td class="is-narrow">
+                  <div class="columns">
+                    <div class="column is-narrow">
+                      <a class="button is-info is-small is-outlined">
+                        <i class="ri-eye-line"></i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr class="has-background-danger-light">
+                <td>vhod04.txt</td>
+                <td>izhod04.txt</td>
+                <td class="has-text-danger">
+                  testirano NOK (oddaja neuspešna)
+                </td>
+                <td class="is-narrow">
+                  <div class="columns">
+                    <div class="column is-narrow">
+                      <a class="button is-info is-small is-outlined">
+                        <i class="ri-eye-line"></i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr class="has-background-warning-light">
+                <td>vhod05.txt</td>
+                <td>izhod05.txt</td>
+                <td class="has-text-warning">
+                  compile error (oddaja neuspešna)
+                </td>
+                <td class="is-narrow">
+                  <div class="columns">
+                    <div class="column is-narrow">
+                      <a class="button is-info is-small is-outlined">
+                        <i class="ri-eye-line"></i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="columns">
+          <div class="column">
+            <label class="checkbox is-success">
+              <input type="checkbox" />
+              Potrjujem, da je oddaja moje osebno delo.
+            </label>
+          </div>
+          <div class="column is-narrow">
+            <button class="button is-primary">Oddaj</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>

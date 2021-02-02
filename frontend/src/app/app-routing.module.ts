@@ -5,6 +5,8 @@ import { ClassAddComponent } from './components/class/class-add/class-add.compon
 import { ClassComponent } from './components/class/class.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FirstScreenComponent } from './components/first-screen/first-screen.component';
+import { SubmissionAddComponent } from './components/submissions/submission-add/submission-add.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 const routes: Routes = [
   {
@@ -38,6 +40,10 @@ const routes: Routes = [
   {
     path: 'user/:userId/profile',
     component: UserProfileComponent
+  },
+  {
+    path: 'course/:courseId/assignment/:assignmentId/submission/new',
+    component: SubmissionAddComponent
   }
 ];
 

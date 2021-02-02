@@ -1,1 +1,114 @@
-<p>user-profile works!</p>
+<div style="min-height: 90vh">
+  <app-navbar></app-navbar>
+  <div class="columns">
+    <app-sidemenu style="min-height: 100%"></app-sidemenu>
+    <div class="column">
+      <div class="box">
+        <h2 class="title is-2">
+          {{ user | userToString }}
+        </h2>
+        <h3 class="subtitle is-3">
+          {{ user | userTypeToString }}
+        </h3>
+      </div>
+      <div class="box">
+        <h4 class="title is-3">Podatki o uporabniku</h4>
+        <div class="columns">
+          <div class="field column">
+            <label class="label">Ime</label>
+            <div class="control">
+              <input
+                [(ngModel)]="user.name"
+                class="input"
+                type="text"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="field column">
+            <label class="label">Priimek</label>
+            <div class="control">
+              <input
+                [(ngModel)]="user.surname"
+                class="input"
+                type="text"
+                disabled
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Epošta</label>
+          <div class="control">
+            <input
+              [(ngModel)]="user.email"
+              class="input"
+              type="text"
+              disabled
+            />
+          </div>
+        </div>
+
+        <div class="field" *ngIf="user.studentNumber">
+          <label class="label">Vpisna številka</label>
+          <div class="control">
+            <input
+              [(ngModel)]="user.studentNumber"
+              class="input"
+              type="text"
+              disabled
+            />
+          </div>
+        </div>
+
+        <div class="columns">
+          <div class="column is-narrow">
+            <button class="button is-outlined is-warning has-icons-left">
+              <span class="is-small icon">
+                <i class="ri-lock-line"></i>
+              </span>
+              <span>
+                Spremeni geslo
+              </span>
+            </button>
+          </div>
+          <div class="column is-narrow">
+            <button class="button is-outlined is-danger has-icons-left">
+              <span class="is-small icon is-left">
+                <i class="ri-database-2-line"></i>
+              </span>
+              <span class="is-text">
+              Zahtevaj spremembo podatkov
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h3 class="title is-3">
+          Moji predmeti
+        </h3>
+      </div>
+
+      <div class="box">
+        <h3 class="title is-3">
+          Kreirani predmeti
+        </h3>
+      </div>
+
+      <div class="box">
+        <h3 class="title is-3">
+          Moje oddaje
+        </h3>
+      </div>
+
+    </div>
+  </div>
+  <footer class="footer" style="height: 5vh">
+    <div class="content has-text-centered">
+      <p>2021</p>
+    </div>
+  </footer>
+</div>

@@ -23,6 +23,9 @@ import { UserToStringPipe } from './pipes/user-pipes/user-to-string.pipe';
 import { AssignmentStatusPipe } from './pipes/assignment-status/assignment-status.pipe';
 import { AssignmentLimitSubmissionsPipe } from './pipes/assignment-limit-submissions/assignment-limit-submissions.pipe';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { UserTypeToStringPipe } from './pipes/user-pipes/user-type-to-string.pipe';
+import { SubmissionAddComponent } from './components/submissions/submission-add/submission-add.component';
+import { SubmissionViewComponent } from './components/submissions/submission-view/submission-view.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +49,9 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     AssignmentStatusPipe,
     AssignmentLimitSubmissionsPipe,
     UserProfileComponent,
+    UserTypeToStringPipe,
+    SubmissionAddComponent,
+    SubmissionViewComponent,
   ],
   imports: [
     BrowserModule,
