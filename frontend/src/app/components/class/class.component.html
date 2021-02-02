@@ -131,6 +131,7 @@
           </div>
           <div *ngFor="let element of course?.assignments">
             <app-assignment
+              *ngIf="element.visible || userCanEdit"
               [canEdit]="userCanEdit"
               [assignment]="element"
               [courseId]="course.courseId"

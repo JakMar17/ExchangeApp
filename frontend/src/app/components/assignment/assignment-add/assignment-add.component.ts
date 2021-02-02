@@ -82,16 +82,24 @@ export class AssignmentAddComponent implements OnInit {
         .saveAssignment(this.courseId, this.assignment)
         .subscribe((data) => {
           alert('Naloga je shranjena (' + data.assignmentId + ')');
-          this.router.navigate(['/course/' + this.courseId]);
+          this.navigateBackToCourse();
         });
     }
   }
 
-  public exitWithoutSave(): void {}
+  public exitWithoutSave(): void {
+    this.navigateBackToCourse();
+  }
 
-  public archiveAssignment(): void {}
+  public archiveAssignment(): void {
+    this.assignment.status = AssignmentStatus.ARCHIVED;
+    this.saveAssignment();
+  }
 
-  public deleteAssignment(): void {}
+  public deleteAssignment(): void {
+    this.assignment.status = AssignmentStatus.DELETED;
+    this.saveAssignment();
+  }
 
   private checkInputs(): string | null {
     if (this.assignment.title.length == 0)
@@ -121,5 +129,9 @@ export class AssignmentAddComponent implements OnInit {
   public onEndDateInputChange($event: any): void {
     const newDate = new Date($event);
     if (!isNaN(newDate.getTime())) this.assignment.endDate = newDate;
+  }
+
+  private navigateBackToCourse(): void {
+    this.router.navigate(['/course/' + this.courseId]);
   }
 }

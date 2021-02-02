@@ -4,23 +4,29 @@
       <i class="ri-pencil-line"></i>
     </button>
   </div>
-  <div *ngIf="canEdit" class="column is-narrow">
-    <button class="button is-outlined is-info is-small">
+  <div *ngIf="canEdit && !assignment.visible" class="column is-narrow">
+    <button
+      class="button is-outlined is-info is-small"
+      (click)="onSetVisibilityClick(true)"
+    >
       <i class="ri-eye-line"></i>
     </button>
   </div>
-  <div *ngIf="canEdit" class="column is-narrow">
-    <button class="button is-outlined is-info is-small">
+  <div *ngIf="canEdit && assignment.visible" class="column is-narrow">
+    <button
+      class="button is-outlined is-info is-small"
+      (click)="onSetVisibilityClick(false)"
+    >
       <i class="ri-eye-off-line"></i>
     </button>
   </div>
-  <div *ngIf="canEdit" class="column is-narrow">
-    <button class="button is-outlined is-danger is-small">
-      <i class="ri-delete-bin-7-line"></i>
-    </button>
-  </div>
   <div class="column">
-    <h1 class="title">{{ assignment.title }}</h1>
+    <h1 class="title">
+      {{ assignment.title }} <span *ngIf="!assignment.visible">[SKRITO]</span>
+      <span *ngIf="assignment.status == assignmentStatusEnum.ARCHIVED"
+        >[ARHIVIRANO]</span
+      >
+    </h1>
   </div>
 </div>
 <p>{{ assignment.description }}</p>
@@ -120,10 +126,10 @@
   </table>
 </div>
 <div class="columns">
-  <div class="column is-narrow">
+  <div class="column is-narrow" *ngIf="showAddSubmissionButton()">
     <button class="button is-primary">Oddaj testni primer</button>
   </div>
-  <div class="column is-narrow">
+  <div class="column is-narrow" *ngIf="showDownloadMySubmissionButton()">
     <button class="button is-success is-outlined">Prenesi vse oddane</button>
   </div>
 </div>
@@ -179,12 +185,12 @@
   </table>
 </div>
 <div class="columns">
-  <div class="column is-narrow">
+  <div class="column is-narrow" *ngIf="showBuySubmissionButton()">
     <button class="button is-primary" (click)="showBuyingBox = !showBuyingBox">
       Kupi testne primere
     </button>
   </div>
-  <div class="column is-narrow">
+  <div class="column is-narrow" *ngIf="showDownloadBoughtSubmissionButton()">
     <button class="button is-success is-outlined">Prenesi vse kupljene</button>
   </div>
 </div>
