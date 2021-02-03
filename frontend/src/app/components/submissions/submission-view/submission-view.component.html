@@ -1,0 +1,145 @@
+<div style="min-height: 90vh">
+  <app-navbar></app-navbar>
+  <div class="columns">
+    <app-sidemenu style="min-height: 100%"></app-sidemenu>
+    <div class="column">
+      <div class="box">
+        <h1 class="title is-2">Pregled oddaje 4712</h1>
+        <div class="columns">
+          <div class="column is-narrow tags has-addons">
+            <span class="tag">Test</span>
+            <span class="tag is-success">OK</span>
+          </div>
+          <div class="column is-narrow tags has-addons">
+            <span class="tag">Plagiat</span>
+            <span class="tag is-warning">opozorilo</span>
+          </div>
+          <div class="column is-narrow tags has-addons">
+            <span class="tag">Status</span>
+            <span class="tag is-danger">zavrnjeno</span>
+          </div>
+        </div>
+        <p>Datum oddaje: 21.10.2021</p>
+      </div>
+
+      <div class="box">
+        <div class="columns">
+          <div class="column">
+            <h3 class="title is-4">Vhodna datoteka</h3>
+            <pre style="margin: 0; padding: 0">
+              <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="code"></code>
+            </pre>
+          </div>
+          <div class="column">
+            <h3 class="title is-4">Izhodna datoteka</h3>
+            <div id="container" style="height: 100%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="columns">
+          <div class="column">
+            <h3 class="title is-4">Test pravilnost</h3>
+          </div>
+          <div class="column is-narrow">
+            <span class="tag is-danger">NOK</span>
+          </div>
+        </div>
+
+        <h3 class="subtitle is-5">Pričakovan izhod</h3>
+        <pre style="margin: 0; padding: 0" class="container">
+          <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="code"></code>
+        </pre>
+      </div>
+
+      <div class="box">
+        <div class="columns">
+          <div class="column">
+            <h3 class="title is-4">Test plagiatorstva</h3>
+          </div>
+          <div class="column is-narrow">
+            <span class="tag is-warning">Opozorilo</span>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="table table is-fullwidth table is-hoverable">
+            <thead>
+              <tr>
+                <th>Oznaka oddaje</th>
+                <th>Odstotek podobnosti</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="has-background-danger-light">
+                <td>3641</td>
+                <td>96</td>
+                <td class="is-narrow">
+                  <div class="columns">
+                    <div class="column is-narrow">
+                      <a class="button is-info is-small is-outlined">
+                        <i class="ri-eye-line"></i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr class="has-background-warning-light">
+                <td>6451</td>
+                <td>64</td>
+                <td class="is-narrow">
+                  <div class="columns">
+                    <div class="column is-narrow">
+                      <a class="button is-info is-small is-outlined">
+                        <i class="ri-eye-line"></i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>36</td>
+                <td>16</td>
+                <td class="is-narrow">
+                  <div class="columns">
+                    <div class="column is-narrow">
+                      <a class="button is-info is-small is-outlined">
+                        <i class="ri-eye-line"></i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="columns">
+          <div class="column">
+            <button class="button is-success has-icons-left is-fullwidth">
+              <span class="icon is-small">
+                <i class="ri-save-line"></i>
+              </span>
+              <span> Potrdi oddajo </span>
+            </button>
+          </div>
+          <div class="column">
+            <button
+              class="button is-danger is-outlined has-icons-left is-fullwidth"
+            >
+              <span class="icon is-small">
+                <i class="ri-delete-bin-7-line"></i>
+              </span>
+              <span> Zavrni kot plagiat </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-footer></app-footer>
+  </div>
+</div>
