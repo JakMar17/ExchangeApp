@@ -26,6 +26,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { UserTypeToStringPipe } from './pipes/user-pipes/user-type-to-string.pipe';
 import { SubmissionAddComponent } from './components/submissions/submission-add/submission-add.component';
 import { SubmissionViewComponent } from './components/submissions/submission-view/submission-view.component';
+import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 
 @NgModule({
   declarations: [
@@ -53,12 +54,15 @@ import { SubmissionViewComponent } from './components/submissions/submission-vie
     SubmissionAddComponent,
     SubmissionViewComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule
+  imports: [BrowserModule, AppRoutingModule, FormsModule, HighlightModule],
+  providers: [
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        fullLibraryLoader: () => import('highlight.js'),
+      },
+    },
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

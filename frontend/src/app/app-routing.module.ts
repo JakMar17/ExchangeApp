@@ -6,6 +6,7 @@ import { ClassComponent } from './components/class/class.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FirstScreenComponent } from './components/first-screen/first-screen.component';
 import { SubmissionAddComponent } from './components/submissions/submission-add/submission-add.component';
+import { SubmissionViewComponent } from './components/submissions/submission-view/submission-view.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 const routes: Routes = [
@@ -44,6 +45,10 @@ const routes: Routes = [
   {
     path: 'course/:courseId/assignment/:assignmentId/submission/new',
     component: SubmissionAddComponent
+  },
+  {
+    path: 'course/:courseId/assignment/:assignmentId/submission/:submissionId',
+    component: SubmissionViewComponent
   }
 ];
 
