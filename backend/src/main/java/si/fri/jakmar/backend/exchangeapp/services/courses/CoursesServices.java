@@ -57,4 +57,28 @@ public class CoursesServices {
         else
             return null;
     }
+
+    public CourseBasicDTO getCourseBasicData(Integer courseId)  {
+        var courseOptional = courseRepository.findById(courseId);
+        if(courseOptional.isEmpty())
+            return null;
+
+        var courseEntity = courseOptional.get();
+        var dto = coursesMappers.castCourseEntityToCourseBasicDTO(courseEntity);
+        return dto;
+    }
+
+    public CourseDTO checkPasswordAndGetCourse(Integer courseId, String userPersonalNumber, String password) throws DataNotFoundException, AccessUnauthorizedException, AccessForbiddenException {
+        var courseOptional = courseRepository.findById(courseId);
+        if(courseOptional.isEmpty())
+            throw new DataNotFoundException();
+
+        var course = courseOptional.get();
+        if(course.getAccessPassword().getPassword().equals(password)) {
+            userAccessServices.signUserInCourse(userRepository.findUsersByPersonalNumber(userPersonalNumber).get(0), course);
+            return this.getCourseData(courseId, userPersonalNumber);
+        } else {
+            throw new AccessUnauthorizedException("Geslo ni pravilno");
+        }
+    }
 }

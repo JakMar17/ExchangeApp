@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Course, CourseAccess } from 'src/app/models/class-model';
@@ -23,6 +24,9 @@ export class ClassComponent implements OnInit {
   public userCanView: boolean = false;
   public userCanEdit: boolean = false;
 
+  public courseVisibility: CourseVisibilityToUser =
+    CourseVisibilityToUser.LOADING;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -37,8 +41,8 @@ export class ClassComponent implements OnInit {
     this.getCourseData();
   }
 
-  public get courseAccess(): typeof CourseAccess {
-    return CourseAccess;
+  public get courseAccess(): typeof CourseVisibilityToUser {
+    return CourseVisibilityToUser;
   }
 
   /**
@@ -56,9 +60,19 @@ export class ClassComponent implements OnInit {
       .subscribe(
         (data) => {
           this.course = data;
-          this.setAccessRights();
+          this.course.notifications = this.course.notifications ?? [];
+          this.courseVisibility = CourseVisibilityToUser.VISIBLE;
+          //this.setAccessRights();
         },
-        () => (this.showClassPasswordError = true)
+        (err: HttpErrorResponse) => {
+
+          switch (err.status) {
+            case 401:
+              this.showClassPasswordError = true;
+              this.course = err.error;
+              break;
+          }
+        }
       );
   }
 
@@ -66,11 +80,27 @@ export class ClassComponent implements OnInit {
     this.activatedRoute.params.subscribe((params: Params) => {
       const courseId = params.classID;
       if (courseId != null)
-        this.coursesService.getCourse(courseId).subscribe((data) => {
-          this.course = data;
-          if (this.course.notifications == null) this.course.notifications = [];
-          this.setAccessRights();
-        });
+        this.coursesService.getCourse(courseId).subscribe(
+          (data) => {
+            this.course = data;
+            this.courseVisibility = CourseVisibilityToUser.VISIBLE;
+            if (this.course.notifications == null)
+              this.course.notifications = [];
+            //this.setAccessRights();
+          },
+          (err: HttpErrorResponse) => {
+            console.error(err);
+            this.course = err.error;
+            switch (err.status) {
+              case 401:
+                this.courseVisibility = CourseVisibilityToUser.PASSWORD;
+                break;
+              case 403:
+                this.courseVisibility = CourseVisibilityToUser.BLOCKED;
+                break;
+            }
+          }
+        );
     });
   }
 
@@ -92,4 +122,11 @@ export class ClassComponent implements OnInit {
       '/course/' + this.course.courseId + '/assignment/add',
     ]);
   }
+}
+
+export enum CourseVisibilityToUser {
+  LOADING,
+  VISIBLE,
+  BLOCKED,
+  PASSWORD,
 }

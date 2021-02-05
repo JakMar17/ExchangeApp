@@ -22,19 +22,16 @@
           skrbnik: {{ course?.guardianMain | userToString }}
         </h2>
         <p>
-          Cilj predmeta je seznaniti študente s ključnimi koncepti
-          proceduralnega in objektno usmerjenega programiranja v enem izmed
-          splošno namenskih programskih jezikov tretje generacije in jih
-          usposobiti za samostojen razvoj enostavnih računalniških programov.
+          {{ course.description }}
         </p>
       </div>
 
+      <app-loading style="height: 100vh;"
+        *ngIf="courseVisibility == courseAccess.LOADING"
+      ></app-loading>
+
       <!-- user does not have rights to see class, class requires password -->
-      <div
-        *ngIf="
-          course?.accessLevel == courseAccess.SECURED_PASSWORD && !userCanView
-        "
-      >
+      <div *ngIf="courseVisibility == courseAccess.PASSWORD">
         <div class="box">
           <h1 class="title is-3">Vstop v predmet</h1>
           <p>Predmet do katerega želite dostopate je omejen z geslo.</p>
@@ -69,11 +66,7 @@
       </div>
 
       <!-- user does not have rights to see class, class requires password -->
-      <div
-        *ngIf="
-          course?.accessLevel == courseAccess.SECURED_WHITELIST && !userCanView
-        "
-      >
+      <div *ngIf="courseVisibility == courseAccess.BLOCKED">
         <div class="box">
           <h1 class="title is-3">Vstop v predmet</h1>
           <p class="has-text-danger">
@@ -87,7 +80,7 @@
       </div>
 
       <!-- user does not have rights to see class, probably is blacklisted -->
-      <div
+      <!-- <div
         *ngIf="
           course?.accessLevel != courseAccess.SECURED_PASSWORD && !userCanView
         "
@@ -98,10 +91,10 @@
             Predmet do katerega želite dostopate je omejen.
           </p>
         </div>
-      </div>
+      </div> -->
 
       <!-- user has rights to view or edit class -->
-      <div *ngIf="userCanView">
+      <div *ngIf="courseVisibility == courseAccess.VISIBLE">
         <app-notifications
           [boxTitle]="'Obvestila izvajalca'"
           [hasRightToEdit]="userCanEdit"

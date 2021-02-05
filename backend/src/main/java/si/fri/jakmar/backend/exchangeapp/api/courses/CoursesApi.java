@@ -42,7 +42,7 @@ public class CoursesApi {
     }
 
     @GetMapping("course")
-    public ResponseEntity<Object> getCourse(@RequestParam Integer courseId, @RequestParam String personalNumber) {
+    public ResponseEntity<Object> getCourse(@RequestParam Integer courseId, @RequestHeader(name = "Personal-Number") String personalNumber) {
         try {
             return ResponseEntity.ok(coursesServices.getCourseData(courseId, personalNumber));
         } catch (DataNotFoundException e) {
@@ -50,10 +50,26 @@ public class CoursesApi {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e));
         } catch (AccessForbiddenException e) {
             logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionWrapper(e));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(coursesServices.getCourseBasicData(courseId));
         } catch (AccessUnauthorizedException e) {
             logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionWrapper(e));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(coursesServices.getCourseBasicData(courseId));
+        }
+    }
+
+    @GetMapping("course/access")
+    public ResponseEntity<Object> checkPasswordAndGetCourse(@RequestParam Integer courseId, @RequestHeader(name = "Personal-Number") String personalNumber, @RequestHeader(name = "Course-Password") String coursePassword) {
+        try {
+            return ResponseEntity.ok(coursesServices.checkPasswordAndGetCourse(courseId, personalNumber, coursePassword));
+        } catch (DataNotFoundException e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e));
+        } catch (AccessForbiddenException e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(coursesServices.getCourseBasicData(courseId));
+        } catch (AccessUnauthorizedException e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(coursesServices.getCourseBasicData(courseId));
         }
     }
 }

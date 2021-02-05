@@ -39,7 +39,7 @@ public class UserEntity {
     private List<CourseEntity> createdCourses;
 
     @JsonIgnoreProperties({"guardianMain", "usersSignedInCourse"})
-    @ManyToMany(mappedBy = "usersSignedInCourse")
+    @ManyToMany(mappedBy = "usersSignedInCourse", cascade = CascadeType.ALL)
     private List<CourseEntity> usersCourses;
 
     @JsonIgnoreProperties({"guardianMain", "usersSignedInCourse"})

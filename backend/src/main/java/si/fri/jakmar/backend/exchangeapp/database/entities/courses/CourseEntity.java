@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "course")
@@ -42,7 +43,7 @@ public class CourseEntity {
     private UserEntity guardianMain;
 
     @JsonIgnoreProperties({"createdCourses", "usersCourses"})
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "STUDENT_SIGNED_IN", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<UserEntity> usersSignedInCourse;
 
@@ -64,6 +65,19 @@ public class CourseEntity {
     @JsonIgnoreProperties({"course"})
     @OneToMany(mappedBy = "course")
     private List<AssignmentEntity> assignments;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CourseEntity that = (CourseEntity) o;
+        return Objects.equals(courseId, that.courseId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(courseId);
+    }
 
     public Integer getCourseId() {
         return courseId;
