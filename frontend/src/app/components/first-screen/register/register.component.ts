@@ -1,20 +1,32 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { LoginRegisterApiService } from 'src/app/api/login-register-api/login-register-api.service';
+import { RegisterRequestModel } from 'src/app/api/login-register-api/models/register-request-model';
+import { User } from 'src/app/models/user-model';
 import { LoginPanelEnum } from '../models/login-panel-enum';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-
   @Input() typeOfRegistration: LoginPanelEnum | null = null;
-  @Output() backButtonEvent: EventEmitter<LoginPanelEnum> = new EventEmitter<LoginPanelEnum>();
+  @Output()
+  backButtonEvent: EventEmitter<LoginPanelEnum> = new EventEmitter<LoginPanelEnum>();
   public emailDomain: string | null = null;
 
   public typeOfOtherRegistration: LoginPanelEnum | null = null;
 
-  constructor() { }
+  public errorMessage: string | null = null;
+  public nameInput: string = '';
+  public surnameInput: string = '';
+  public emailWithoutDomainInput: string = '';
+  public passwordInput: string = '';
+  public passwordRepeatInput: string = '';
+  public studentNumberInput: string = '';
+  public description: string = '';
+
+  constructor(private loginRegisterApi: LoginRegisterApiService) {}
 
   ngOnInit(): void {
     this.selectRegistrationFormOnInit();
@@ -23,8 +35,8 @@ export class RegisterComponent implements OnInit {
   /**
    * create view depending on type of registration
    */
-  private selectRegistrationFormOnInit() {
-    switch(this.typeOfRegistration) {
+  private selectRegistrationFormOnInit(): void {
+    switch (this.typeOfRegistration) {
       case LoginPanelEnum.REGISTER_STUDENT:
         this.emailDomain = '@student.uni-lj.si';
         break;
@@ -58,4 +70,61 @@ export class RegisterComponent implements OnInit {
     this.typeOfOtherRegistration = switchTo;
   }
 
+  public onRegisterButtonPressed(): void {
+    if (!this.checkInputedData()) return;
+    const registerModel: RegisterRequestModel = {
+      email:
+        this.typeOfRegistration != LoginPanelEnum.REGISTER_OTHER
+          ? this.emailWithoutDomainInput + this.emailDomain
+          : this.emailWithoutDomainInput,
+      name: this.nameInput,
+      surname: this.surnameInput,
+      password: this.passwordInput,
+      studentNumber:
+        this.studentNumberInput.length == 8 ? this.studentNumberInput : null,
+    };
+
+    this.loginRegisterApi.register(registerModel).subscribe(
+      (data) => {
+        alert(
+          'Registracija je bila uspešna, na vnešeni epoštni naslov je bil poslan potrditveni email'
+        );
+        this.onBackButtonClick();
+      },
+      (err) => (this.errorMessage = err.error.message)
+    );
+  }
+
+  private checkInputedData(): boolean {
+    this.errorMessage = null;
+
+    console.log(this.nameInput.length);
+
+    if (this.nameInput.length == 0)
+      this.errorMessage = 'Ime mora biti izpoljeno';
+    else if (this.surnameInput.length == 0)
+      this.errorMessage = 'Priimek mora biti izpolnjen';
+    else if (this.emailWithoutDomainInput.length == 0)
+      this.errorMessage = 'Epošta mora biti izpolnjena';
+    else if (
+      this.passwordInput.length == 0 ||
+      this.passwordRepeatInput.length == 0
+    )
+      this.errorMessage = 'Geslo ne sme biti prazno';
+    else if (this.passwordRepeatInput != this.passwordInput)
+      this.errorMessage = 'Gesli se ne ujemata';
+    else if (
+      this.typeOfRegistration == LoginPanelEnum.REGISTER_OTHER &&
+      this.typeOfOtherRegistration == LoginPanelEnum.REGISTER_STUDENT &&
+      this.studentNumberInput.length != 8
+    )
+      this.errorMessage = 'Vpisna številka mora biti izpolnjena';
+    else if (
+      this.typeOfRegistration == LoginPanelEnum.REGISTER_STUDENT &&
+      this.studentNumberInput.length != 8
+    )
+      this.errorMessage = 'Vpisna številka mora biti izpolnjena';
+
+    return this.errorMessage == null;
+  }
 }

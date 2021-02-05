@@ -23,6 +23,10 @@
   </div>
 </div>
 
+<div class="notification is-danger" *ngIf="errorMessage != null">
+  {{ errorMessage }}
+</div>
+
 <div
   class="tabs is-centered"
   *ngIf="typeOfRegistration == loginPanelEnum.REGISTER_OTHER"
@@ -57,7 +61,7 @@
   <div class="columns is-gapless">
     <div class="column">
       <p class="control has-icons-left has-icons-right">
-        <input class="input" type="text" placeholder="Ime" />
+        <input class="input" type="text" placeholder="Ime" [(ngModel)] = "nameInput"/>
         <span class="icon is-small is-left">
           <i class="ri-user-line"></i>
         </span>
@@ -65,7 +69,7 @@
     </div>
     <div class="column">
       <p class="control has-icons-left has-icons-right">
-        <input class="input" type="text" placeholder="Priimek" />
+        <input class="input" type="text" placeholder="Priimek" [(ngModel)]="surnameInput" />
         <span class="icon is-small is-left">
           <i class="ri-user-line"></i>
         </span>
@@ -78,14 +82,14 @@
   *ngIf="typeOfRegistration != loginPanelEnum.REGISTER_OTHER"
 >
   <p class="control">
-    <input class="input" type="text" placeholder="Epošta" />
+    <input class="input" type="text" placeholder="Epošta" [(ngModel)]="emailWithoutDomainInput" />
   </p>
   <p class="control">
     <a class="button is-static"> {{ emailDomain }} </a>
   </p>
 </div>
 <div class="field" *ngIf="typeOfRegistration == loginPanelEnum.REGISTER_OTHER">
-  <input class="input" type="text" placeholder="Epošta" />
+  <input class="input" type="text" placeholder="Epošta" [(ngModel)]="emailWithoutDomainInput" />
 </div>
 <div
   class="field"
@@ -96,7 +100,7 @@
   "
 >
   <p class="control has-icons-left">
-    <input class="input" type="text" placeholder="Vpisna številka" />
+    <input class="input" type="text" placeholder="Vpisna številka" [(ngModel)]="studentNumberInput" />
     <span class="icon is-small is-left">
       <i class="ri-file-list-3-line"></i>
     </span>
@@ -104,7 +108,7 @@
 </div>
 <div class="field">
   <p class="control has-icons-left">
-    <input class="input" type="password" placeholder="Geslo" />
+    <input class="input" type="password" placeholder="Geslo" [(ngModel)]="passwordInput" />
     <span class="icon is-small is-left">
       <i class="ri-key-line"></i>
     </span>
@@ -112,14 +116,18 @@
 </div>
 <div class="field">
   <p class="control has-icons-left">
-    <input class="input" type="password" placeholder="Ponovi geslo" />
+    <input class="input" type="password" placeholder="Ponovi geslo" [(ngModel)]="passwordRepeatInput" />
     <span class="icon is-small is-left">
       <i class="ri-key-line"></i>
     </span>
   </p>
 </div>
 <textarea
+  *ngIf="typeOfRegistration == loginPanelEnum.REGISTER_OTHER"
   class="textarea"
+  [(ngModel)]="description"
   placeholder="Razlog za neuporabo univerzitetnega emaila (pomembno pri obravnavi vloge)"
 ></textarea>
-<button class="button is-primary">Registracija</button>
+<button class="button is-primary" (click)="onRegisterButtonPressed()">
+  Registracija
+</button>
