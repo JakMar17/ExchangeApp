@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { UserDummyLogin } from 'src/app/aaa_dummy-data/dummy-users';
 import { LoginRegisterApiService } from 'src/app/api/login-register-api/login-register-api.service';
 import { User } from 'src/app/models/user-model';
 
