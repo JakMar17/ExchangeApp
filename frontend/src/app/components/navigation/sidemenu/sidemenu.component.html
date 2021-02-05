@@ -13,12 +13,13 @@
 
       <p *ngIf="user?.myCourses" class="menu-label">Moji predmeti</p>
       <ul *ngIf="user?.myCourses" class="menu-list">
-        <li *ngFor=""><a>Programiranje 1 (UNI)</a></li>
-        <li><a>Programiranje 1 (UNI)</a></li>
-        <li><a>Programiranje 1 (UNI)</a></li>
-        <li><a>Programiranje 1 (UNI)</a></li>
+        <li *ngFor="let element of user.myCourses">
+          <a>{{ element.title }}</a>
+        </li>
       </ul>
-      <p *ngIf="showClassManagmentFields" class="menu-label">Upravljanje s predmeti</p>
+      <p *ngIf="showClassManagmentFields" class="menu-label">
+        Upravljanje s predmeti
+      </p>
       <ul *ngIf="showClassManagmentFields" class="menu-list">
         <li>
           <a (click)="onAddNewClassButtonClick()"
