@@ -52,8 +52,6 @@ export class AssignmentComponent implements OnInit {
   }
 
   public showAddSubmissionButton(): boolean {
-    console.log(this.isActive());
-
     if (this.isActive())
       if (
         this.assignment.noOfSubmisions < this.assignment.maxSubmissionsTotal ||

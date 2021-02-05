@@ -47,7 +47,6 @@ export class ClassComponent implements OnInit {
    */
   public onPasswordInputClick(): void {
     if (this.user == null) return;
-    console.log(this.classPasswordInput);
     this.coursesService
       .checkCoursePassword(
         this.course?.courseId ?? -1,
@@ -76,7 +75,6 @@ export class ClassComponent implements OnInit {
   }
 
   private setAccessRights(): void {
-    console.log(this.user, this.course);
     if (this.user != null && this.course != null) {
       this.userCanView = this.accessService.hasAccessToCourse(
         this.user,
@@ -86,8 +84,6 @@ export class ClassComponent implements OnInit {
         this.user,
         this.course
       );
-
-      console.log(this.userCanView);
     }
   }
 

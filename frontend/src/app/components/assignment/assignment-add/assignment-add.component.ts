@@ -50,7 +50,6 @@ export class AssignmentAddComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.assignment);
   }
 
   public changeSubmissionCheck(check: SubmissionCheck): void {
@@ -75,7 +74,6 @@ export class AssignmentAddComponent implements OnInit {
 
   public saveAssignment(): void {
     this.errorMessage = this.checkInputs();
-    console.log(this.assignment);
 
     if (this.errorMessage == null) {
       this.assignmentService

@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserServiceService } from 'src/app/services/user-service/user-service.service';
@@ -11,8 +12,8 @@ import { LoginPanelEnum } from '../models/login-panel-enum';
 export class LoginMenuComponent implements OnInit {
   @Output()
   registerButtonEvent: EventEmitter<LoginPanelEnum> = new EventEmitter<LoginPanelEnum>();
-  public email: string = '';
-  public password: string = '';
+  public email: string = 'karleto.spacapan';
+  public password: string = 'geslo';
 
   public userLoginError: string | null = null;
 
@@ -35,7 +36,6 @@ export class LoginMenuComponent implements OnInit {
    * @param switchTo defines which type of template should be shown (student, proffesor or other)
    */
   public onRegisterButtonClick(switchTo: LoginPanelEnum): void {
-    console.log(switchTo);
     this.registerButtonEvent.emit(switchTo);
   }
 
@@ -50,7 +50,10 @@ export class LoginMenuComponent implements OnInit {
         this.userService.userLoggedIn = user;
         this.router.navigate(['/dashboard']);
       },
-      (err) => (this.userLoginError = 'Epošta ali geslo nista pravilna')
+      (err: HttpErrorResponse) => {
+        (this.userLoginError = err.error.message);
+        console.error(err);
+      }
     );
   }
 }

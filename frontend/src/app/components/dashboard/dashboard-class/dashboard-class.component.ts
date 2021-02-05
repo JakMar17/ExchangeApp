@@ -9,13 +9,12 @@ import { Course } from 'src/app/models/class-model';
 })
 export class DashboardClassComponent implements OnInit {
 
-  @Input() course: Course | null = null;
+  @Input() course: any | null = null;
 
   constructor(private router: Router) {
   }
 
   ngOnInit(): void {
-
   }
 
   /**

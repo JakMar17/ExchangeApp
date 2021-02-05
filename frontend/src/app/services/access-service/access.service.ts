@@ -9,15 +9,15 @@ export class AccessService {
   constructor() {}
 
   public adminAccess(user: User): boolean {
-    return user.globalUserType === UserType.ADMIN;
+    return user.userType === 'ADMIN';
   }
 
   public minimumGlobalProffesorAccess(user: User): boolean {
-    return user.globalUserType === UserType.PROFFESOR || this.adminAccess(user);
+    return user.userType === 'PROFESSOR' || this.adminAccess(user);
   }
 
   public hasEditRightsOnCourse(user: User, course: Course): boolean {
-    if (user.globalUserType == UserType.ADMIN) return true;
+    if (user.userType == 'ADMIN') return true;
     if (user.email == course.guardianMain.email) return true;
     if (course.guardians?.some((e) => e.email == user.email)) return true;
 

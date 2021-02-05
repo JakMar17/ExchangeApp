@@ -8,15 +8,13 @@ export class UserTypeToStringPipe implements PipeTransform {
   transform(user: User | null): string {
     if (user == null) return '';
 
-    switch (user.globalUserType) {
-      case UserType.ADMIN:
+    switch (user.userType) {
+      case 'ADMIN':
         return 'administrator sistema';
-      case UserType.PROFFESOR:
+      case 'PROFESSOR':
         return 'pedagoški delavec';
-      case UserType.STUDENT:
-        return 'študent';
       default:
-        return '';
+        return 'študent';
     }
   }
 }

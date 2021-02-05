@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { UserDummyLogin } from 'src/app/aaa_dummy-data/dummy-users';
+import { LoginRegisterApiService } from 'src/app/api/login-register-api/login-register-api.service';
 import { User } from 'src/app/models/user-model';
 
 @Injectable({
@@ -9,15 +10,10 @@ import { User } from 'src/app/models/user-model';
 export class UserServiceService {
   public userLoggedIn: User | null = null;
 
-  constructor() {
-    // TODO odstrani kasneje
-    this.loginUserIn('karleto', 'karleto').subscribe(
-      (user) => (this.userLoggedIn = user)
-    );
+  constructor(private loginRegisterApi: LoginRegisterApiService) {
   }
 
   public loginUserIn(email: string, password: string): Observable<User> {
-    const userDummy: UserDummyLogin = new UserDummyLogin();
-    return userDummy.getUser(email, password);
+    return this.loginRegisterApi.login({ email, password });
   }
 }

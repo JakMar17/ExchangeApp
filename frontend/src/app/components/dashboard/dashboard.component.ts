@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
     private coursesService: CoursesService
   ) {
     this.user = userService.userLoggedIn;
-    this.showMyCourses = (this.user?.courses?.length ?? 0) > 0;
+    this.showMyCourses = (this.user?.myCourses?.length ?? 0) > 0;
   }
 
   ngOnInit(): void {
@@ -44,7 +44,6 @@ export class DashboardComponent implements OnInit {
   private getAllCourses(): void {
     this.coursesService.getAllCourses().subscribe((data) => {
       this.courses = data;
-      console.log(data);
     });
   }
 }

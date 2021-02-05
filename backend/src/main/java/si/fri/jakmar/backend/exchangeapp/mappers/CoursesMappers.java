@@ -25,7 +25,7 @@ public class CoursesMappers {
                 courseEntity.getCourseTitle(),
                 courseEntity.getCourseDescription(),
                 courseEntity.getCourseClassroomUrl(),
-                usersMappers.castUserEntityToUserDTO(courseEntity.getGuardianMain())
+                usersMappers.castUserEntityToUserDTO(courseEntity.getGuardianMain(), false)
         );
     }
 
@@ -39,7 +39,7 @@ public class CoursesMappers {
                 courseEntity.getCourseTitle(),
                 courseEntity.getCourseDescription(),
                 courseEntity.getCourseClassroomUrl(),
-                usersMappers.castUserEntityToUserDTO(courseEntity.getGuardianMain()),
+                usersMappers.castUserEntityToUserDTO(courseEntity.getGuardianMain(), false),
                 assignments
         );
     }

@@ -19,11 +19,24 @@ public class UsersMappers {
     @Autowired
     private CoursesMappers coursesMappers;
 
-    public UserDTO castUserEntityToUserDTO(UserEntity userEntity) {
+    public UserDTO castUserEntityToUserDTO(UserEntity userEntity, boolean withCourses) {
         var courses = new ArrayList<CourseBasicDTO>();
-        for(var courseEntity : userEntity.getUsersCourses()) {
-            courseEntity.getGuardianMain().setUsersCourses(null);
-            courses.add(coursesMappers.castCourseEntityToCourseBasicDTO(courseEntity));
+
+        if(withCourses) {
+            for (var courseEntity : userEntity.getUsersCourses()) {
+                courseEntity.getGuardianMain().setUsersCourses(null);
+                courses.add(coursesMappers.castCourseEntityToCourseBasicDTO(courseEntity));
+            }
+
+            for (var course : userEntity.getGuardinasCourses()) {
+                course.getGuardianMain().setUsersCourses(null);
+                courses.add(coursesMappers.castCourseEntityToCourseBasicDTO(course));
+            }
+
+            for (var course : userEntity.getCreatedCourses()) {
+                course.getGuardianMain().setUsersCourses(null);
+                courses.add(coursesMappers.castCourseEntityToCourseBasicDTO(course));
+            }
         }
 
         return new UserDTO(

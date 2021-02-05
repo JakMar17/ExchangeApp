@@ -12,8 +12,8 @@ export interface Course {
   assignments?: Assignment[];
   classroomURL?: string;
 
-  initialCoins: number;
-  accessLevel: CourseAccess;
+  initialCoins?: number;
+  accessLevel?: CourseAccess;
   accessPassword?: string;
 
   studentWhitelist?: User[];

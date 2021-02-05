@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CoursesDammyData } from 'src/app/aaa_dummy-data/dummy-courses';
+import { CourseApiService } from 'src/app/api/course-api/course-api.service';
 import { Course } from 'src/app/models/class-model';
 import { User } from 'src/app/models/user-model';
 
@@ -11,13 +12,12 @@ export class CoursesService {
 
   private dummy: CoursesDammyData;
 
-  constructor() {
+  constructor(private courseApi: CourseApiService) {
     this.dummy = new CoursesDammyData();
   }
 
   public getAllCourses(): Observable<Course[]> {
-    const dummy = new CoursesDammyData();
-    return dummy.getAllCourses();
+    return this.courseApi.getAll();
   }
 
   public getCourse(courseId: number): Observable<Course>{
@@ -26,7 +26,6 @@ export class CoursesService {
   }
 
   public checkCoursePassword(courseId: number, insertedPassword: string, user: User): Observable<Course> {
-    console.log(courseId, insertedPassword, user);
     return this.dummy.checkPassword(courseId, insertedPassword, user);
   }
 }

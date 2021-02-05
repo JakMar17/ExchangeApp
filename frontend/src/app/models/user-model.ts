@@ -5,11 +5,9 @@ export interface User {
   name: string;
   surname: string;
   password?: string;
-  studentNumber?: string;
-
-  courses?: UserCourse[];
-
-  globalUserType: UserType;
+  personalNumber?: string;
+  myCourses?: Course[];
+  userType: string;
 }
 
 export enum UserType {

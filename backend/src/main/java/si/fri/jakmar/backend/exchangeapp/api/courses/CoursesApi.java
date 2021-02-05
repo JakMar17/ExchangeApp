@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("courses/")
+@CrossOrigin("*")
 public class CoursesApi {
 
     @Autowired
