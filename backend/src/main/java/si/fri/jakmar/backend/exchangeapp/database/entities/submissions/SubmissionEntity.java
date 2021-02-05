@@ -6,7 +6,8 @@ import si.fri.jakmar.backend.exchangeapp.database.entities.purchases.PurchaseEnt
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Entity
@@ -23,16 +24,16 @@ public class SubmissionEntity {
     @Column(name = "output_id")
     private String output;
     @Column(name = "submission_created")
-    private Timestamp created = new Timestamp(System.currentTimeMillis());
+    private LocalDateTime created = LocalDateTime.now(ZoneOffset.UTC);
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserEntity authour;
+    private UserEntity author;
 
     @JsonIgnoreProperties({"submissions"})
     @ManyToOne
     @JoinColumn(name = "assignment_id")
-    private AssignmentEntity assignemnt;
+    private AssignmentEntity assignment;
 
     @ManyToOne
     @JoinColumn(name = "submission_status_id")
@@ -66,28 +67,28 @@ public class SubmissionEntity {
         this.output = output;
     }
 
-    public Timestamp getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 
-    public UserEntity getAuthour() {
-        return authour;
+    public UserEntity getAuthor() {
+        return author;
     }
 
-    public void setAuthour(UserEntity authour) {
-        this.authour = authour;
+    public void setAuthor(UserEntity authour) {
+        this.author = authour;
     }
 
-    public AssignmentEntity getAssignemnt() {
-        return assignemnt;
+    public AssignmentEntity getAssignment() {
+        return assignment;
     }
 
-    public void setAssignemnt(AssignmentEntity assignemnt) {
-        this.assignemnt = assignemnt;
+    public void setAssignment(AssignmentEntity assignemnt) {
+        this.assignment = assignemnt;
     }
 
     public SubmissionStatusEntity getStatus() {

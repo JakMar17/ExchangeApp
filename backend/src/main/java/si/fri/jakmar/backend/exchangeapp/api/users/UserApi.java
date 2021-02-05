@@ -27,6 +27,6 @@ public class UserApi {
 
     @GetMapping("user")
     public ResponseEntity<UserEntity> getUserByPersonalNumber(@RequestParam String personalNumber) {
-        return ResponseEntity.ok(userRepository.findUserByPersonalNumber(personalNumber));
+        return ResponseEntity.ok(userRepository.findUsersByPersonalNumber(personalNumber).get(0));
     }
 }

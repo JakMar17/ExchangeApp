@@ -5,7 +5,8 @@ import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.Assignmen
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Entity
@@ -25,7 +26,7 @@ public class CourseEntity {
     @Column(name = "initial_coins")
     private Integer initialCoins = 0;
     @Column(name = "course_created")
-    private Timestamp courseCreated = new Timestamp(System.currentTimeMillis());
+    private LocalDateTime courseCreated = LocalDateTime.now(ZoneOffset.UTC);
 
     @ManyToOne
     @JoinColumn(name = "access_level_id", referencedColumnName = "access_level_id")
@@ -53,7 +54,7 @@ public class CourseEntity {
     @JsonIgnoreProperties({"createdCourses", "usersCourses"})
     @ManyToMany
     @JoinTable(name = "STUDENT_WHITELIST", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<UserEntity> usersWhiteListed;
+    private List<UserEntity> usersWhitelisted;
 
     @JsonIgnoreProperties({"createdCourses", "usersCourses"})
     @ManyToMany
@@ -104,11 +105,11 @@ public class CourseEntity {
         this.initialCoins = initialCoins;
     }
 
-    public Timestamp getCourseCreated() {
+    public LocalDateTime getCourseCreated() {
         return courseCreated;
     }
 
-    public void setCourseCreated(Timestamp courseCreated) {
+    public void setCourseCreated(LocalDateTime courseCreated) {
         this.courseCreated = courseCreated;
     }
 
@@ -152,12 +153,12 @@ public class CourseEntity {
         this.usersBlacklisted = usersBlacklisted;
     }
 
-    public List<UserEntity> getUsersWhiteListed() {
-        return usersWhiteListed;
+    public List<UserEntity> getUsersWhitelisted() {
+        return usersWhitelisted;
     }
 
-    public void setUsersWhiteListed(List<UserEntity> usersWhiteListed) {
-        this.usersWhiteListed = usersWhiteListed;
+    public void setUsersWhitelisted(List<UserEntity> usersWhiteListed) {
+        this.usersWhitelisted = usersWhiteListed;
     }
 
     public List<UserEntity> getUsersGuardians() {
@@ -175,4 +176,5 @@ public class CourseEntity {
     public void setAssignments(List<AssignmentEntity> assignments) {
         this.assignments = assignments;
     }
+
 }

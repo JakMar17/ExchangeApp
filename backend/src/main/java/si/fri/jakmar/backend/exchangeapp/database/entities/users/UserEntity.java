@@ -7,8 +7,10 @@ import si.fri.jakmar.backend.exchangeapp.database.entities.purchases.PurchaseEnt
 import si.fri.jakmar.backend.exchangeapp.database.entities.submissions.SubmissionEntity;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "user")
@@ -26,7 +28,7 @@ public class UserEntity {
     @Column(name = "personal_number")
     private String personalNumber;
     @Column(name = "user_created")
-    private Timestamp userCreated = new Timestamp(System.currentTimeMillis());
+    private LocalDateTime userCreated = LocalDateTime.now(ZoneOffset.UTC);
 
     @ManyToOne
     @JoinColumn(name = "user_type_id")
@@ -63,6 +65,36 @@ public class UserEntity {
     @JsonIgnoreProperties({"userBuying"})
     @OneToMany(mappedBy = "userBuying")
     private List<PurchaseEntity> purchases;
+
+    @ManyToOne
+    @JoinColumn(name = "registration_status_id")
+    private UserRegistrationStage registrationStatus;
+
+    public UserEntity() {
+    }
+
+    public UserEntity(String email, String name, String surname, String password, String personalNumber, UserRegistrationStage registrationStatus, UserTypeEntity userType) {
+        this.email = email;
+        this.name = name;
+        this.surname = surname;
+        this.password = password;
+        this.personalNumber = personalNumber;
+        this.registrationStatus = registrationStatus;
+        this.userType = userType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserEntity that = (UserEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     public Integer getId() {
         return id;
@@ -112,11 +144,11 @@ public class UserEntity {
         this.personalNumber = personalNumber;
     }
 
-    public Timestamp getUserCreated() {
+    public LocalDateTime getUserCreated() {
         return userCreated;
     }
 
-    public void setUserCreated(Timestamp userCreated) {
+    public void setUserCreated(LocalDateTime userCreated) {
         this.userCreated = userCreated;
     }
 
@@ -190,5 +222,13 @@ public class UserEntity {
 
     public void setPurchases(List<PurchaseEntity> purchases) {
         this.purchases = purchases;
+    }
+
+    public UserRegistrationStage getRegistrationStatus() {
+        return registrationStatus;
+    }
+
+    public void setRegistrationStatus(UserRegistrationStage registrationStatus) {
+        this.registrationStatus = registrationStatus;
     }
 }

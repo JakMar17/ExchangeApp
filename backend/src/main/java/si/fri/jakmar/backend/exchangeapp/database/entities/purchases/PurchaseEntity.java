@@ -5,7 +5,8 @@ import si.fri.jakmar.backend.exchangeapp.database.entities.submissions.Submissio
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Entity
 @Table(name = "purchase")
@@ -17,7 +18,7 @@ public class PurchaseEntity {
     private Integer id;
 
     @Column(name = "purchase_date")
-    private Timestamp created = new Timestamp(System.currentTimeMillis());
+    private LocalDateTime created = LocalDateTime.now(ZoneOffset.UTC);
 
     @JsonIgnoreProperties({"purchases"})
     @ManyToOne
@@ -37,11 +38,11 @@ public class PurchaseEntity {
         this.id = id;
     }
 
-    public Timestamp getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 

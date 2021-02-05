@@ -6,7 +6,8 @@ import si.fri.jakmar.backend.exchangeapp.database.entities.submissions.Submissio
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Entity
@@ -22,12 +23,12 @@ public class AssignmentEntity {
     private String title;
     @Column(name = "assignment_classroom_url")
     private String classroomUrl;
-    @Column(name = "assignemnt_description")
+    @Column(name = "assignment_description")
     private String description;
     @Column(name = "start_date")
-    private Timestamp startDate;
-    @Column(name = "start_date")
-    private Timestamp endDate;
+    private LocalDateTime startDate;
+    @Column(name = "end_date")
+    private LocalDateTime endDate;
     @Column(name = "max_submissions_total")
     private Integer maxSubmissionsTotal;
     @Column(name = "max_submissions_student")
@@ -42,14 +43,14 @@ public class AssignmentEntity {
     private Integer outputDataType;
     @Column(name = "submission_notify")
     private Integer submissionNotify;
-    @Column(name = "plagiarsm_warning")
+    @Column(name = "plagiarism_warning")
     private Integer plagiarismWarning;
     @Column(name = "plagiarism_level")
     private Integer plagiarismLevel;
     @Column(name = "visible")
     private Integer visible;
     @Column(name = "assignment_date_created")
-    private Timestamp created = new Timestamp(System.currentTimeMillis());
+    private LocalDateTime created = LocalDateTime.now(ZoneOffset.UTC);
 
     @ManyToOne
     @JoinColumn(name = "submission_check_id")
@@ -105,19 +106,19 @@ public class AssignmentEntity {
         this.description = description;
     }
 
-    public Timestamp getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Timestamp startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Timestamp getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Timestamp endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
@@ -201,11 +202,11 @@ public class AssignmentEntity {
         this.visible = visible;
     }
 
-    public Timestamp getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 

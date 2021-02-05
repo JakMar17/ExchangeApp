@@ -14,6 +14,13 @@ public class UserTypeEntity {
     @Column(name = "user_type_description")
     private String description;
 
+    public UserTypeEntity() {
+    }
+
+    public UserTypeEntity(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }
