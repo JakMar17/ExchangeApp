@@ -15,6 +15,13 @@ public class RegisterServices {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * takes register data, checks them and registers user
+     * TODO: send email for confirmation
+     * @param user register data
+     * @return true if user has been registered in system
+     * @throws UserExistsException user with given data already exists
+     */
     public Boolean registerNewUser(RegisterUserDTO user) throws UserExistsException {
         if(userRepository.findUsersByEmail(user.getEmail()).size() != 0)
             throw new UserExistsException("Uporabnik s tem epoštnim naslovom že obstaja");
@@ -26,6 +33,11 @@ public class RegisterServices {
         return true;
     }
 
+    /**
+     * casts RegisterUserDTO to UserEntity
+     * @param registerUserDTO DTO to cast
+     * @return casted UserEntity
+     */
     private UserEntity registerUserDTOToUserEntity(RegisterUserDTO registerUserDTO) {
         int userType = 4;
 
@@ -45,6 +57,10 @@ public class RegisterServices {
         );
     }
 
+    /**
+     * generates personal number for PROFESSORs, "p_" + 6 digits
+     * @return generated personal number
+     */
     private String generatePersonalNumberForProfessor() {
         var profs = userRepository.getLastInsertedProfessor();
         if(profs == null || profs.size() == 0)

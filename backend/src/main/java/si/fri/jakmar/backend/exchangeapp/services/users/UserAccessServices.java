@@ -18,6 +18,15 @@ public class UserAccessServices {
     private UserRepository userRepository;
     @Autowired private CourseRepository courseRepository;
 
+    /**
+     * checks if given userEntity has access to given courseEntity
+     * has access = is admin OR is main guardian OR is not on blacklist and is either on whitelist, signed in, guardian or is course public
+     * @param userEntity user to be check
+     * @param courseEntity course to be checked
+     * @return true if user has access
+     * @throws AccessForbiddenException user is either blacklisted or not whitelisted (if course has whitelist)
+     * @throws AccessUnauthorizedException user is not signed in course yet, course requires password access
+     */
     public boolean userHasAccessToCourse(UserEntity userEntity, CourseEntity courseEntity) throws AccessForbiddenException, AccessUnauthorizedException {
         boolean hasAccess = false;
 
@@ -52,10 +61,21 @@ public class UserAccessServices {
         return true;
     }
 
+    /**
+     * checks if user has admin role
+     * @param userEntity user to be checked
+     * @return true if user has admin rights
+     */
     private boolean userIsAdmin(UserEntity userEntity) {
         return userEntity.getUserType().getId() == 1;
     }
 
+    /**
+     * checks if user is guardian on course
+     * @param userEntity user to be checked
+     * @param courseEntity course to be checked
+     * @return true if user is guardian on course, otherwise returns false
+     */
     private boolean userIsGuardian(UserEntity userEntity, CourseEntity courseEntity) {
         if(userEntity.equals(courseEntity.getGuardianMain()))
             return true;
@@ -63,10 +83,23 @@ public class UserAccessServices {
         return courseEntity.getUsersGuardians().stream().anyMatch(userEntity::equals);
     }
 
+
+    /**
+     * check if user "part" of given list
+     * @param user user to be checked
+     * @param list list to be checked on
+     * @return true if is part of list
+     */
     private boolean userOnList(UserEntity user, List<UserEntity> list) {
         return list.stream().anyMatch(user::equals);
     }
 
+
+    /**
+     * checks if user is already signed in given course, if it is not signs him in
+     * @param user to be signed in
+     * @param course to sign user in
+     */
     public void signUserInCourse(UserEntity user, CourseEntity course) {
         var userCourses = user.getUsersCourses();
         boolean isSignedIn = userCourses.stream().anyMatch(course::equals);
@@ -82,6 +115,12 @@ public class UserAccessServices {
         courseRepository.save(course);
     }
 
+    /**
+     * checks if given user can edit course (is either admin or guardian of course)
+     * @param user to be checked
+     * @param course to check
+     * @return true if user can edit course
+     */
     public boolean userCanEditCourse(UserEntity user, CourseEntity course) {
         return userIsAdmin(user) || userOnList(user, course.getUsersGuardians());
     }

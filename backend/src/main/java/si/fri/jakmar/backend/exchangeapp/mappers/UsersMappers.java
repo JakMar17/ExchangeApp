@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.mappers.users;
+package si.fri.jakmar.backend.exchangeapp.mappers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

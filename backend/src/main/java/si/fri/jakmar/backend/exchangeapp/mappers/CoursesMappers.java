@@ -6,7 +6,6 @@ import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.CourseAccessLevelRepository;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
-import si.fri.jakmar.backend.exchangeapp.mappers.users.UsersMappers;
 import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseBasicDTO;
 import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseDTO;
 import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseDetailedDTO;

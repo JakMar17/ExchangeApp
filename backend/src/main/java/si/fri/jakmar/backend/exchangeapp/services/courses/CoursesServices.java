@@ -15,6 +15,7 @@ import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataNotFoundExcepti
 import si.fri.jakmar.backend.exchangeapp.services.users.UserAccessServices;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -30,6 +31,13 @@ public class CoursesServices {
     @Autowired
     private UserAccessServices userAccessServices;
 
+    /**
+     * returns basic data of all courses in system
+     * TODO: deleted/archived
+     *
+     * @return list of courses with basic data
+     * @throws DataNotFoundException no courses found
+     */
     public List<CourseBasicDTO> getAllCoursesWithBasicInfo() throws DataNotFoundException {
         var coursesEntity = courseRepository.findAll();
         var dtos =
@@ -42,6 +50,17 @@ public class CoursesServices {
         return dtos;
     }
 
+
+    /**
+     * return course data if user has right to view course
+     *
+     * @param courseId           course
+     * @param userPersonalNumber user's personal number
+     * @return course data if user can access it
+     * @throws DataNotFoundException       either user or course cannot be found
+     * @throws AccessForbiddenException    user does not have right to access (is either blacklisted or not whitelisted)
+     * @throws AccessUnauthorizedException user does not have right to access (is not signed in yet and course has password protection)
+     */
     public CourseDTO getCourseData(Integer courseId, String userPersonalNumber) throws DataNotFoundException, AccessForbiddenException, AccessUnauthorizedException {
         var users = userRepository.findUsersByPersonalNumber(userPersonalNumber);
         var courseEntityOptional = courseRepository.findById(courseId);
@@ -60,6 +79,12 @@ public class CoursesServices {
             return null;
     }
 
+    /**
+     * get course basic data
+     *
+     * @param courseId course ID
+     * @return course's basic data
+     */
     public CourseBasicDTO getCourseBasicData(Integer courseId) {
         var courseOptional = courseRepository.findById(courseId);
         if (courseOptional.isEmpty())
@@ -70,6 +95,17 @@ public class CoursesServices {
         return dto;
     }
 
+    /**
+     * checks given password and if it is OK signs user in course
+     *
+     * @param courseId           course ID
+     * @param userPersonalNumber user's personal number
+     * @param password           inputed password
+     * @return course data if password OK
+     * @throws DataNotFoundException       course with given ID does not exists
+     * @throws AccessForbiddenException    user does not have right to access (is either blacklisted or not whitelisted)
+     * @throws AccessUnauthorizedException user does not have right to access (is not signed in yet and course has password protection)
+     */
     public CourseDTO checkPasswordAndGetCourse(Integer courseId, String userPersonalNumber, String password) throws DataNotFoundException, AccessUnauthorizedException, AccessForbiddenException {
         var courseOptional = courseRepository.findById(courseId);
         if (courseOptional.isEmpty())
@@ -84,6 +120,15 @@ public class CoursesServices {
         }
     }
 
+    /**
+     * get all course data (for editing) only guardians and admins has all access
+     *
+     * @param courseId           course ID
+     * @param userPersonalNumber user's personal number
+     * @return course data
+     * @throws DataNotFoundException    course with given ID or person with given number does not exists
+     * @throws AccessForbiddenException given user does not have access right for data
+     */
     public CourseDetailedDTO getCourseDetailed(Integer courseId, String userPersonalNumber) throws DataNotFoundException, AccessForbiddenException {
         var cOptional = courseRepository.findById(courseId);
         var users = userRepository.findUsersByPersonalNumber(userPersonalNumber);
@@ -98,9 +143,17 @@ public class CoursesServices {
             throw new AccessForbiddenException("Uporabnik nima pravice za dostop do podatkov");
     }
 
+    /**
+     * updates or inserts course with given data
+     *
+     * @param courseId           course ID
+     * @param userPersonalNumber user's personal number
+     * @throws DataNotFoundException    course with given ID or person with given number does not exists
+     * @throws AccessForbiddenException given user does not have access right for data
+     */
     public void updateCourse(Integer courseId, String userPersonalNumber, CourseDetailedDTO courseDTO) throws DataNotFoundException, AccessForbiddenException {
         var users = userRepository.findUsersByPersonalNumber(userPersonalNumber);
-        var cOptional = courseId != null ? courseRepository.findById(courseId) : null;
+        var cOptional = courseId != null ? courseRepository.findById(courseId) : Optional.<CourseEntity>empty();
         if (users.size() == 0 || (courseId != null && cOptional.isEmpty()))
             throw new DataNotFoundException();
 

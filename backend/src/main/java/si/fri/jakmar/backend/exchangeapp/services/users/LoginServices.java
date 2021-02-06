@@ -3,7 +3,7 @@ package si.fri.jakmar.backend.exchangeapp.services.users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
-import si.fri.jakmar.backend.exchangeapp.mappers.users.UsersMappers;
+import si.fri.jakmar.backend.exchangeapp.mappers.UsersMappers;
 import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.users.UserDTO;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataInvalidException;
@@ -18,6 +18,15 @@ public class LoginServices {
     @Autowired
     private UsersMappers usersMappers;
 
+    /**
+     * checks email & password combination in database and return UserDTO if combination is OK
+     * @param email user's email
+     * @param password user's password
+     * @return user that corresponds to email & password combination
+     * @throws DataInvalidException invalid database state - there are more then one users that corresponds to combination
+     * @throws UserDoesNotExistsException invalid username password combination
+     * @throws AccessForbiddenException user hasn't respond to confirmation email
+     */
     public UserDTO loginUser(String email, String password) throws DataInvalidException, UserDoesNotExistsException, AccessForbiddenException {
         var users = userRepository.getUserByEmailAndPassword(email, password);
 
