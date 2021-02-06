@@ -60,18 +60,11 @@ public class UserAccessServices {
         if(userEntity.equals(courseEntity.getGuardianMain()))
             return true;
 
-        for(var u : courseEntity.getUsersGuardians())
-            if(userEntity.equals(u))
-                return true;
-
-        return false;
+        return courseEntity.getUsersGuardians().stream().anyMatch(userEntity::equals);
     }
 
     private boolean userOnList(UserEntity user, List<UserEntity> list) {
-        for(var u : list)
-            if(user.equals(u))
-                return true;
-        return false;
+        return list.stream().anyMatch(user::equals);
     }
 
     public void signUserInCourse(UserEntity user, CourseEntity course) {
@@ -87,6 +80,10 @@ public class UserAccessServices {
         }
 
         courseRepository.save(course);
+    }
+
+    public boolean userCanEditCourse(UserEntity user, CourseEntity course) {
+        return userIsAdmin(user) || userOnList(user, course.getUsersGuardians());
     }
 
 }

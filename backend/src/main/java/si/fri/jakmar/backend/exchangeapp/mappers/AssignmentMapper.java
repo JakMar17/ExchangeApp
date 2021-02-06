@@ -9,14 +9,10 @@ import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.assignments.Assign
 public class AssignmentMapper {
 
     public AssignmentBasicDTO castAssignmentEntityToAssignmentBasicDTO(AssignmentEntity assignmentEntity, UserEntity userEntity) {
-        int noOfSubmissionsTotal = 0;
-        int noOfSubmissionsStudent = 0;
-
-        for(var submission : assignmentEntity.getSubmissions()) {
-            if(submission.getAuthor().equals(userEntity))
-                noOfSubmissionsStudent++;
-            noOfSubmissionsTotal++;
-        }
+        int noOfSubmissionsTotal = assignmentEntity.getSubmissions().size();
+        int noOfSubmissionsStudent = (int) assignmentEntity.getSubmissions()
+                .stream()
+                .filter(submission -> submission.getAuthor().equals(userEntity)).count();
 
         return new AssignmentBasicDTO(
                 assignmentEntity.getId(),

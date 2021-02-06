@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import si.fri.jakmar.backend.exchangeapp.api.wrappers.exceptions.ExceptionWrapper;
-import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.CourseRepository;
 import si.fri.jakmar.backend.exchangeapp.services.courses.CoursesServices;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
@@ -19,17 +18,9 @@ import java.util.logging.Logger;
 @CrossOrigin("*")
 public class CoursesApi {
 
-    @Autowired
-    CourseRepository courseRepository;
-    @Autowired
-    private CoursesServices coursesServices;
-    private Logger logger = Logger.getLogger(CoursesApi.class.getSimpleName());
-
-    @PostMapping("save")
-    public ResponseEntity<CourseEntity> insertOrUpdateCourse(@RequestBody CourseEntity course) {
-        CourseEntity updated = courseRepository.save(course);
-        return ResponseEntity.ok(updated);
-    }
+    private final Logger logger = Logger.getLogger(CoursesApi.class.getSimpleName());
+    @Autowired CourseRepository courseRepository;
+    @Autowired private CoursesServices coursesServices;
 
     @GetMapping("all")
     public ResponseEntity<Object> getCourses() {

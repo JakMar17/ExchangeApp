@@ -43,7 +43,8 @@ public class LoginRegisterApi {
     @PostMapping("login")
     public ResponseEntity<Object> loginUser(@RequestBody LoginUserDTO loginData) {
         try {
-            return ResponseEntity.ok(loginServices.loginUser(loginData.getEmail(), loginData.getPassword()));
+            var data = loginServices.loginUser(loginData.getEmail(), loginData.getPassword());
+            return ResponseEntity.ok(data);
         } catch (DataInvalidException e) {
             logger.severe(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionWrapper(e));

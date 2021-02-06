@@ -2,41 +2,31 @@ package si.fri.jakmar.backend.exchangeapp.mappers.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseBasicDTO;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.mappers.CoursesMappers;
 import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.users.UserDTO;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class UsersMappers {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private CoursesMappers coursesMappers;
+    @Autowired private CoursesMappers coursesMappers;
+    @Autowired private UserRepository userRepository;
 
     public UserDTO castUserEntityToUserDTO(UserEntity userEntity, boolean withCourses) {
-        var courses = new ArrayList<CourseBasicDTO>();
+        var coursesDtos = new ArrayList<CourseBasicDTO>();
 
-        if(withCourses) {
-            for (var courseEntity : userEntity.getUsersCourses()) {
-                courseEntity.getGuardianMain().setUsersCourses(null);
-                courses.add(coursesMappers.castCourseEntityToCourseBasicDTO(courseEntity));
-            }
+        if (withCourses) {
+            var coursesEntities = userEntity.getUsersCourses();
+            coursesEntities.addAll(userEntity.getCreatedCourses().stream().filter(f -> !coursesEntities.contains(f)).collect(Collectors.toList()));
+            coursesEntities.addAll(userEntity.getGuardinasCourses().stream().filter(f -> !coursesEntities.contains(f)).collect(Collectors.toList()));
 
-            for (var course : userEntity.getGuardinasCourses()) {
-                course.getGuardianMain().setUsersCourses(null);
-                courses.add(coursesMappers.castCourseEntityToCourseBasicDTO(course));
-            }
-
-            for (var course : userEntity.getCreatedCourses()) {
-                course.getGuardianMain().setUsersCourses(null);
-                courses.add(coursesMappers.castCourseEntityToCourseBasicDTO(course));
-            }
+            coursesDtos.addAll(coursesEntities.stream().map(e -> coursesMappers.castCourseEntityToCourseBasicDTO(e)).collect(Collectors.toList()));
         }
 
         return new UserDTO(
@@ -45,7 +35,33 @@ public class UsersMappers {
                 userEntity.getSurname(),
                 userEntity.getPersonalNumber(),
                 userEntity.getUserType().getDescription(),
-                courses
+                coursesDtos
         );
+    }
+
+    public UserEntity castUserDtoToUserEntity(UserDTO dto) {
+        return this.castUserDtoToUserEntity(dto, new UserEntity());
+    }
+
+    public UserEntity castUserDtoToUserEntity(UserDTO dto, UserEntity entity) {
+        entity.setEmail(dto.getEmail());
+        entity.setName(dto.getName());
+        entity.setName(dto.getSurname());
+        entity.setPersonalNumber(dto.getPersonalNumber());
+        //usertype
+        //courses
+
+        return entity;
+    }
+
+    public List<UserEntity> castListOfUserDtosToUserEntities(List<UserDTO> dtos) {
+        return dtos.stream()
+                .map(e ->
+                        castUserDtoToUserEntity(
+                                e,
+                                userRepository.findUsersByPersonalNumber(e.getPersonalNumber()).get(0)
+                        )
+                )
+                .collect(Collectors.toList());
     }
 }
