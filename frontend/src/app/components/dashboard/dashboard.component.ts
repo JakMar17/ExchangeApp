@@ -40,6 +40,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllCourses();
+    this.getUserCourses();
   }
 
   private getAllCourses(): void {
@@ -47,5 +48,11 @@ export class DashboardComponent implements OnInit {
       this.courses = data;
       console.log(data);
     });
+  }
+
+  private getUserCourses(): void {
+    this.coursesService
+      .getMyCourses()
+      .subscribe((data) => (this.userService.userLoggedIn.myCourses = data));
   }
 }

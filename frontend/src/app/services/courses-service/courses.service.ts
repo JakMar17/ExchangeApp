@@ -44,4 +44,8 @@ export class CoursesService {
   ): Observable<Course> {
     return this.courseApi.saveCourse(course, personalNumber);
   }
+
+  public getMyCourses(): Observable<Course[]>{
+    return this.courseApi.getUsersCourses(this.userService.userLoggedIn.personalNumber);
+  }
 }

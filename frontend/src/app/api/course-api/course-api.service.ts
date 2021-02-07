@@ -49,7 +49,10 @@ export class CourseApiService {
     personalNumber: string
   ): Observable<Course> {
     const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
-    return this.http.get<Course>(this.baseUrlManagement + 'detailed?courseId=' + courseId, { headers });
+    return this.http.get<Course>(
+      this.baseUrlManagement + 'detailed?courseId=' + courseId,
+      { headers }
+    );
   }
 
   public saveCourse(
@@ -57,6 +60,11 @@ export class CourseApiService {
     personalNumber: string
   ): Observable<Course> {
     const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
-    return this.http.post<Course>(this.baseUrlManagement, course,  { headers });
+    return this.http.post<Course>(this.baseUrlManagement, course, { headers });
+  }
+
+  public getUsersCourses(personalNumber: string): Observable<Course[]> {
+    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    return this.http.get<Course[]>(this.baseUrl + "my", { headers });
   }
 }
