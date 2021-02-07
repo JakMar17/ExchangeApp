@@ -8,15 +8,20 @@ import { AssignmentStatus } from 'src/app/models/assignment-model';
 export class AssignmentStatusPipe implements PipeTransform {
   transform(
     assignmentStatus: AssignmentStatus,
-    startDate: Date,
-    endDate: Date | null
+    startDate: any,
+    endDate: any | null
   ): string {
     if (assignmentStatus == AssignmentStatus.ARCHIVED) return 'arhivirano';
 
     const today = new Date().getTime();
+
+    if (!(startDate instanceof Date)) startDate = new Date(startDate);
+    if (!(endDate instanceof Date) && endDate != null)
+      endDate = new Date(endDate);
+
     const startTime = startDate.getTime();
     const endTime = endDate == null ? null : endDate.getTime();
-    
+
     if (today < startTime) return 'aktivno od ' + this.dateToString(startDate);
     else if (endTime == null) return 'aktivno';
     else if (today > endTime) return 'zaključeno';
