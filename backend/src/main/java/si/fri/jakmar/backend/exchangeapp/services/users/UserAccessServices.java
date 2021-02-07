@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.CourseRepository;
+import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseRepository;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessUnauthorizedException;
@@ -47,11 +47,13 @@ public class UserAccessServices {
                         hasAccess = true;
                     else
                         throw new AccessForbiddenException("Uporabnik ni dodan med izjeme, ki imajo dostop do predmeta");
+                    break;
                 case "PASSWORD":
                     if(userOnList(userEntity, courseEntity.getUsersSignedInCourse()))
                         hasAccess = true;
                     else
                         throw new AccessUnauthorizedException("Predmet je zaščiten z geslom, vnesite ga preden lahko nadaljujete");
+                    break;
                 default:
                     hasAccess = true;
             }

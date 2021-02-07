@@ -17,6 +17,7 @@
               class="input"
               type="text"
               placeholder="Ime predmeta"
+              [(ngModel)]="course.title"
               required
             />
           </div>
@@ -28,6 +29,7 @@
               class="input"
               type="text"
               placeholder="https://ucilnica.fri.uni-lj.si"
+              [(ngModel)]="course.classroomURL"
             />
           </div>
         </div>
@@ -37,6 +39,7 @@
             <textarea
               class="textarea"
               placeholder="Kratek opis predmeta"
+              [(ngModel)]="course.description"
             ></textarea>
           </div>
         </div>
@@ -63,26 +66,16 @@
           {{ selectedSecurityLevel?.securityLevelDescription }}
         </div>
 
-        <div
-          *ngIf="
-            selectedSecurityLevel?.securityLevelTitle == 'zaščiten z geslom'
-          "
-        >
+        <div *ngIf="selectedSecurityLevel?.key == 'PASSWORD'">
           <div class="field">
             <label class="label">Geslo za dostop</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Geslo" required />
+              <input class="input" type="text" placeholder="Geslo" [(ngModel)]="course.accessPassword" required />
             </div>
           </div>
         </div>
 
-        <div
-          *ngIf="
-            selectedSecurityLevel?.securityLevelTitle ==
-              'omejen z vpisno številko' ||
-            selectedSecurityLevel?.securityLevelTitle == 'omejen z epošto'
-          "
-        >
+        <div *ngIf="selectedSecurityLevel?.key == 'WHITELIST'">
           <div class="columns">
             <div class="column is-9">
               <div class="table-container">
@@ -96,29 +89,54 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Mojca Pokraculja</td>
-                      <td>6314520</td>
-                      <td>mp5412@student.uni-lj.si</td>
+                    <tr *ngFor="let element of course.studentsWhitelisted">
+                      <td>{{ element | userToString }}</td>
+                      <td>{{ element.personalNumber }}</td>
+                      <td>{{ element.email }}</td>
                       <td>
                         <div class="columns">
                           <div class="column">
-                            <a class="button is-warning is-small is-outlined">
+                            <a
+                              (click)="
+                                onElementListRemove(
+                                  element,
+                                  typeOfList.WHITELIST
+                                )
+                              "
+                              class="button is-warning is-small is-outlined"
+                            >
                               <i class="ri-delete-bin-line"></i>
                             </a>
                           </div>
                         </div>
                       </td>
                     </tr>
-                    <tr>
-                      <td>Mojca Pokraculja</td>
-                      <td>6314520</td>
-                      <td>mp5412@student.uni-lj.si</td>
+                    <tr *ngIf="showAddWhitelistsRow">
+                      <td></td>
+                      <td>
+                        <input
+                          class="input is-small"
+                          type="text"
+                          placeholder="Vpisna številka"
+                          [(ngModel)]="whitelistAddPersonalNumberInput"
+                        />
+                      </td>
+                      <td>
+                        <input
+                          class="input is-small"
+                          type="text"
+                          placeholder="email"
+                          [(ngModel)]="whitelistAddEmailInput"
+                        />
+                      </td>
                       <td>
                         <div class="columns">
                           <div class="column">
-                            <a class="button is-warning is-small is-outlined">
-                              <i class="ri-delete-bin-line"></i>
+                            <a
+                              (click)="onStudentWhitelistAdd()"
+                              class="button is-info is-small is-outlined"
+                            >
+                              <i class="ri-check-line"></i>
                             </a>
                           </div>
                         </div>
@@ -131,6 +149,7 @@
             <div class="column is-3">
               <button
                 class="button-bottom-margin is-success is-outlined has-icons-left is-fullwidth"
+                (click)="showAddWhitelistsRow = true"
               >
                 <span class="icon is-small">
                   <i class="ri-add-line"></i>
@@ -138,7 +157,8 @@
                 <span> Dodaj novega </span>
               </button>
               <button
-                class="button-bottom-margin is-info is-outlined has-icons-left is-fullwidth"
+                data-tooltip="Datoteka naj vsebuje en zapis (vpisna številka ali email) na vrstico, brez ločil."
+                class="button-bottom-margin is-info is-outlined has-icons-left is-fullwidth has-tooltip-left"
               >
                 <span class="icon is-small">
                   <i class="ri-file-line"></i>
@@ -147,6 +167,7 @@
               </button>
               <button
                 class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"
+                (click)="onAllElementsListRemove(typeOfList.WHITELIST)"
               >
                 <span class="icon is-small">
                   <i class="ri-delete-bin-line"></i>
@@ -154,6 +175,101 @@
                 <span> Izbriši vse </span>
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2 class="title is-3">Blokirani uporabniki</h2>
+        <div class="info-notification">
+          <p>Blokirani uporabniki nimajo dostopa do predmeta.</p>
+        </div>
+        <div class="columns">
+          <div class="column is-9">
+            <div class="table-container">
+              <table class="table table is-fullwidth table is-hoverable">
+                <thead>
+                  <tr>
+                    <th>Ime in priimek</th>
+                    <th>Vpisna številka</th>
+                    <th>Epošta</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let element of course.studentsBlacklisted">
+                    <td>{{ element | userToString }}</td>
+                    <td>{{ element.personalNumber }}</td>
+                    <td>{{ element.email }}</td>
+                    <td>
+                      <div class="columns">
+                        <div class="column">
+                          <a
+                            (click)="
+                              onElementListRemove(element, typeOfList.BLACKLIST)
+                            "
+                            class="button is-warning is-small is-outlined"
+                          >
+                            <i class="ri-delete-bin-line"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="showAddBlacklistsRow">
+                    <td></td>
+                    <td>
+                      <input
+                        class="input is-small"
+                        type="text"
+                        placeholder="Vpisna številka"
+                        [(ngModel)]="blacklistAddPersonalNumberInput"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        class="input is-small"
+                        type="text"
+                        placeholder="email"
+                        [(ngModel)]="blacklistAddEmailInput"
+                      />
+                    </td>
+                    <td>
+                      <div class="columns">
+                        <div class="column">
+                          <a
+                            (click)="onStudentBlacklistAdd()"
+                            class="button is-info is-small is-outlined"
+                          >
+                            <i class="ri-check-line"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="column is-3">
+            <button
+              (click)="showAddBlacklistsRow = true"
+              class="button-bottom-margin is-success is-outlined has-icons-left is-fullwidth"
+            >
+              <span class="icon is-small">
+                <i class="ri-add-line"></i>
+              </span>
+              <span> Dodaj novega </span>
+            </button>
+            <button
+              class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"
+              (click)="onAllElementsListRemove(typeOfList.GUARDIANS)"
+            >
+              <span class="icon is-small">
+                <i class="ri-delete-bin-line"></i>
+              </span>
+              <span> Izbriši vse </span>
+            </button>
           </div>
         </div>
       </div>
@@ -178,14 +294,42 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Prosto Prosto</td>
-                    <td>prosto.prosto@fri1.uni-lj.si</td>
+                  <tr *ngFor="let element of course.guardians">
+                    <td>{{ element | userToString }}</td>
+                    <td>{{ element.email }}</td>
                     <td>
                       <div class="columns">
                         <div class="column">
-                          <a class="button is-warning is-small is-outlined">
+                          <a
+                            (click)="
+                              onElementListRemove(element, typeOfList.GUARDIANS)
+                            "
+                            class="button is-warning is-small is-outlined"
+                          >
                             <i class="ri-delete-bin-line"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="showAddGuardianRow">
+                    <td></td>
+                    <td>
+                      <input
+                        class="input is-small"
+                        type="text"
+                        placeholder="email"
+                        [(ngModel)]="guardianAddEmailInput"
+                      />
+                    </td>
+                    <td>
+                      <div class="columns">
+                        <div class="column">
+                          <a
+                            (click)="onGuardianAdd()"
+                            class="button is-info is-small is-outlined"
+                          >
+                            <i class="ri-check-line"></i>
                           </a>
                         </div>
                       </div>
@@ -197,6 +341,7 @@
           </div>
           <div class="column is-3">
             <button
+              (click)="showAddGuardianRow = true"
               class="button-bottom-margin is-success is-outlined has-icons-left is-fullwidth"
             >
               <span class="icon is-small">
@@ -206,6 +351,7 @@
             </button>
             <button
               class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"
+              (click)="onAllElementsListRemove(typeOfList.GUARDIANS)"
             >
               <span class="icon is-small">
                 <i class="ri-delete-bin-line"></i>
@@ -225,15 +371,25 @@
         <div class="field">
           <label class="label">Število žetonov</label>
           <div class="control">
-            <input class="input" type="number" placeholder="3" required />
+            <input
+              class="input"
+              type="number"
+              placeholder="3"
+              required
+              [(ngModel)]="course.initialCoins"
+            />
           </div>
         </div>
       </div>
 
       <div class="box">
+        <div *ngIf="errorMessage != null" class="notification is-danger">
+          {{ errorMessage }}
+        </div>
         <div class="columns">
           <div class="column">
             <button
+              (click)="onSaveButtonPressed()"
               class="button-bottom-margin is-success has-icons-left is-fullwidth"
             >
               <span class="icon is-small">

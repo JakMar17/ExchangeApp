@@ -19,4 +19,5 @@ public interface UserRepository extends CrudRepository<UserEntity, Integer> {
 
     @Query("SELECT u FROM UserEntity  u WHERE u.email = :email AND u.password = :password")
     List<UserEntity> getUserByEmailAndPassword(String email, String password);
+
 }

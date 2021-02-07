@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class CourseApiService {
   private baseUrl = environment.BASE_API_URL + 'courses/';
+  private baseUrlManagement = environment.BASE_API_URL + 'course/';
 
   constructor(private http: HttpClient) {}
 
@@ -31,9 +32,31 @@ export class CourseApiService {
     personalNumber: string,
     password: string
   ): Observable<Course> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber, 'Course-Password': password });
-    return this.http.get<Course>(this.baseUrl + 'course/access?courseId=' + courseId, {
-      headers,
+    const headers = new HttpHeaders({
+      'Personal-Number': personalNumber,
+      'Course-Password': password,
     });
+    return this.http.get<Course>(
+      this.baseUrl + 'course/access?courseId=' + courseId,
+      {
+        headers,
+      }
+    );
+  }
+
+  public getCourseDetailedData(
+    courseId: number,
+    personalNumber: string
+  ): Observable<Course> {
+    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    return this.http.get<Course>(this.baseUrlManagement + 'detailed?courseId=' + courseId, { headers });
+  }
+
+  public saveCourse(
+    course: Course,
+    personalNumber: string
+  ): Observable<Course> {
+    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    return this.http.post<Course>(this.baseUrlManagement, course,  { headers });
   }
 }

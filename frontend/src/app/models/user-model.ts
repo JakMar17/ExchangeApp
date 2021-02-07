@@ -1,13 +1,13 @@
 import { Course } from "./class-model";
 
 export interface User {
-  email: string;
-  name: string;
-  surname: string;
+  email?: string;
+  name?: string;
+  surname?: string;
   password?: string;
   personalNumber?: string;
   myCourses?: Course[];
-  userType: string;
+  userType?: string;
 }
 
 export enum UserType {

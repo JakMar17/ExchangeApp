@@ -1,7 +1,6 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.courses;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "course_access_password")
@@ -15,8 +14,15 @@ public class CourseAccessPassword {
     @Column(name = "access_password")
     private String password;
 
-    @OneToMany(mappedBy = "accessPassword")
-    List<CourseEntity> courses;
+    @OneToOne(mappedBy = "accessPassword")
+    private CourseEntity course;
+
+    public CourseAccessPassword() {
+    }
+
+    public CourseAccessPassword(String password) {
+        this.password = password;
+    }
 
     public Integer getId() {
         return id;

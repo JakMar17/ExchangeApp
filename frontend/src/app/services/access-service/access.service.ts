@@ -24,7 +24,7 @@ export class AccessService {
     return false;
   }
 
-  public hasAccessToCourse(user: User, course: Course): boolean {
+  /* public hasAccessToCourse(user: User, course: Course): boolean {
     if (this.hasEditRightsOnCourse(user, course)) return true;
     else if (course.studentBlacklist?.some((e) => e.email == user.email))
       return false;
@@ -33,5 +33,5 @@ export class AccessService {
       return true;
     else if (course.accessLevel == CourseAccess.PUBLIC) return true;
     else return false;
-  }
+  } */
 }

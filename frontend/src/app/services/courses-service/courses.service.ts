@@ -7,21 +7,41 @@ import { User } from 'src/app/models/user-model';
 import { UserServiceService } from '../user-service/user-service.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CoursesService {
-  constructor(private courseApi: CourseApiService, private userService: UserServiceService) {
-  }
+  constructor(
+    private courseApi: CourseApiService,
+    private userService: UserServiceService
+  ) {}
 
   public getAllCourses(): Observable<Course[]> {
     return this.courseApi.getAll();
   }
 
-  public getCourse(courseId: number): Observable<Course>{
-    return this.courseApi.getCourse(courseId, this.userService.userLoggedIn.personalNumber);
+  public getCourse(courseId: number): Observable<Course> {
+    return this.courseApi.getCourse(
+      courseId,
+      this.userService.userLoggedIn.personalNumber
+    );
   }
 
-  public checkCoursePassword(courseId: number, insertedPassword: string, user: User): Observable<Course> {
-    return this.courseApi.checkPasswordAndGetCourse(courseId, user.personalNumber, insertedPassword);
+  public checkCoursePassword(
+    courseId: number,
+    insertedPassword: string,
+    user: User
+  ): Observable<Course> {
+    return this.courseApi.checkPasswordAndGetCourse(
+      courseId,
+      user.personalNumber,
+      insertedPassword
+    );
+  }
+
+  public saveCourse(
+    course: Course,
+    personalNumber: string
+  ): Observable<Course> {
+    return this.courseApi.saveCourse(course, personalNumber);
   }
 }

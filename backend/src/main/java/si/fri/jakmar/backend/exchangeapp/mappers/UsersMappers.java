@@ -3,9 +3,8 @@ package si.fri.jakmar.backend.exchangeapp.mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseBasicDTO;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.mappers.CoursesMappers;
+import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseDTO;
 import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.users.UserDTO;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public class UsersMappers {
     @Autowired private UserRepository userRepository;
 
     public UserDTO castUserEntityToUserDTO(UserEntity userEntity, boolean withCourses) {
-        var coursesDtos = new ArrayList<CourseBasicDTO>();
+        ArrayList<CourseDTO> coursesDtos = new ArrayList<>();
 
         if (withCourses) {
             var coursesEntities = userEntity.getUsersCourses();

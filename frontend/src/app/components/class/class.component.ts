@@ -21,7 +21,6 @@ export class ClassComponent implements OnInit {
 
   public course: Course | null = null;
   public user: User | null = null;
-  public userCanView: boolean = false;
   public userCanEdit: boolean = false;
 
   public courseVisibility: CourseVisibilityToUser =
@@ -31,8 +30,7 @@ export class ClassComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private coursesService: CoursesService,
-    private userService: UserServiceService,
-    private accessService: AccessService
+    private userService: UserServiceService
   ) {
     this.user = userService.userLoggedIn;
   }
@@ -65,7 +63,6 @@ export class ClassComponent implements OnInit {
           //this.setAccessRights();
         },
         (err: HttpErrorResponse) => {
-
           switch (err.status) {
             case 401:
               this.showClassPasswordError = true;
@@ -86,6 +83,7 @@ export class ClassComponent implements OnInit {
             this.courseVisibility = CourseVisibilityToUser.VISIBLE;
             if (this.course.notifications == null)
               this.course.notifications = [];
+            console.log(this.course);
             //this.setAccessRights();
           },
           (err: HttpErrorResponse) => {
@@ -104,23 +102,14 @@ export class ClassComponent implements OnInit {
     });
   }
 
-  private setAccessRights(): void {
-    if (this.user != null && this.course != null) {
-      this.userCanView = this.accessService.hasAccessToCourse(
-        this.user,
-        this.course
-      );
-      this.userCanEdit = this.accessService.hasEditRightsOnCourse(
-        this.user,
-        this.course
-      );
-    }
-  }
-
   public onAssignmentNewButtonClick(): void {
     this.router.navigate([
       '/course/' + this.course.courseId + '/assignment/add',
     ]);
+  }
+
+  public onEditCourseButtonPressed(): void {
+    this.router.navigate(['/course/edit/' + this.course.courseId]);
   }
 }
 

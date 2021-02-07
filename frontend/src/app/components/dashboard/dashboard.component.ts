@@ -34,6 +34,7 @@ export class DashboardComponent implements OnInit {
     private coursesService: CoursesService
   ) {
     this.user = userService.userLoggedIn;
+    console.log(this.user);
     this.showMyCourses = (this.user?.myCourses?.length ?? 0) > 0;
   }
 
@@ -44,6 +45,7 @@ export class DashboardComponent implements OnInit {
   private getAllCourses(): void {
     this.coursesService.getAllCourses().subscribe((data) => {
       this.courses = data;
+      console.log(data);
     });
   }
 }

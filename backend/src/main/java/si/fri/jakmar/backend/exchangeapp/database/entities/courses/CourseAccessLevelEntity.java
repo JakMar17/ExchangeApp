@@ -20,6 +20,13 @@ public class CourseAccessLevelEntity {
     @OneToMany(mappedBy = "accessLevel")
     private List<CourseEntity> courses;
 
+    public CourseAccessLevelEntity() {
+    }
+
+    public CourseAccessLevelEntity(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

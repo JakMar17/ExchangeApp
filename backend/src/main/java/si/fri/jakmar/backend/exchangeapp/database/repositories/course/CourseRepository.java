@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.database.repositories;
+package si.fri.jakmar.backend.exchangeapp.database.repositories.course;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

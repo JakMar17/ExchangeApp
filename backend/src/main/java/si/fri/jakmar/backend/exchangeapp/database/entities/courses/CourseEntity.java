@@ -33,7 +33,7 @@ public class CourseEntity {
     @JoinColumn(name = "access_level_id", referencedColumnName = "access_level_id")
     private CourseAccessLevelEntity accessLevel;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "access_password_id", referencedColumnName = "access_password_id")
     private CourseAccessPassword accessPassword;
 
@@ -65,6 +65,55 @@ public class CourseEntity {
     @JsonIgnoreProperties({"course"})
     @OneToMany(mappedBy = "course")
     private List<AssignmentEntity> assignments;
+
+    public CourseEntity() {
+    }
+
+    public CourseEntity(String courseTitle, String courseDescription, String courseClassroomUrl, Integer initialCoins, CourseAccessLevelEntity accessLevel, CourseAccessPassword accessPassword, UserEntity guardianMain, List<UserEntity> usersSignedInCourse, List<UserEntity> usersBlacklisted, List<UserEntity> usersWhitelisted, List<UserEntity> usersGuardians) {
+        this.courseTitle = courseTitle;
+        this.courseDescription = courseDescription;
+        this.courseClassroomUrl = courseClassroomUrl;
+        this.initialCoins = initialCoins;
+        this.accessLevel = accessLevel;
+        this.accessPassword = accessPassword;
+        this.guardianMain = guardianMain;
+        this.usersSignedInCourse = usersSignedInCourse;
+        this.usersBlacklisted = usersBlacklisted;
+        this.usersWhitelisted = usersWhitelisted;
+        this.usersGuardians = usersGuardians;
+    }
+
+    public CourseEntity(Integer courseId, String courseTitle, String courseDescription, String courseClassroomUrl, Integer initialCoins, LocalDateTime courseCreated, CourseAccessLevelEntity accessLevel, CourseAccessPassword accessPassword, UserEntity guardianMain, List<UserEntity> usersSignedInCourse, List<UserEntity> usersBlacklisted, List<UserEntity> usersWhitelisted, List<UserEntity> usersGuardians, List<AssignmentEntity> assignments) {
+        this.courseId = courseId;
+        this.courseTitle = courseTitle;
+        this.courseDescription = courseDescription;
+        this.courseClassroomUrl = courseClassroomUrl;
+        this.initialCoins = initialCoins;
+        this.courseCreated = courseCreated;
+        this.accessLevel = accessLevel;
+        this.accessPassword = accessPassword;
+        this.guardianMain = guardianMain;
+        this.usersSignedInCourse = usersSignedInCourse;
+        this.usersBlacklisted = usersBlacklisted;
+        this.usersWhitelisted = usersWhitelisted;
+        this.usersGuardians = usersGuardians;
+        this.assignments = assignments;
+    }
+
+    public CourseEntity courseUpdater(String courseTitle, String courseDescription, String courseClassroomUrl, Integer initialCoins, CourseAccessLevelEntity accessLevel, CourseAccessPassword accessPassword, UserEntity guardianMain, List<UserEntity> usersSignedInCourse, List<UserEntity> usersBlacklisted, List<UserEntity> usersWhitelisted, List<UserEntity> usersGuardians) {
+        this.courseTitle = courseTitle;
+        this.courseDescription = courseDescription;
+        this.courseClassroomUrl = courseClassroomUrl;
+        this.initialCoins = initialCoins;
+        this.accessLevel = accessLevel;
+        this.accessPassword = accessPassword;
+        this.guardianMain = guardianMain;
+        this.usersSignedInCourse = usersSignedInCourse;
+        this.usersBlacklisted = usersBlacklisted;
+        this.usersWhitelisted = usersWhitelisted;
+        this.usersGuardians = usersGuardians;
+        return this;
+    }
 
     @Override
     public boolean equals(Object o) {

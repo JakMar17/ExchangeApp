@@ -1,6 +1,6 @@
 package si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.users;
 
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseBasicDTO;
+import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseDTO;
 
 import java.util.List;
 
@@ -10,12 +10,12 @@ public class UserDTO {
     private String surname;
     private String personalNumber;
     private String userType;
-    private List<CourseBasicDTO> myCourses;
+    private List<CourseDTO> myCourses;
 
     public UserDTO() {
     }
 
-    public UserDTO(String email, String name, String surname, String personalNumber, String userType, List<CourseBasicDTO> myCourses) {
+    public UserDTO(String email, String name, String surname, String personalNumber, String userType, List<CourseDTO> myCourses) {
         this.email = email;
         this.name = name;
         this.surname = surname;
@@ -64,11 +64,11 @@ public class UserDTO {
         this.userType = userType;
     }
 
-    public List<CourseBasicDTO> getMyCourses() {
+    public List<CourseDTO> getMyCourses() {
         return myCourses;
     }
 
-    public void setMyCourses(List<CourseBasicDTO> myCourses) {
+    public void setMyCourses(List<CourseDTO> myCourses) {
         this.myCourses = myCourses;
     }
 }

@@ -13,13 +13,15 @@ export interface Course {
   classroomURL?: string;
 
   initialCoins?: number;
-  accessLevel?: CourseAccess;
+  accessLevel?: string;
   accessPassword?: string;
 
-  studentWhitelist?: User[];
-  studentBlacklist?: User[];
+  studentsBlacklisted?: User[];
+  studentsWhitelisted?: User[];
 
   students?: User[];
+  userCanEditCourse?: boolean;
+  userHasAdminRights?: boolean;
 }
 
 export interface CourseCategory {

@@ -1,26 +1,132 @@
 package si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.assignments.AssignmentBasicDTO;
 import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.users.UserDTO;
 
 import java.util.List;
 
-public class CourseDTO extends CourseBasicDTO{
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CourseDTO{
+    //basic info
+    private Integer courseId;
+    private String title;
+    private String description;
+    private String classroomURL;
+    private UserDTO guardianMain;
+    private String accessLevel;
+
     private List<AssignmentBasicDTO> assignments;
-    private Boolean userHasAdminRights;
+    private Boolean userCanEditCourse;
 
-    public CourseDTO(Integer courseId, String title, String description, String classroomUrl, UserDTO guardianMain, List<AssignmentBasicDTO> assignments) {
-        super(courseId, title, description, classroomUrl, guardianMain);
+    // all info
+    private List<UserDTO> guardians;
+    private List<UserDTO> studentsSignedIn;
+    private List<UserDTO> studentsWhitelisted;
+    private List<UserDTO> studentsBlacklisted;
+    private String accessType;
+    private Integer initialCoins;
+
+    private String accessPassword;
+
+    public CourseDTO() {
+    }
+
+    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel) {
+        this.courseId = courseId;
+        this.title = title;
+        this.description = description;
+        this.classroomURL = classroomURL;
+        this.guardianMain = guardianMain;
+        this.accessLevel = accessLevel;
+    }
+
+    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentBasicDTO> assignments) {
+        this.courseId = courseId;
+        this.title = title;
+        this.description = description;
+        this.classroomURL = classroomURL;
+        this.guardianMain = guardianMain;
+        this.accessLevel = accessLevel;
         this.assignments = assignments;
     }
 
-    public CourseDTO(Integer courseId, String title, String description, String classroomUrl, UserDTO guardianMain, List<AssignmentBasicDTO> assignments, Boolean userHasAdminRights) {
-        super(courseId, title, description, classroomUrl, guardianMain);
+    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentBasicDTO> assignments, Boolean userCanEditCourse) {
+        this.courseId = courseId;
+        this.title = title;
+        this.description = description;
+        this.classroomURL = classroomURL;
+        this.guardianMain = guardianMain;
+        this.accessLevel = accessLevel;
         this.assignments = assignments;
-        this.userHasAdminRights = userHasAdminRights;
+        this.userCanEditCourse = userCanEditCourse;
     }
 
+    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentBasicDTO> assignments, Boolean userCanEditCourse, List<UserDTO> guardians, List<UserDTO> studentsSignedIn, List<UserDTO> studentsWhitelisted, List<UserDTO> studentsBlacklisted, String accessType, Integer initialCoins, String accessPassword) {
+        this.courseId = courseId;
+        this.title = title;
+        this.description = description;
+        this.classroomURL = classroomURL;
+        this.guardianMain = guardianMain;
+        this.accessLevel = accessLevel;
+        this.assignments = assignments;
+        this.userCanEditCourse = userCanEditCourse;
+        this.guardians = guardians;
+        this.studentsSignedIn = studentsSignedIn;
+        this.studentsWhitelisted = studentsWhitelisted;
+        this.studentsBlacklisted = studentsBlacklisted;
+        this.accessType = accessType;
+        this.initialCoins = initialCoins;
+        this.accessPassword = accessPassword;
+    }
 
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getClassroomURL() {
+        return classroomURL;
+    }
+
+    public void setClassroomURL(String classroomURL) {
+        this.classroomURL = classroomURL;
+    }
+
+    public UserDTO getGuardianMain() {
+        return guardianMain;
+    }
+
+    public void setGuardianMain(UserDTO guardianMain) {
+        this.guardianMain = guardianMain;
+    }
+
+    public String getAccessLevel() {
+        return accessLevel;
+    }
+
+    public void setAccessLevel(String accessLevel) {
+        this.accessLevel = accessLevel;
+    }
 
     public List<AssignmentBasicDTO> getAssignments() {
         return assignments;
@@ -30,11 +136,67 @@ public class CourseDTO extends CourseBasicDTO{
         this.assignments = assignments;
     }
 
-    public Boolean getUserHasAdminRights() {
-        return userHasAdminRights;
+    public Boolean getUserCanEditCourse() {
+        return userCanEditCourse;
     }
 
-    public void setUserHasAdminRights(Boolean userHasAdminRights) {
-        this.userHasAdminRights = userHasAdminRights;
+    public void setUserCanEditCourse(Boolean userCanEditCourse) {
+        this.userCanEditCourse = userCanEditCourse;
+    }
+
+    public List<UserDTO> getGuardians() {
+        return guardians;
+    }
+
+    public void setGuardians(List<UserDTO> guardians) {
+        this.guardians = guardians;
+    }
+
+    public List<UserDTO> getStudentsSignedIn() {
+        return studentsSignedIn;
+    }
+
+    public void setStudentsSignedIn(List<UserDTO> studentsSignedIn) {
+        this.studentsSignedIn = studentsSignedIn;
+    }
+
+    public List<UserDTO> getStudentsWhitelisted() {
+        return studentsWhitelisted;
+    }
+
+    public void setStudentsWhitelisted(List<UserDTO> studentsWhitelisted) {
+        this.studentsWhitelisted = studentsWhitelisted;
+    }
+
+    public List<UserDTO> getStudentsBlacklisted() {
+        return studentsBlacklisted;
+    }
+
+    public void setStudentsBlacklisted(List<UserDTO> studentsBlacklisted) {
+        this.studentsBlacklisted = studentsBlacklisted;
+    }
+
+    public String getAccessType() {
+        return accessType;
+    }
+
+    public void setAccessType(String accessType) {
+        this.accessType = accessType;
+    }
+
+    public Integer getInitialCoins() {
+        return initialCoins;
+    }
+
+    public void setInitialCoins(Integer initialCoins) {
+        this.initialCoins = initialCoins;
+    }
+
+    public String getAccessPassword() {
+        return accessPassword;
+    }
+
+    public void setAccessPassword(String accessPassword) {
+        this.accessPassword = accessPassword;
     }
 }

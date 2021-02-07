@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.CourseAccessLevelRepository;
+import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseAccessLevelRepository;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseBasicDTO;
 import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseDTO;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseDetailedDTO;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserAccessServices;
+import  org.apache.commons.collections4.CollectionUtils;
 
 import java.util.stream.Collectors;
 
@@ -27,13 +26,14 @@ public class CoursesMappers {
     @Autowired
     private CourseAccessLevelRepository courseAccessLevelRepository;
 
-    public CourseBasicDTO castCourseEntityToCourseBasicDTO(CourseEntity courseEntity) {
-        return new CourseBasicDTO(
+    public CourseDTO castCourseEntityToCourseBasicDTO(CourseEntity courseEntity) {
+        return new CourseDTO(
                 courseEntity.getCourseId(),
                 courseEntity.getCourseTitle(),
                 courseEntity.getCourseDescription(),
                 courseEntity.getCourseClassroomUrl(),
-                usersMappers.castUserEntityToUserDTO(courseEntity.getGuardianMain(), false)
+                usersMappers.castUserEntityToUserDTO(courseEntity.getGuardianMain(), false),
+                courseEntity.getAccessLevel().getDescription()
         );
     }
 
@@ -44,44 +44,48 @@ public class CoursesMappers {
                 courseEntity.getCourseDescription(),
                 courseEntity.getCourseClassroomUrl(),
                 usersMappers.castUserEntityToUserDTO(courseEntity.getGuardianMain(), false),
-                courseEntity.getAssignments().stream()
+                courseEntity.getAccessLevel().getDescription(),
+                CollectionUtils.emptyIfNull(courseEntity.getAssignments()).stream()
                         .map(e -> assignmentMappers.castAssignmentEntityToAssignmentBasicDTO(e, userEntity))
                         .collect(Collectors.toList())
         );
     }
 
-    public CourseDetailedDTO castCourseEntittyToCourseDetailedDTO(CourseEntity courseEntity, UserEntity userEntity) {
-        return new CourseDetailedDTO(
+    public CourseDTO castCourseEntityToCourseDetailedDTO(CourseEntity courseEntity, UserEntity userEntity) {
+        return new CourseDTO(
                 courseEntity.getCourseId(),
                 courseEntity.getCourseTitle(),
                 courseEntity.getCourseDescription(),
                 courseEntity.getCourseClassroomUrl(),
                 usersMappers.castUserEntityToUserDTO(courseEntity.getGuardianMain(), false),
-                courseEntity.getAssignments().stream()
+                courseEntity.getAccessLevel().getDescription(),
+                CollectionUtils.emptyIfNull(courseEntity.getAssignments()).stream()
                         .map(e -> assignmentMappers.castAssignmentEntityToAssignmentBasicDTO(e, userEntity))
                         .collect(Collectors.toList()),
                 userAccessServices.userCanEditCourse(userEntity, courseEntity),
-                courseEntity.getUsersGuardians().stream()
+                CollectionUtils.emptyIfNull(courseEntity.getUsersGuardians()).stream()
                         .map(e -> usersMappers.castUserEntityToUserDTO(e, false))
                         .collect(Collectors.toList()),
-                courseEntity.getUsersSignedInCourse().stream()
+                CollectionUtils.emptyIfNull(courseEntity.getUsersSignedInCourse()).stream()
                         .map(e -> usersMappers.castUserEntityToUserDTO(e, false))
                         .collect(Collectors.toList()),
-                courseEntity.getUsersWhitelisted().stream()
+                CollectionUtils.emptyIfNull(courseEntity.getUsersWhitelisted()).stream()
                         .map(e -> usersMappers.castUserEntityToUserDTO(e, false))
                         .collect(Collectors.toList()),
-                courseEntity.getUsersBlacklisted().stream()
+                CollectionUtils.emptyIfNull(courseEntity.getUsersBlacklisted()).stream()
                         .map(e -> usersMappers.castUserEntityToUserDTO(e, false))
                         .collect(Collectors.toList()),
-                courseEntity.getAccessLevel().getDescription()
+                courseEntity.getAccessLevel().getDescription(),
+                courseEntity.getInitialCoins(),
+                courseEntity.getAccessPassword() == null ? null : courseEntity.getAccessPassword().getPassword()
         );
     }
 
-    public CourseEntity castCourseDetailedDtoToCourseEntity(CourseDetailedDTO courseDetailedDTO) {
+   /* public CourseEntity castCourseDetailedDtoToCourseEntity(CourseDetailedDTO courseDetailedDTO) {
         return this.castCourseDetailedDtoToCourseEntity(courseDetailedDTO, new CourseEntity());
     }
 
-    public CourseEntity castCourseDetailedDtoToCourseEntity(CourseDetailedDTO dto, CourseEntity entity) {
+    public CourseEntity castCourseDetailedDtoToCourseEntity(CourseDTO dto, CourseEntity entity) {
         entity.setUsersGuardians(usersMappers.castListOfUserDtosToUserEntities(dto.getGuardians()));
         entity.setUsersSignedInCourse(usersMappers.castListOfUserDtosToUserEntities(dto.getStudentsSignedIn()));
         entity.setUsersWhitelisted(usersMappers.castListOfUserDtosToUserEntities(dto.getStudentsWhitelisted()));
@@ -97,6 +101,6 @@ public class CoursesMappers {
         entity.setCourseClassroomUrl(dto.getClassroomUrl());
 
         return entity;
-    }
+    }*/
 
 }
