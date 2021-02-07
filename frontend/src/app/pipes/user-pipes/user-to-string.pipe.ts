@@ -7,6 +7,10 @@ import { User } from 'src/app/models/user-model';
 export class UserToStringPipe implements PipeTransform {
   transform(user: User | null): string {
     if (user == null) return '';
-    return user.name + ' ' + user.surname;
+
+    const name = user.name == null ? '' : user.name;
+    const surname = user.surname == null ? '' : user.surname;
+
+    return name + ' ' + surname;
   }
 }
