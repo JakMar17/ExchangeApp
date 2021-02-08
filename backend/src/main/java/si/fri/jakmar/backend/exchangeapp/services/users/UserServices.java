@@ -12,6 +12,12 @@ public class UserServices {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * gets user from database by personal number or throws exception DataNotFound
+     * @param personalNumber users personal number
+     * @return UserEntity
+     * @throws DataNotFoundException user with given personal number doesnt exists
+     */
     public UserEntity getUserByPersonalNumber(String personalNumber) throws DataNotFoundException {
         var users = userRepository.findUsersByPersonalNumber(personalNumber);
         if(users == null || users.size() == 0)
@@ -20,6 +26,12 @@ public class UserServices {
             return users.get(0);
     }
 
+    /**
+     * gets user from database by email or throws exception DataNotFound
+     * @param email users email
+     * @return UserEntity
+     * @throws DataNotFoundException user with given email doesnt exists
+     */
     public UserEntity getUserByEmail(String email) throws DataNotFoundException {
         var users = userRepository.findUsersByEmail(email);
         if(users == null || users.size() == 0)
@@ -28,6 +40,13 @@ public class UserServices {
             return users.get(0);
     }
 
+    /**
+     * gets user from database by personal number or (if personal number is not given) by email or throws exception DataNotFound
+     * @param personalNumber users personal number
+     * @param email users email
+     * @return UserEntity
+     * @throws DataNotFoundException user with given personal number/email doesnt exists
+     */
     public UserEntity getUserByEmailOrPersonalNumber(String personalNumber, String email) throws DataNotFoundException {
         UserEntity u = null;
         if(personalNumber != null)

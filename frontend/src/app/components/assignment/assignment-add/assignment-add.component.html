@@ -6,7 +6,7 @@
       <div class="box">
         <h1 *ngIf="!editing" class="title is-2">Dodajanje nove naloge</h1>
         <h1 *ngIf="editing" class="title is-2">
-          Urejanje naloge ({{ assignment.assignmentId }})
+          Urejanje naloge ({{ assignment.title }})
         </h1>
       </div>
 
@@ -30,7 +30,7 @@
           <label class="label">Povezava do naloge na eučilnici</label>
           <div class="control">
             <input
-              [(ngModel)]="assignment.classromUrl"
+              [(ngModel)]="assignment.classroomUrl"
               class="input"
               type="text"
               placeholder="https://ucilnica.fri.uni-lj.si"
@@ -118,7 +118,7 @@
               <label class="label">Število oddaj udeleženca</label>
               <div class="control">
                 <input
-                  [(ngModel)]="assignment.maxSubmissionsStudent"
+                  [(ngModel)]="assignment.maxSubmissionsPerStudent"
                   class="input"
                   type="number"
                   placeholder="5"
@@ -178,9 +178,9 @@
               <div class="control">
                 <input
                   [ngClass]="{
-                    'is-danger': assignment.inputDataType == null
+                    'is-danger': assignment.inputExtension == null
                   }"
-                  [(ngModel)]="assignment.inputDataType"
+                  [(ngModel)]="assignment.inputExtension"
                   class="input"
                   type="text"
                   placeholder=".txt"
@@ -196,9 +196,9 @@
               <div class="control">
                 <input
                   [ngClass]="{
-                    'is-danger': assignment.outputDataType == null
+                    'is-danger': assignment.outputExtension == null
                   }"
-                  [(ngModel)]="assignment.outputDataType"
+                  [(ngModel)]="assignment.outputExtension"
                   class="input"
                   type="text"
                   placeholder=".txt"
@@ -215,30 +215,18 @@
           <ul>
             <li
               (click)="onSubmissionCheckTabChange(submissionCheckEnum.NONE)"
-              [ngClass]="{
-                'is-active':
-                  assignment.submissionCheck == submissionCheckEnum.NONE
-              }"
             >
               <a>Brez</a>
             </li>
             <li
               (click)="onSubmissionCheckTabChange(submissionCheckEnum.MANUAL)"
-              [ngClass]="{
-                'is-active':
-                  assignment.submissionCheck == submissionCheckEnum.MANUAL
-              }"
             >
               <a>Ročno testiranje</a>
             </li>
             <li
               (click)="
                 onSubmissionCheckTabChange(submissionCheckEnum.AUTOMATIC)
-              "
-              [ngClass]="{
-                'is-active':
-                  assignment.submissionCheck == submissionCheckEnum.AUTOMATIC
-              }"
+"
             >
               <a>Avtomatsko testiranje</a>
             </li>
@@ -247,9 +235,9 @@
         <label class="checkbox is-success">
           <input
             type="checkbox"
-            [checked]="assignment.submissionNotify"
+            [checked]="assignment.notifyOnEmail"
             (change)="
-              assignment.submissionNotify = !assignment.submissionNotify
+              assignment.submissionNotify = !assignment.notifyOnEmail
             "
           />
           Ob novi oddaji me obvesti po epošti.
@@ -268,7 +256,7 @@
           skrbnik predmeta obveščen o podobnosti.
         </div>
         <label class="checkbox is-success">
-          <input (click)="onPlagiarismWarningCheckboxClick()" type="checkbox" />
+          <input (click)="onPlagiarismWarningCheckboxClick()" type="checkbox" [checked]="assignment.plagiarismWarning != null" />
           Nastavi opozorilno stopnjo
         </label>
 
@@ -289,7 +277,7 @@
           obravnava kot plagiat.
         </div>
         <label class="checkbox is-success">
-          <input (click)="onPlagiarismLevelCheckboxClick()" type="checkbox" />
+          <input (click)="onPlagiarismLevelCheckboxClick()" type="checkbox" [checked]="assignment.plagiarismLevel != null" />
           Nastavi stopnjo zavrnitve
         </label>
         <div *ngIf="assignment.plagiarismLevel" class="field">
@@ -305,7 +293,7 @@
         </div>
       </div>
 
-      <div class="box" *ngIf="assignment.studentSubmissions != null">
+      <div class="box" *ngIf="assignment.noOfSubmissionsTotal != null">
         <h1 class="title is-3">Pregled oddaj</h1>
         <div class="table-container">
           <table class="table table is-fullwidth table is-hoverable">
@@ -405,7 +393,7 @@
               <span> Arhiviraj nalogo </span>
             </button>
           </div>
-          <div class="column">
+          <div class="column" *ngIf="editing">
             <button
               (click)="deleteAssignment()"
               class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"

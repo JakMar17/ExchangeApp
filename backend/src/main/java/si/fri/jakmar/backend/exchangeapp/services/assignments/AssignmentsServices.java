@@ -4,6 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
+import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.SubmissionCheckEntity;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.AssignmentRepository;
 import si.fri.jakmar.backend.exchangeapp.mappers.AssignmentMapper;
 import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.assignments.AssignmentDTO;
@@ -30,6 +31,12 @@ public class AssignmentsServices {
     @Autowired
     private AssignmentRepository assignmentRepository;
 
+    /**
+     * return entity from database
+     * @param assignmentId to be find by
+     * @return entity
+     * @throws DataNotFoundException assignments doesn't exists
+     */
     public AssignmentEntity getAssignmentById(Integer assignmentId) throws DataNotFoundException {
         var optional = assignmentRepository.findById(assignmentId);
         if (optional.isEmpty())
@@ -38,6 +45,15 @@ public class AssignmentsServices {
             return optional.get();
     }
 
+    /**
+     * returns basic data for assignments of given course
+     * @param personalNumber users personal number
+     * @param courseId id for parent
+     * @return list of assignments dto
+     * @throws DataNotFoundException user, course or assignments doesnt exists
+     * @throws AccessUnauthorizedException user has no right to perform operation
+     * @throws AccessForbiddenException user has no right to perform operation
+     */
     public List<AssignmentDTO> getBasicDataForAssignmentsOfCourse(String personalNumber, Integer courseId) throws DataNotFoundException, AccessUnauthorizedException, AccessForbiddenException {
         var user = userServices.getUserByPersonalNumber(personalNumber);
         var course = coursesServices.getCourseEntityById(courseId);
@@ -49,6 +65,15 @@ public class AssignmentsServices {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * inserts or updates assignment
+     * @param personalNumber of user performing operation
+     * @param courseId where updated or inserted assignment is (parent)
+     * @param assignmentDTO data for inserting/updating
+     * @return updated object
+     * @throws DataNotFoundException course, user or assignment does not exists
+     * @throws AccessForbiddenException user has no rights to perform operation
+     */
     public AssignmentDTO insertOrUpdateAssignment(String personalNumber, Integer courseId, AssignmentDTO assignmentDTO) throws DataNotFoundException, AccessForbiddenException {
         boolean insertNew = assignmentDTO.getAssignmentId() == null;
         var user = userServices.getUserByPersonalNumber(personalNumber);
@@ -80,7 +105,7 @@ public class AssignmentsServices {
                 assignmentDTO.getPlagiarismWarning(),
                 assignmentDTO.getPlagiarismLevel(),
                 assignmentDTO.getVisible() ? 1 : 0,
-                null,//assignmentDTO.getTestType()
+                new SubmissionCheckEntity(1),//assignmentDTO.getTestType()
                 null,
                 course,
                 user
@@ -90,6 +115,15 @@ public class AssignmentsServices {
         return assignmentMapper.castAssignmentEntityToAssignmentDTO(assignmentEntity, user);
     }
 
+    /**
+     * sets visibility for assignment
+     * @param personalNumber users personal number
+     * @param assignmentId to be updated
+     * @param isVisible update with value
+     * @return updated dto object
+     * @throws DataNotFoundException user, assignment or course doesnt exists
+     * @throws AccessForbiddenException user has not right to perform operation
+     */
     public AssignmentDTO setVisibility(String personalNumber, Integer assignmentId, Boolean isVisible) throws DataNotFoundException, AccessForbiddenException {
         var user = userServices.getUserByPersonalNumber(personalNumber);
         var assignment = getAssignmentById(assignmentId);
@@ -105,5 +139,39 @@ public class AssignmentsServices {
         assignment = assignmentRepository.save(assignment);
 
         return assignmentMapper.castAssignmentEntityToAssignmentDTO(assignment, user);
+    }
+
+    public AssignmentDTO getAssignmentsData(String personalNumber, Integer assignmentId) throws DataNotFoundException, AccessUnauthorizedException, AccessForbiddenException {
+        var assignment = getAssignmentById(assignmentId);
+        var user = userServices.getUserByPersonalNumber(personalNumber);
+        var course = assignment.getCourse();
+
+        if(course == null)
+            throw new DataNotFoundException("Ne najdem predmeta");
+
+        if(!userAccessServices.userHasAccessToCourse(user, course))
+            throw new AccessForbiddenException("Uporabnik nima dostopa do predmeta");
+
+        return assignmentMapper.castAssignmentEntityToAssignmentDTO(assignment, user);
+    }
+
+    /**
+     * delets entity from database
+     * @param personalNumber of user who is performing operation
+     * @param assignmentId of entity to be deleted
+     * @throws DataNotFoundException user, course or assignment doesnt exists
+     * @throws AccessForbiddenException user doesnt have rights to perform operation
+     */
+    public void deleteAssignment(String personalNumber, Integer assignmentId) throws DataNotFoundException, AccessForbiddenException {
+        var assignment = getAssignmentById(assignmentId);
+        var user = userServices.getUserByPersonalNumber(personalNumber);
+        var course = assignment.getCourse();
+        if(course == null)
+            throw new DataNotFoundException("Ne najdem predmeta");
+
+        if(!userAccessServices.userCanEditCourse(user, course))
+            throw new AccessForbiddenException("Ni pravic");
+
+        assignmentRepository.delete(assignment);
     }
 }

@@ -69,7 +69,7 @@ export class AssignmentComponent implements OnInit {
         (this.assignment.maxSubmissionsTotal ?? 0) === 0
       )
         if (
-          (this.assignment.studentSubmissions?.length ?? 0) <
+          (/* this.assignment.studentSubmissions?.length */null ?? 0) <
             this.assignment.maxSubmissionsPerStudent ||
           (this.assignment.maxSubmissionsPerStudent ?? 0) === 0
         )
@@ -78,11 +78,13 @@ export class AssignmentComponent implements OnInit {
   }
 
   public showDownloadMySubmissionButton(): boolean {
-    return (this.assignment.studentSubmissions?.length ?? 0) > 0;
+    /* return (this.assignment.studentSubmissions?.length ?? 0) > 0; */
+    return true;
   }
 
   public showDownloadBoughtSubmissionButton(): boolean {
-    return (this.assignment.boughtSubmissions?.length ?? 0) > 0;
+    /* return (this.assignment.boughtSubmissions?.length ?? 0) > 0; */
+    return true;
   }
 
   public showBuySubmissionButton(): boolean {

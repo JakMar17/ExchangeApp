@@ -34,7 +34,7 @@ public class AssignmentMapper {
     }
 
     public AssignmentDTO castAssignmentEntityToAssignmentDTO(AssignmentEntity assignmentEntity, UserEntity userEntity) {
-        int noOfSubmissionsTotal = assignmentEntity.getSubmissions().size();
+        int noOfSubmissionsTotal = assignmentEntity.getSubmissions() != null ? assignmentEntity.getSubmissions().size() : 0;
         int noOfSubmissionsStudent = (int)
                 CollectionUtils.emptyIfNull(assignmentEntity.getSubmissions())
                         .stream()

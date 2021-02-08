@@ -39,6 +39,12 @@ public class CoursesServices {
     @Autowired
     private UserAccessServices userAccessServices;
 
+    /**
+     * gets CourseEntity from database with given courseId
+     * @param courseId attribute for finding entity
+     * @return course with given id
+     * @throws DataNotFoundException course with given id doesnt exists
+     */
     public CourseEntity getCourseEntityById(Integer courseId) throws DataNotFoundException {
         var o = courseRepository.findById(courseId);
         if(o.isEmpty())
@@ -165,6 +171,14 @@ public class CoursesServices {
     }
 
 
+    /**
+     * insert new course or update existing if course id is given
+     * @param personalNumber personal number of user who is updating/inserting
+     * @param courseDto data for update/insert
+     * @return updated courseDto object
+     * @throws DataNotFoundException either user or course dont exists
+     * @throws AccessForbiddenException user does not have rights for operation
+     */
     public CourseDTO insertOrUpdateCourse(String personalNumber, CourseDTO courseDto) throws DataNotFoundException, AccessForbiddenException {
         boolean insertNew = courseDto.getCourseId() == null;
         UserEntity user = userServices.getUserByPersonalNumber(personalNumber);
@@ -214,6 +228,12 @@ public class CoursesServices {
         return coursesMappers.castCourseEntityToCourseDetailedDTO(courseEntity, user);
     }
 
+    /**
+     * gets user entity by either personal number or email, without throwing errors
+     * @param personalNumber users personal number
+     * @param email users email
+     * @return UserEntity if user exists or null
+     */
     private UserEntity getUserEntityWithoutExceptions(String personalNumber, String email) {
         try {
             return userServices.getUserByEmailOrPersonalNumber(personalNumber, email);
@@ -223,6 +243,11 @@ public class CoursesServices {
         return null;
     }
 
+    /**
+     * creates course's password and return entity
+     * @param password password to be created
+     * @return CourseAccessPassword with given password
+     */
     private CourseAccessPassword createPasswordForCourse(String password) {
         if (password == null)
             return null;
@@ -230,6 +255,12 @@ public class CoursesServices {
             return courseAccessPasswordRepository.save(new CourseAccessPassword(password));
     }
 
+    /**
+     * gets course's access level by given description
+     * @param str description of access level
+     * @return CourseAccessLevelEntity with given description
+     * @throws DataNotFoundException entity with given description doesn't exists
+     */
     private CourseAccessLevelEntity getCourseAccessLevelEntity(String str) throws DataNotFoundException {
         var list = courseAccessLevelRepository.getCourseAccessLevelEntitiesByDescription(str);
         if(list == null || list.isEmpty())

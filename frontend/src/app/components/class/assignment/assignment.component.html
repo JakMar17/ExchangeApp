@@ -23,9 +23,9 @@
   <div class="column">
     <h1 class="title">
       {{ assignment.title }} <span *ngIf="!assignment.visible">[SKRITO]</span>
-      <span *ngIf="assignment.status == assignmentStatusEnum.ARCHIVED"
+      <!-- <span *ngIf="assignment.status == assignmentStatusEnum.ARCHIVED"
         >[ARHIVIRANO]</span
-      >
+      > -->
     </h1>
   </div>
 </div>
@@ -35,15 +35,19 @@
     <tr>
       <td>Status naloge</td>
       <td style="text-align: end">
-        {{
+        <!-- {{
           assignment.status
             | assignmentStatus: assignment.startDate:assignment.endDate
-        }}
+        }} -->
       </td>
     </tr>
     <tr>
       <td>Število oddanih testnih primerov</td>
-      <td style="text-align: end">{{ assignment.noOfSubmissionsTotal }} ({{assignment.noOfSubmissionsStudent}})</td>
+      <td style="text-align: end">
+        {{ assignment.noOfSubmissionsTotal }} ({{
+          assignment.noOfSubmissionsStudent
+        }})
+      </td>
     </tr>
     <tr>
       <td>Omejitev oddaj na študenta</td>
@@ -68,13 +72,14 @@
   </tbody>
 </table>
 <h6 class="title is-5">Moje oddaje</h6>
-<div
+<!-- <div
   *ngIf="
     assignment.studentSubmissions != null &&
     assignment.studentSubmissions.length > 0
   "
   class="table-container"
->
+> -->
+<div *ngIf="true" class="table-container">
   <table class="table is-fullwidth is-hoverable">
     <thead>
       <tr>
@@ -134,13 +139,14 @@
   </div>
 </div>
 <h6 class="title is-5">Kupljeni testni primeri</h6>
-<div
+<!-- <div
   *ngIf="
     assignment.boughtSubmissions != null &&
     assignment.boughtSubmissions.length > 0
   "
   class="table-container"
->
+> -->
+<div *ngIf="true" class="table-container">
   <table class="table is-fullwidth is-hoverable">
     <thead>
       <tr>

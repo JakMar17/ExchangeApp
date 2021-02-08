@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CoursesDammyData } from 'src/app/aaa_dummy-data/dummy-courses';
 import { CourseApiService } from 'src/app/api/course-api/course-api.service';
 import { Course } from 'src/app/models/class-model';
 import { User } from 'src/app/models/user-model';

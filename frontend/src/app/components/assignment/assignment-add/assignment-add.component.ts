@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -18,10 +19,8 @@ export class AssignmentAddComponent implements OnInit {
     startDate: new Date(),
     coinsPerSubmission: 1,
     coinsPrice: 1,
-    submissionCheck: SubmissionCheck.NONE,
-    submissionNotify: false,
+    notifyOnEmail: false,
     visible: true,
-    noOfSubmisions: 0,
   };
 
   public courseId: number | null = null;
@@ -37,23 +36,23 @@ export class AssignmentAddComponent implements OnInit {
     this.activatedRoute.params.subscribe((params) => {
       if (params != null) {
         this.courseId = params.courseId;
-        const assignmentId = params.assignmentId;
+        this.assignment.assignmentId = params.assignmentId;
 
-        if (this.courseId != null && assignmentId != null) {
+        if (this.courseId != null && this.assignment.assignmentId != null) {
           this.editing = true;
-          assignmentService
-            .getAssignemntFromCourse(this.courseId, assignmentId)
-            .subscribe((data) => (this.assignment = data));
+          assignmentService.getAssignment(this.assignment).subscribe((data) => {
+            this.assignment = data;
+            console.log(data);
+          });
         }
       }
     });
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   public changeSubmissionCheck(check: SubmissionCheck): void {
-    this.assignment.submissionCheck = check;
+    //this.assignment.submissionCheck = check;
   }
 
   public onPlagiarismWarningCheckboxClick(): void {
@@ -69,19 +68,20 @@ export class AssignmentAddComponent implements OnInit {
   }
 
   public onSubmissionCheckTabChange(submissionCheck: SubmissionCheck): void {
-    this.assignment.submissionCheck = submissionCheck;
+    //this.assignment.submissionCheck = submissionCheck;
   }
 
   public saveAssignment(): void {
+    console.log(this.courseId);
     this.errorMessage = this.checkInputs();
 
     if (this.errorMessage == null) {
       this.assignmentService
-        .saveAssignment(this.courseId, this.assignment)
-        .subscribe((data) => {
-          alert('Naloga je shranjena (' + data.assignmentId + ')');
-          this.navigateBackToCourse();
-        });
+        .saveAssignment(this.assignment, this.courseId)
+        .subscribe(
+          () => this.alertAndExit('Naloga je bila shranjena'),
+          (err: HttpErrorResponse) => (this.errorMessage = err.error.message)
+        );
     }
   }
 
@@ -90,27 +90,31 @@ export class AssignmentAddComponent implements OnInit {
   }
 
   public archiveAssignment(): void {
-    this.assignment.status = AssignmentStatus.ARCHIVED;
-    this.saveAssignment();
+    this.assignmentService.archiveAssignment(this.assignment).subscribe(
+      () => this.alertAndExit('Naloga je bila arhivirana'),
+      (err: HttpErrorResponse) => (this.errorMessage = err.error.message)
+    );
   }
 
   public deleteAssignment(): void {
-    this.assignment.status = AssignmentStatus.DELETED;
-    this.saveAssignment();
+    this.assignmentService.deleteAssignment(this.assignment).subscribe(
+      () => this.alertAndExit('Naloga je bila izbrisana'),
+      (err: HttpErrorResponse) => (this.errorMessage = err.error.message)
+    );
   }
 
   private checkInputs(): string | null {
     if (this.assignment.title.length == 0)
       return 'Ime naloge mora biti izpolnjeno';
 
-    if (this.assignment.inputDataType == null)
+    if (this.assignment.inputExtension == null)
       return 'Tip vhodne datoteke mora biti izpolnjen';
 
-    if (this.assignment.outputDataType == null)
+    if (this.assignment.outputExtension == null)
       return 'Tip izhodne datoteke mora biti izpolnjen';
 
-    if (this.assignment.status == null)
-      this.assignment.status = AssignmentStatus.ACTIVE;
+    /* if (this.assignment.status == null)
+      this.assignment.status = AssignmentStatus.ACTIVE; */
 
     return null;
   }
@@ -131,5 +135,10 @@ export class AssignmentAddComponent implements OnInit {
 
   private navigateBackToCourse(): void {
     this.router.navigate(['/course/' + this.courseId]);
+  }
+
+  private alertAndExit(message: string) {
+    alert(message);
+    this.navigateBackToCourse();
   }
 }

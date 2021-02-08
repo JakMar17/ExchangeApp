@@ -14,6 +14,13 @@ public class SubmissionCheckEntity {
     @Column(name = "submission_check_description")
     private String description;
 
+    public SubmissionCheckEntity() {
+    }
+
+    public SubmissionCheckEntity(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

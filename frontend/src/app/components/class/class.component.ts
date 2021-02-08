@@ -60,7 +60,6 @@ export class ClassComponent implements OnInit {
           this.course = data;
           this.course.notifications = this.course.notifications ?? [];
           this.courseVisibility = CourseVisibilityToUser.VISIBLE;
-          //this.setAccessRights();
         },
         (err: HttpErrorResponse) => {
           switch (err.status) {
@@ -84,7 +83,6 @@ export class ClassComponent implements OnInit {
             if (this.course.notifications == null)
               this.course.notifications = [];
             console.log(this.course);
-            //this.setAccessRights();
           },
           (err: HttpErrorResponse) => {
             console.error(err);

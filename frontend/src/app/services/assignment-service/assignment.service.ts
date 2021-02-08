@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CoursesDammyData } from 'src/app/aaa_dummy-data/dummy-courses';
 import { AssignmentsApiService } from 'src/app/api/assignments-api/assignments-api.service';
 import { Assignment } from 'src/app/models/assignment-model';
 import { Course } from 'src/app/models/class-model';
@@ -10,8 +9,6 @@ import { UserServiceService } from '../user-service/user-service.service';
   providedIn: 'root',
 })
 export class AssignmentService {
-  private courseDummy = new CoursesDammyData();
-
   constructor(
     private userService: UserServiceService,
     private assignmentApi: AssignmentsApiService
@@ -32,5 +29,24 @@ export class AssignmentService {
       this.userService.userLoggedIn.personalNumber,
       !assignment.visible
     );
+  }
+
+  public getAssignment(assignment: Assignment): Observable<Assignment> {
+    return this.assignmentApi.getAssignmentById(
+      assignment.assignmentId,
+      this.userService.userLoggedIn.personalNumber
+    );
+  }
+
+  public saveAssignment(assignment: Assignment, courseId: number): Observable<Assignment> {
+    return this.assignmentApi.postAssignment(courseId, assignment, this.userService.userLoggedIn.personalNumber);
+  }
+
+  public archiveAssignment(assignment: Assignment): Observable<Assignment>{
+    return this.assignmentApi.archiveAssignment(assignment, this.userService.userLoggedIn.personalNumber);
+  }
+
+  public deleteAssignment(assignment: Assignment): Observable<boolean> {
+    return this.assignmentApi.deleteAssignment(assignment.assignmentId, this.userService.userLoggedIn.personalNumber);
   }
 }
