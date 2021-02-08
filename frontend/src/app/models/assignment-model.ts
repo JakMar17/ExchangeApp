@@ -8,7 +8,7 @@ export interface Assignment {
   startDate: Date;
   endDate?: Date;
   maxSubmissionsTotal?: number;
-  maxSubmissionsStudent?: number;
+  maxSubmissionsPerStudent?: number;
   coinsPerSubmission: number;
   coinsPrice: number;
   inputDataType?: string;
@@ -18,7 +18,8 @@ export interface Assignment {
   submissionNotify: boolean;
   plagiarismWarning?: number;
   plagiarismLevel?: number;
-  noOfSubmisions: number;
+  noOfSubmissionsTotal: number;
+  noOfSubmissionsStudent: number;
   studentSubmissions?: Submission[];
   boughtSubmissions?: Submission[];
   status?: AssignmentStatus ;

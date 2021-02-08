@@ -43,12 +43,12 @@
     </tr>
     <tr>
       <td>Število oddanih testnih primerov</td>
-      <td style="text-align: end">{{ assignment.noOfSubmisions }}</td>
+      <td style="text-align: end">{{ assignment.noOfSubmissionsTotal }} ({{assignment.noOfSubmissionsStudent}})</td>
     </tr>
     <tr>
       <td>Omejitev oddaj na študenta</td>
       <td style="text-align: end">
-        {{ assignment.maxSubmissionsStudent | assignmentLimitSubmissions }}
+        {{ assignment.maxSubmissionsPerStudent | assignmentLimitSubmissions }}
       </td>
     </tr>
     <tr>

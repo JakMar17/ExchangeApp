@@ -61,7 +61,7 @@ public class CourseManagementApi {
         return null;
     }
 
-    @PutMapping("/archive")
+    @GetMapping("/archive")
     public ResponseEntity<Object> archiveCourse(
             @RequestHeader(name = "Personal-Number") String personalNumber,
             @RequestParam Integer courseId

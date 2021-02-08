@@ -1,7 +1,7 @@
 package si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.assignments.AssignmentBasicDTO;
+import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.assignments.AssignmentDTO;
 import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.users.UserDTO;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class CourseDTO{
     private UserDTO guardianMain;
     private String accessLevel;
 
-    private List<AssignmentBasicDTO> assignments;
+    private List<AssignmentDTO> assignments;
     private Boolean userCanEditCourse;
 
     // all info
@@ -41,7 +41,7 @@ public class CourseDTO{
         this.accessLevel = accessLevel;
     }
 
-    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentBasicDTO> assignments) {
+    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments) {
         this.courseId = courseId;
         this.title = title;
         this.description = description;
@@ -51,7 +51,7 @@ public class CourseDTO{
         this.assignments = assignments;
     }
 
-    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentBasicDTO> assignments, Boolean userCanEditCourse) {
+    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments, Boolean userCanEditCourse) {
         this.courseId = courseId;
         this.title = title;
         this.description = description;
@@ -62,7 +62,7 @@ public class CourseDTO{
         this.userCanEditCourse = userCanEditCourse;
     }
 
-    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentBasicDTO> assignments, Boolean userCanEditCourse, List<UserDTO> guardians, List<UserDTO> studentsSignedIn, List<UserDTO> studentsWhitelisted, List<UserDTO> studentsBlacklisted, String accessType, Integer initialCoins, String accessPassword) {
+    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments, Boolean userCanEditCourse, List<UserDTO> guardians, List<UserDTO> studentsSignedIn, List<UserDTO> studentsWhitelisted, List<UserDTO> studentsBlacklisted, String accessType, Integer initialCoins, String accessPassword) {
         this.courseId = courseId;
         this.title = title;
         this.description = description;
@@ -128,11 +128,11 @@ public class CourseDTO{
         this.accessLevel = accessLevel;
     }
 
-    public List<AssignmentBasicDTO> getAssignments() {
+    public List<AssignmentDTO> getAssignments() {
         return assignments;
     }
 
-    public void setAssignments(List<AssignmentBasicDTO> assignments) {
+    public void setAssignments(List<AssignmentDTO> assignments) {
         this.assignments = assignments;
     }
 

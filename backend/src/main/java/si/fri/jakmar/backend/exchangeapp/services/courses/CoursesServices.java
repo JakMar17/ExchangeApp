@@ -1,5 +1,6 @@
 package si.fri.jakmar.backend.exchangeapp.services.courses;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseAccessLevelEntity;
@@ -38,6 +39,13 @@ public class CoursesServices {
     @Autowired
     private UserAccessServices userAccessServices;
 
+    public CourseEntity getCourseEntityById(Integer courseId) throws DataNotFoundException {
+        var o = courseRepository.findById(courseId);
+        if(o.isEmpty())
+            throw new DataNotFoundException("Iskan predmet ne obstaja");
+        else
+            return o.get();
+    }
 
     /**
      * returns basic data of all courses in system
@@ -58,6 +66,13 @@ public class CoursesServices {
         return dtos;
     }
 
+    public List<CourseDTO> getAllCoursesOfUserWithBasicInfo(String personalNumber) throws DataNotFoundException {
+        UserEntity user = userServices.getUserByPersonalNumber(personalNumber);
+        return CollectionUtils.emptyIfNull(user.getUsersCourses()).stream()
+                .map(e -> coursesMappers.castCourseEntityToCourseBasicDTO(e))
+                .collect(Collectors.toList());
+    }
+
 
     /**
      * return course data if user has right to view course
@@ -70,7 +85,7 @@ public class CoursesServices {
      * @throws AccessUnauthorizedException user does not have right to access (is not signed in yet and course has password protection)
      */
     public CourseDTO getCourseData(Integer courseId, String userPersonalNumber) throws DataNotFoundException, AccessForbiddenException, AccessUnauthorizedException {
-        var user = userServices.getUserByPersonalNumber(userPersonalNumber);
+        UserEntity user = userServices.getUserByPersonalNumber(userPersonalNumber);
         var courseEntityOptional = courseRepository.findById(courseId);
 
         if (courseEntityOptional.isEmpty())
@@ -138,7 +153,7 @@ public class CoursesServices {
      */
     public CourseDTO getCourseDetailed(Integer courseId, String userPersonalNumber) throws DataNotFoundException, AccessForbiddenException {
         var cOptional = courseRepository.findById(courseId);
-        var user = userServices.getUserByPersonalNumber(userPersonalNumber);
+        UserEntity user = userServices.getUserByPersonalNumber(userPersonalNumber);
         if (cOptional.isEmpty())
             throw new DataNotFoundException();
 
@@ -149,31 +164,10 @@ public class CoursesServices {
             throw new AccessForbiddenException("Uporabnik nima pravice za dostop do podatkov");
     }
 
-    /**
-     * updates or inserts course with given data
-     *
-     * @param userPersonalNumber user's personal number
-     * @param courseId           course ID
-     * @throws DataNotFoundException    course with given ID or person with given number does not exists
-     * @throws AccessForbiddenException given user does not have access right for data
-     * @return
-     */
-    /*public void updateCourse(Integer courseId, String userPersonalNumber, CourseDetailedDTO courseDTO) throws DataNotFoundException, AccessForbiddenException {
-        var users = userRepository.findUsersByPersonalNumber(userPersonalNumber);
-        var cOptional = courseId != null ? courseRepository.findById(courseId) : Optional.<CourseEntity>empty();
-        if (users.size() == 0 || (courseId != null && cOptional.isEmpty()))
-            throw new DataNotFoundException();
 
-        if (courseId == null || userAccessServices.userCanEditCourse(users.get(0), cOptional.get())) {
-            var entity = coursesMappers.castCourseDetailedDtoToCourseEntity(courseDTO, cOptional.orElse(new CourseEntity()));
-            courseRepository.save(entity);
-        } else {
-            throw new AccessForbiddenException("Uporabnik nima pravice za dostop do podatkov");
-        }
-    }*/
     public CourseDTO insertOrUpdateCourse(String personalNumber, CourseDTO courseDto) throws DataNotFoundException, AccessForbiddenException {
         boolean insertNew = courseDto.getCourseId() == null;
-        var user = userServices.getUserByPersonalNumber(personalNumber);
+        UserEntity user = userServices.getUserByPersonalNumber(personalNumber);
         CourseEntity course;
 
         if (insertNew) {

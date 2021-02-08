@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Assignment, AssignmentStatus } from 'src/app/models/assignment-model';
+import { AssignmentService } from 'src/app/services/assignment-service/assignment.service';
 import { UserServiceService } from 'src/app/services/user-service/user-service.service';
 
 @Component({
@@ -16,7 +17,7 @@ export class AssignmentComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private userService: UserServiceService
+    private assignmentServices: AssignmentService
   ) {}
 
   ngOnInit(): void {}
@@ -30,9 +31,12 @@ export class AssignmentComponent implements OnInit {
     ]);
   }
 
-  public onSetVisibilityClick(visible: boolean): void {
-    //TODO create service that sets visibility on backend
-    this.assignment.visible = visible;
+  public onSetVisibilityClick(): void {
+    this.assignmentServices
+      .inverseAssignmentVisibility(this.assignment)
+      .subscribe((data) => {
+        this.assignment = data;
+      });
   }
 
   public get assignmentStatusEnum(): typeof AssignmentStatus {
@@ -40,13 +44,19 @@ export class AssignmentComponent implements OnInit {
   }
 
   private isActive(): boolean {
+    const startDate: Date =
+      this.assignment.startDate instanceof Date
+        ? this.assignment.startDate
+        : new Date(this.assignment.startDate);
+    const endDate: Date =
+      this.assignment.endDate instanceof Date
+        ? this.assignment.endDate
+        : new Date(this.assignment.endDate);
     const todayTime = new Date().getTime();
-    if (this.assignment.status === AssignmentStatus.ACTIVE)
-      if (
-        this.assignment.startDate.getTime() <= todayTime &&
-        todayTime <= this.assignment.endDate.getTime()
-      )
-        return true;
+
+    if (startDate.getTime() <= todayTime)
+      if (endDate == null) return true;
+      else return todayTime <= endDate.getTime();
 
     return false;
   }
@@ -54,13 +64,14 @@ export class AssignmentComponent implements OnInit {
   public showAddSubmissionButton(): boolean {
     if (this.isActive())
       if (
-        this.assignment.noOfSubmisions < this.assignment.maxSubmissionsTotal ||
+        this.assignment.noOfSubmissionsTotal <
+          this.assignment.maxSubmissionsTotal ||
         (this.assignment.maxSubmissionsTotal ?? 0) === 0
       )
         if (
           (this.assignment.studentSubmissions?.length ?? 0) <
-            this.assignment.maxSubmissionsStudent ||
-          (this.assignment.maxSubmissionsStudent ?? 0) === 0
+            this.assignment.maxSubmissionsPerStudent ||
+          (this.assignment.maxSubmissionsPerStudent ?? 0) === 0
         )
           return true;
     return false;
@@ -76,6 +87,6 @@ export class AssignmentComponent implements OnInit {
 
   public showBuySubmissionButton(): boolean {
     //todo dodaj check, ce ima user dovolj zetonov
-    return this.assignment.noOfSubmisions > 0;
+    return this.assignment.noOfSubmissionsStudent > 0;
   }
 }

@@ -32,6 +32,16 @@ public class CoursesApi {
         }
     }
 
+    @GetMapping("my")
+    public ResponseEntity<Object> getUsersCourses(@RequestHeader(name = "Personal-Number") String personalNumber) {
+        try {
+            return ResponseEntity.ok(coursesServices.getAllCoursesOfUserWithBasicInfo(personalNumber));
+        } catch (DataNotFoundException e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e.getMessage()));
+        }
+    }
+
     @GetMapping("course")
     public ResponseEntity<Object> getCourse(@RequestParam Integer courseId, @RequestHeader(name = "Personal-Number") String personalNumber) {
         try {

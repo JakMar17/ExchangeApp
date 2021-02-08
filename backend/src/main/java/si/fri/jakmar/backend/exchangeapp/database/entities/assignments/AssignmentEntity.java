@@ -40,7 +40,7 @@ public class AssignmentEntity {
     @Column(name = "input_data_type")
     private String inputDataType;
     @Column(name = "output_data_type")
-    private Integer outputDataType;
+    private String outputDataType;
     @Column(name = "submission_notify")
     private Integer submissionNotify;
     @Column(name = "plagiarism_warning")
@@ -73,6 +73,29 @@ public class AssignmentEntity {
     @JsonIgnoreProperties({"assignment"})
     @OneToMany(mappedBy = "assignment")
     private List<SubmissionEntity> submissions;
+
+    public AssignmentEntity assignmentUpdater(String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, String inputDataType, String outputDataType, Integer submissionNotify, Integer plagiarismWarning, Integer plagiarismLevel, Integer visible, SubmissionCheckEntity submissionCheckType, SubmissionCheckUrl submissionCheckUrl, CourseEntity course, UserEntity author) {
+        this.title = title;
+        this.classroomUrl = classroomUrl;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.maxSubmissionsTotal = maxSubmissionsTotal;
+        this.maxSubmissionsPerStudent = maxSubmissionsPerStudent;
+        this.coinsPerSubmission = coinsPerSubmission;
+        this.coinsPrice = coinsPrice;
+        this.inputDataType = inputDataType;
+        this.outputDataType = outputDataType;
+        this.submissionNotify = submissionNotify;
+        this.plagiarismWarning = plagiarismWarning;
+        this.plagiarismLevel = plagiarismLevel;
+        this.visible = visible;
+        this.submissionCheckType = submissionCheckType;
+        this.submissionCheckUrl = submissionCheckUrl;
+        this.course = course;
+        this.author = author;
+        return this;
+    }
 
     public Integer getId() {
         return id;
@@ -162,11 +185,11 @@ public class AssignmentEntity {
         this.inputDataType = inputDataType;
     }
 
-    public Integer getOutputDataType() {
+    public String getOutputDataType() {
         return outputDataType;
     }
 
-    public void setOutputDataType(Integer outputDataType) {
+    public void setOutputDataType(String outputDataType) {
         this.outputDataType = outputDataType;
     }
 

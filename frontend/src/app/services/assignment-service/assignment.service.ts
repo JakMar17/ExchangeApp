@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CoursesDammyData } from 'src/app/aaa_dummy-data/dummy-courses';
+import { AssignmentsApiService } from 'src/app/api/assignments-api/assignments-api.service';
 import { Assignment } from 'src/app/models/assignment-model';
+import { Course } from 'src/app/models/class-model';
+import { UserServiceService } from '../user-service/user-service.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,16 +12,25 @@ import { Assignment } from 'src/app/models/assignment-model';
 export class AssignmentService {
   private courseDummy = new CoursesDammyData();
 
-  constructor() {}
+  constructor(
+    private userService: UserServiceService,
+    private assignmentApi: AssignmentsApiService
+  ) {}
 
-  public getAssignemntFromCourse(
-    courseId: number,
-    assignmentId: number
-  ): Observable<Assignment> {
-    return this.courseDummy.getAssignemtn(courseId, assignmentId);
+  public getCourseAssignments(course: Course): Observable<Assignment[]> {
+    return this.assignmentApi.getAssignments(
+      course.courseId,
+      this.userService.userLoggedIn.personalNumber
+    );
   }
 
-  public saveAssignment(courseId: number, assignment: Assignment): Observable<Assignment> {
-    return this.courseDummy.saveAssignment(courseId, assignment);
+  public inverseAssignmentVisibility(
+    assignment: Assignment
+  ): Observable<Assignment> {
+    return this.assignmentApi.setAssignmentsVisibility(
+      assignment.assignmentId,
+      this.userService.userLoggedIn.personalNumber,
+      !assignment.visible
+    );
   }
 }

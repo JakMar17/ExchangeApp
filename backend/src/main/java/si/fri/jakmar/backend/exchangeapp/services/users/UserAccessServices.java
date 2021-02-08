@@ -109,7 +109,7 @@ public class UserAccessServices {
             userCourses.add(course);
             user.setUsersCourses(userCourses);
 
-            var users = course.getUsersSignedInCourse();
+            List<UserEntity> users = course.getUsersSignedInCourse();
             users.add(user);
             course.setUsersSignedInCourse(users);
         }
