@@ -29,6 +29,7 @@ create table assignment
    plagiarism_level     int,
    visible              int not null,
    assignment_date_created timestamp not null,
+   assignment_archived int not null,
    primary key (assignment_id)
 );
 
@@ -46,6 +47,7 @@ create table course
    course_classroom_url  varchar(100),
    initial_coins        int not null,
    course_created       timestamp not null,
+   course_archived      int not null,
    primary key (course_id)
 );
 
