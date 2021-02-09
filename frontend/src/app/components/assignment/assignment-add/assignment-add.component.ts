@@ -90,6 +90,7 @@ export class AssignmentAddComponent implements OnInit {
   }
 
   public archiveAssignment(): void {
+    this.assignment.archived = true;
     this.assignmentService.archiveAssignment(this.assignment).subscribe(
       () => this.alertAndExit('Naloga je bila arhivirana'),
       (err: HttpErrorResponse) => (this.errorMessage = err.error.message)

@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Assignment, AssignmentStatus } from 'src/app/models/assignment-model';
+import { Course } from 'src/app/models/class-model';
 import { AssignmentService } from 'src/app/services/assignment-service/assignment.service';
+import { CoursesService } from 'src/app/services/courses-service/courses.service';
 import { UserServiceService } from 'src/app/services/user-service/user-service.service';
 
 @Component({
@@ -12,7 +14,7 @@ import { UserServiceService } from 'src/app/services/user-service/user-service.s
 export class AssignmentComponent implements OnInit {
   @Input() canEdit: boolean = false;
   @Input() assignment: Assignment | null = null;
-  @Input() courseId: number;
+  @Input() course: Course;
   public showBuyingBox: boolean = false;
 
   constructor(
@@ -25,7 +27,7 @@ export class AssignmentComponent implements OnInit {
   public onEditButtonClick(): void {
     this.router.navigate([
       '/course/' +
-        this.courseId +
+        this.course.courseId +
         '/assignment/edit/' +
         this.assignment.assignmentId,
     ]);
@@ -69,7 +71,7 @@ export class AssignmentComponent implements OnInit {
         (this.assignment.maxSubmissionsTotal ?? 0) === 0
       )
         if (
-          (/* this.assignment.studentSubmissions?.length */null ?? 0) <
+          /* this.assignment.studentSubmissions?.length */ (null ?? 0) <
             this.assignment.maxSubmissionsPerStudent ||
           (this.assignment.maxSubmissionsPerStudent ?? 0) === 0
         )
@@ -88,7 +90,18 @@ export class AssignmentComponent implements OnInit {
   }
 
   public showBuySubmissionButton(): boolean {
-    //todo dodaj check, ce ima user dovolj zetonov
+    return true;
     return this.assignment.noOfSubmissionsStudent > 0;
+  }
+
+  public onAddSubmissionButtonPressed(): void {
+    console.log("klik");
+    this.router.navigate([
+      'course/' +
+        this.course.courseId +
+        '/assignment/' +
+        this.assignment.assignmentId +
+        '/submission/new',
+    ]);
   }
 }

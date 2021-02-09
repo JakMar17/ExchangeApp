@@ -17,14 +17,18 @@
           </div>
           <div class="column">
             <h1 class="title is-2">{{ course?.title }}</h1>
+            <p class="subtitle is-6">
+              Trenutno stanje žetonov: {{ course.usersCoins }}
+            </p>
           </div>
         </div>
         <h2 class="subtitle is-4">
           skrbnik: {{ course?.guardianMain | userToString }}
         </h2>
-        <p>
+        <p class="subtitle is-5">
           {{ course.description }}
         </p>
+        
       </div>
 
       <app-loading
@@ -129,7 +133,7 @@
               *ngIf="element.visible || course.userCanEditCourse"
               [canEdit]="course.userCanEditCourse"
               [assignment]="element"
-              [courseId]="course.courseId"
+              [course]="course"
             ></app-assignment>
           </div>
         </div>

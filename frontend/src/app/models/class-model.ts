@@ -22,6 +22,8 @@ export interface Course {
   students?: User[];
   userCanEditCourse?: boolean;
   userHasAdminRights?: boolean;
+
+  usersCoins?: number;
 }
 
 export interface CourseCategory {

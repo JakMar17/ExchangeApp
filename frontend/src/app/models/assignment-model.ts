@@ -20,6 +20,7 @@ export interface Assignment {
   notifyOnEmail?: boolean;
   plagiarismWarning?: number;
   plagiarismLevel?: number;
+  archived?: boolean;
 }
 
 export enum SubmissionCheck {
