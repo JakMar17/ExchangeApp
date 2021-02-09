@@ -6,7 +6,7 @@ import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserRegistrationStage;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserTypeEntity;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.users.RegisterUserDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.users.RegisterUserDTO;
 import si.fri.jakmar.backend.exchangeapp.services.users.exceptions.UserExistsException;
 
 @Component

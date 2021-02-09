@@ -1,8 +1,8 @@
-package si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses;
+package si.fri.jakmar.backend.exchangeapp.dtos.courses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.assignments.AssignmentDTO;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.users.UserDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
 
 import java.util.List;
 
@@ -18,6 +18,7 @@ public class CourseDTO{
 
     private List<AssignmentDTO> assignments;
     private Boolean userCanEditCourse;
+    private Integer usersCoins;
 
     // all info
     private List<UserDTO> guardians;
@@ -41,7 +42,7 @@ public class CourseDTO{
         this.accessLevel = accessLevel;
     }
 
-    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments) {
+    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments, Integer usersCoins) {
         this.courseId = courseId;
         this.title = title;
         this.description = description;
@@ -49,20 +50,10 @@ public class CourseDTO{
         this.guardianMain = guardianMain;
         this.accessLevel = accessLevel;
         this.assignments = assignments;
+        this.usersCoins = usersCoins;
     }
 
-    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments, Boolean userCanEditCourse) {
-        this.courseId = courseId;
-        this.title = title;
-        this.description = description;
-        this.classroomURL = classroomURL;
-        this.guardianMain = guardianMain;
-        this.accessLevel = accessLevel;
-        this.assignments = assignments;
-        this.userCanEditCourse = userCanEditCourse;
-    }
-
-    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments, Boolean userCanEditCourse, List<UserDTO> guardians, List<UserDTO> studentsSignedIn, List<UserDTO> studentsWhitelisted, List<UserDTO> studentsBlacklisted, String accessType, Integer initialCoins, String accessPassword) {
+    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments, Boolean userCanEditCourse, List<UserDTO> guardians, List<UserDTO> studentsSignedIn, List<UserDTO> studentsWhitelisted, List<UserDTO> studentsBlacklisted, String accessType, Integer initialCoins, String accessPassword, Integer usersCoins) {
         this.courseId = courseId;
         this.title = title;
         this.description = description;
@@ -78,6 +69,7 @@ public class CourseDTO{
         this.accessType = accessType;
         this.initialCoins = initialCoins;
         this.accessPassword = accessPassword;
+        this.usersCoins = usersCoins;
     }
 
     public Integer getCourseId() {
@@ -198,5 +190,13 @@ public class CourseDTO{
 
     public void setAccessPassword(String accessPassword) {
         this.accessPassword = accessPassword;
+    }
+
+    public Integer getUsersCoins() {
+        return usersCoins;
+    }
+
+    public void setUsersCoins(Integer usersCoins) {
+        this.usersCoins = usersCoins;
     }
 }

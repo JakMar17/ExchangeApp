@@ -4,7 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.assignments.AssignmentDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 
 @Component
 public class AssignmentMapper {
@@ -29,7 +29,8 @@ public class AssignmentMapper {
                 assignmentEntity.getCoinsPrice(),
                 noOfSubmissionsTotal,
                 noOfSubmissionsStudent,
-                assignmentEntity.getVisible() == 1
+                assignmentEntity.getVisible() == 1,
+                assignmentEntity.getArchived()
         );
     }
 
@@ -59,7 +60,8 @@ public class AssignmentMapper {
                 assignmentEntity.getSubmissionCheckType().getDescription(),
                 assignmentEntity.getSubmissionNotify() == 1,
                 assignmentEntity.getPlagiarismWarning(),
-                assignmentEntity.getPlagiarismLevel()
+                assignmentEntity.getPlagiarismLevel(),
+                assignmentEntity.getArchived()
         );
     }
 }

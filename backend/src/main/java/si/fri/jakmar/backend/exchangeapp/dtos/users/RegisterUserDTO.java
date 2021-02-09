@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.users;
+package si.fri.jakmar.backend.exchangeapp.dtos.users;
 
 public class RegisterUserDTO {
     private String name;

@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseDTO;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.users.UserDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.courses.CourseDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
 
 import java.util.ArrayList;
 import java.util.List;

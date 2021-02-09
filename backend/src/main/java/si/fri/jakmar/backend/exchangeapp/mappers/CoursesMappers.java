@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseAccessLevelRepository;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.courses.CourseDTO;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserAccessServices;
 import  org.apache.commons.collections4.CollectionUtils;
+import si.fri.jakmar.backend.exchangeapp.services.users.UserServices;
 
 import java.util.stream.Collectors;
 
@@ -22,9 +21,7 @@ public class CoursesMappers {
     @Autowired
     private UserAccessServices userAccessServices;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private CourseAccessLevelRepository courseAccessLevelRepository;
+    private UserServices userServices;
 
     public CourseDTO castCourseEntityToCourseBasicDTO(CourseEntity courseEntity) {
         return new CourseDTO(
@@ -47,7 +44,8 @@ public class CoursesMappers {
                 courseEntity.getAccessLevel().getDescription(),
                 CollectionUtils.emptyIfNull(courseEntity.getAssignments()).stream()
                         .map(e -> assignmentMappers.castAssignmentEntityToAssignmentBasicDTO(e, userEntity))
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+                userServices.getUsersCoinsInCourse(userEntity, courseEntity)
         );
     }
 
@@ -77,30 +75,9 @@ public class CoursesMappers {
                         .collect(Collectors.toList()),
                 courseEntity.getAccessLevel().getDescription(),
                 courseEntity.getInitialCoins(),
-                courseEntity.getAccessPassword() == null ? null : courseEntity.getAccessPassword().getPassword()
+                courseEntity.getAccessPassword() == null ? null : courseEntity.getAccessPassword().getPassword(),
+                userServices.getUsersCoinsInCourse(userEntity, courseEntity)
         );
     }
-
-   /* public CourseEntity castCourseDetailedDtoToCourseEntity(CourseDetailedDTO courseDetailedDTO) {
-        return this.castCourseDetailedDtoToCourseEntity(courseDetailedDTO, new CourseEntity());
-    }
-
-    public CourseEntity castCourseDetailedDtoToCourseEntity(CourseDTO dto, CourseEntity entity) {
-        entity.setUsersGuardians(usersMappers.castListOfUserDtosToUserEntities(dto.getGuardians()));
-        entity.setUsersSignedInCourse(usersMappers.castListOfUserDtosToUserEntities(dto.getStudentsSignedIn()));
-        entity.setUsersWhitelisted(usersMappers.castListOfUserDtosToUserEntities(dto.getStudentsWhitelisted()));
-        entity.setUsersBlacklisted(usersMappers.castListOfUserDtosToUserEntities(dto.getStudentsBlacklisted()));
-
-        var accesses = courseAccessLevelRepository.getCourseAccessLevelEntitiesByDescription(dto.getAccessType());
-        if(accesses != null || accesses.size() != 0)
-            entity.setAccessLevel(accesses.get(0));
-
-        //entity.setAssignments(dto.getAssignments());
-        entity.setCourseTitle(dto.getTitle());
-        entity.setCourseDescription(dto.getDescription());
-        entity.setCourseClassroomUrl(dto.getClassroomUrl());
-
-        return entity;
-    }*/
 
 }

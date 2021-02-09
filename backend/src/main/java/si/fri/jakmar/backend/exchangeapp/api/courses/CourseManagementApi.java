@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.courses.CourseDTO;
 import si.fri.jakmar.backend.exchangeapp.services.courses.CoursesServices;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataNotFoundException;

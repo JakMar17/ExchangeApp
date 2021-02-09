@@ -11,7 +11,7 @@ import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseAcce
 import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseAccessPasswordRepository;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseRepository;
 import si.fri.jakmar.backend.exchangeapp.mappers.CoursesMappers;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.courses.CourseDTO;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessUnauthorizedException;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataNotFoundException;
@@ -221,7 +221,8 @@ public class CoursesServices {
                         ? courseDto.getGuardians().stream()
                         .map(e -> getUserEntityWithoutExceptions(e.getPersonalNumber(), e.getEmail()))
                         .collect(Collectors.toList())
-                        : null
+                        : null,
+                false
         );
 
         var courseEntity =  courseRepository.save(course);

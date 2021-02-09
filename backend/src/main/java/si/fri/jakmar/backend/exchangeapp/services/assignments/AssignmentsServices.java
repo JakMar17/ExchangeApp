@@ -7,7 +7,7 @@ import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.Assignmen
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.SubmissionCheckEntity;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.AssignmentRepository;
 import si.fri.jakmar.backend.exchangeapp.mappers.AssignmentMapper;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.assignments.AssignmentDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 import si.fri.jakmar.backend.exchangeapp.services.courses.CoursesServices;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessUnauthorizedException;
@@ -108,7 +108,8 @@ public class AssignmentsServices {
                 new SubmissionCheckEntity(1),//assignmentDTO.getTestType()
                 null,
                 course,
-                user
+                user,
+                false
         );
 
         assignmentEntity = assignmentRepository.save(assignmentEntity);
@@ -173,5 +174,20 @@ public class AssignmentsServices {
             throw new AccessForbiddenException("Ni pravic");
 
         assignmentRepository.delete(assignment);
+    }
+
+    public AssignmentDTO setArchivedStatus(String personalNumber, Integer assignmentId, Boolean isVisible) throws DataNotFoundException, AccessForbiddenException {
+        var assignment = getAssignmentById(assignmentId);
+        var user = userServices.getUserByPersonalNumber(personalNumber);
+        var course = assignment.getCourse();
+        if(course == null)
+            throw new DataNotFoundException("Ne najdem predmeta");
+
+        if(!userAccessServices.userCanEditCourse(user, course))
+            throw new AccessForbiddenException("Ni pravic");
+
+        assignment.setArchived(isVisible);
+
+        return assignmentMapper.castAssignmentEntityToAssignmentDTO(assignmentRepository.save(assignment), user);
     }
 }

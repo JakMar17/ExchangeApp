@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.mappers.UsersMappers;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.users.UserDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataInvalidException;
 import si.fri.jakmar.backend.exchangeapp.services.users.exceptions.UserDoesNotExistsException;

@@ -1,6 +1,7 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.assignments;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Type;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.submissions.SubmissionEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
@@ -51,6 +52,9 @@ public class AssignmentEntity {
     private Integer visible;
     @Column(name = "assignment_date_created")
     private LocalDateTime created = LocalDateTime.now(ZoneOffset.UTC);
+    @Column(name = "assignment_archived")
+    @Type(type = "org.hibernate.type.NumericBooleanType")
+    private Boolean archived = false;
 
     @ManyToOne
     @JoinColumn(name = "submission_check_id")
@@ -74,7 +78,7 @@ public class AssignmentEntity {
     @OneToMany(mappedBy = "assignment")
     private List<SubmissionEntity> submissions;
 
-    public AssignmentEntity assignmentUpdater(String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, String inputDataType, String outputDataType, Integer submissionNotify, Integer plagiarismWarning, Integer plagiarismLevel, Integer visible, SubmissionCheckEntity submissionCheckType, SubmissionCheckUrl submissionCheckUrl, CourseEntity course, UserEntity author) {
+    public AssignmentEntity assignmentUpdater(String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, String inputDataType, String outputDataType, Integer submissionNotify, Integer plagiarismWarning, Integer plagiarismLevel, Integer visible, SubmissionCheckEntity submissionCheckType, SubmissionCheckUrl submissionCheckUrl, CourseEntity course, UserEntity author, Boolean archived) {
         this.title = title;
         this.classroomUrl = classroomUrl;
         this.description = description;
@@ -94,6 +98,7 @@ public class AssignmentEntity {
         this.submissionCheckUrl = submissionCheckUrl;
         this.course = course;
         this.author = author;
+        this.archived = archived;
         return this;
     }
 
@@ -271,5 +276,13 @@ public class AssignmentEntity {
 
     public void setSubmissions(List<SubmissionEntity> submissions) {
         this.submissions = submissions;
+    }
+
+    public Boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
     }
 }

@@ -1,6 +1,7 @@
-package si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.users;
+package si.fri.jakmar.backend.exchangeapp.dtos.users;
 
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.courses.CourseDTO;
+import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.dtos.courses.CourseDTO;
 
 import java.util.List;
 
@@ -22,6 +23,19 @@ public class UserDTO {
         this.personalNumber = personalNumber;
         this.userType = userType;
         this.myCourses = myCourses;
+    }
+
+    public static UserDTO castFromEntityWithoutCourses(UserEntity entity, boolean withUserType) {
+        return new UserDTO(
+                entity.getEmail(),
+                entity.getName(),
+                entity.getSurname(),
+                entity.getPersonalNumber(),
+                withUserType
+                        ? entity.getUserType().getDescription()
+                        : null,
+                null
+        );
     }
 
     public String getEmail() {

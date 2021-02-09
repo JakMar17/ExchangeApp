@@ -1,6 +1,7 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.courses;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Type;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 
@@ -28,6 +29,10 @@ public class CourseEntity {
     private Integer initialCoins = 0;
     @Column(name = "course_created")
     private LocalDateTime courseCreated = LocalDateTime.now(ZoneOffset.UTC);
+    @Column(name = "course_archived")
+    @Type(type = "org.hibernate.type.NumericBooleanType")
+    private Boolean archived = false;
+
 
     @ManyToOne
     @JoinColumn(name = "access_level_id", referencedColumnName = "access_level_id")
@@ -69,27 +74,14 @@ public class CourseEntity {
     public CourseEntity() {
     }
 
-    public CourseEntity(String courseTitle, String courseDescription, String courseClassroomUrl, Integer initialCoins, CourseAccessLevelEntity accessLevel, CourseAccessPassword accessPassword, UserEntity guardianMain, List<UserEntity> usersSignedInCourse, List<UserEntity> usersBlacklisted, List<UserEntity> usersWhitelisted, List<UserEntity> usersGuardians) {
-        this.courseTitle = courseTitle;
-        this.courseDescription = courseDescription;
-        this.courseClassroomUrl = courseClassroomUrl;
-        this.initialCoins = initialCoins;
-        this.accessLevel = accessLevel;
-        this.accessPassword = accessPassword;
-        this.guardianMain = guardianMain;
-        this.usersSignedInCourse = usersSignedInCourse;
-        this.usersBlacklisted = usersBlacklisted;
-        this.usersWhitelisted = usersWhitelisted;
-        this.usersGuardians = usersGuardians;
-    }
-
-    public CourseEntity(Integer courseId, String courseTitle, String courseDescription, String courseClassroomUrl, Integer initialCoins, LocalDateTime courseCreated, CourseAccessLevelEntity accessLevel, CourseAccessPassword accessPassword, UserEntity guardianMain, List<UserEntity> usersSignedInCourse, List<UserEntity> usersBlacklisted, List<UserEntity> usersWhitelisted, List<UserEntity> usersGuardians, List<AssignmentEntity> assignments) {
+    public CourseEntity(Integer courseId, String courseTitle, String courseDescription, String courseClassroomUrl, Integer initialCoins, LocalDateTime courseCreated, Boolean archived, CourseAccessLevelEntity accessLevel, CourseAccessPassword accessPassword, UserEntity guardianMain, List<UserEntity> usersSignedInCourse, List<UserEntity> usersBlacklisted, List<UserEntity> usersWhitelisted, List<UserEntity> usersGuardians, List<AssignmentEntity> assignments) {
         this.courseId = courseId;
         this.courseTitle = courseTitle;
         this.courseDescription = courseDescription;
         this.courseClassroomUrl = courseClassroomUrl;
         this.initialCoins = initialCoins;
         this.courseCreated = courseCreated;
+        this.archived = archived;
         this.accessLevel = accessLevel;
         this.accessPassword = accessPassword;
         this.guardianMain = guardianMain;
@@ -100,7 +92,7 @@ public class CourseEntity {
         this.assignments = assignments;
     }
 
-    public CourseEntity courseUpdater(String courseTitle, String courseDescription, String courseClassroomUrl, Integer initialCoins, CourseAccessLevelEntity accessLevel, CourseAccessPassword accessPassword, UserEntity guardianMain, List<UserEntity> usersSignedInCourse, List<UserEntity> usersBlacklisted, List<UserEntity> usersWhitelisted, List<UserEntity> usersGuardians) {
+    public CourseEntity courseUpdater(String courseTitle, String courseDescription, String courseClassroomUrl, Integer initialCoins, CourseAccessLevelEntity accessLevel, CourseAccessPassword accessPassword, UserEntity guardianMain, List<UserEntity> usersSignedInCourse, List<UserEntity> usersBlacklisted, List<UserEntity> usersWhitelisted, List<UserEntity> usersGuardians, Boolean archived) {
         this.courseTitle = courseTitle;
         this.courseDescription = courseDescription;
         this.courseClassroomUrl = courseClassroomUrl;
@@ -112,6 +104,7 @@ public class CourseEntity {
         this.usersBlacklisted = usersBlacklisted;
         this.usersWhitelisted = usersWhitelisted;
         this.usersGuardians = usersGuardians;
+        this.archived = archived;
         return this;
     }
 
@@ -240,4 +233,11 @@ public class CourseEntity {
         this.assignments = assignments;
     }
 
+    public Boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
+    }
 }

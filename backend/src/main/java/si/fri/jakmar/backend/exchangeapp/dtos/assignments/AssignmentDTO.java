@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.assignments;
+package si.fri.jakmar.backend.exchangeapp.dtos.assignments;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +16,7 @@ public class AssignmentDTO {
     private Integer noOfSubmissionsTotal;
     private Integer noOfSubmissionsStudent;
     private Boolean visible;
+    private Boolean archived;
 
     private String inputExtension;
     private String outputExtension;
@@ -28,7 +29,7 @@ public class AssignmentDTO {
     public AssignmentDTO() {
     }
 
-    private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible) {
+    private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived) {
         this.assignmentId = assignmentId;
         this.title = title;
         this.classroomUrl = classroomUrl;
@@ -42,9 +43,10 @@ public class AssignmentDTO {
         this.noOfSubmissionsTotal = noOfSubmissionsTotal;
         this.noOfSubmissionsStudent = noOfSubmissionsStudent;
         this.visible = visible;
+        this.archived = archived;
     }
 
-    private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, String inputExtension, String outputExtension, String testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel) {
+    private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived, String inputExtension, String outputExtension, String testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel) {
         this.assignmentId = assignmentId;
         this.title = title;
         this.classroomUrl = classroomUrl;
@@ -58,6 +60,7 @@ public class AssignmentDTO {
         this.noOfSubmissionsTotal = noOfSubmissionsTotal;
         this.noOfSubmissionsStudent = noOfSubmissionsStudent;
         this.visible = visible;
+        this.archived = archived;
         this.inputExtension = inputExtension;
         this.outputExtension = outputExtension;
         this.testType = testType;
@@ -70,12 +73,12 @@ public class AssignmentDTO {
      * creates new AssignmentDTO with basic data
      * @return new object
      */
-    public static AssignmentDTO createBasicAssignmentDto(Integer id, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible) {
-        return new AssignmentDTO(id, title, classroomUrl, description, startDate, endDate, maxSubmissionsTotal, maxSubmissionsPerStudent, coinsPerSubmission, coinsPrice, noOfSubmissionsTotal, noOfSubmissionsStudent, visible);
+    public static AssignmentDTO createBasicAssignmentDto(Integer id, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived) {
+        return new AssignmentDTO(id, title, classroomUrl, description, startDate, endDate, maxSubmissionsTotal, maxSubmissionsPerStudent, coinsPerSubmission, coinsPrice, noOfSubmissionsTotal, noOfSubmissionsStudent, visible, archived);
     }
 
-    public static AssignmentDTO createFullAssignmentDto(Integer id, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, String inputExtension, String outputExtension, String testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel) {
-        return new AssignmentDTO(id, title, classroomUrl, description, startDate, endDate, maxSubmissionsTotal, maxSubmissionsPerStudent, coinsPerSubmission, coinsPrice, noOfSubmissionsTotal, noOfSubmissionsStudent, visible, inputExtension, outputExtension, testType, notifyOnEmail, plagiarismWarning, plagiarismLevel);
+    public static AssignmentDTO createFullAssignmentDto(Integer id, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, String inputExtension, String outputExtension, String testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel, Boolean archived) {
+        return new AssignmentDTO(id, title, classroomUrl, description, startDate, endDate, maxSubmissionsTotal, maxSubmissionsPerStudent, coinsPerSubmission, coinsPrice, noOfSubmissionsTotal, noOfSubmissionsStudent, visible, archived, inputExtension, outputExtension, testType, notifyOnEmail, plagiarismWarning, plagiarismLevel);
     }
 
     public Boolean getVisible() {
@@ -228,5 +231,13 @@ public class AssignmentDTO {
 
     public void setPlagiarismLevel(Integer plagiarismLevel) {
         this.plagiarismLevel = plagiarismLevel;
+    }
+
+    public Boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
     }
 }

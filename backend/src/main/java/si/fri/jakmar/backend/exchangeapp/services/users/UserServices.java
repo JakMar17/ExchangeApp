@@ -1,10 +1,14 @@
 package si.fri.jakmar.backend.exchangeapp.services.users;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataNotFoundException;
+
+import java.util.stream.Collectors;
 
 @Component
 public class UserServices {
@@ -55,5 +59,20 @@ public class UserServices {
             u = getUserByEmail(email);
 
         return u;
+    }
+
+    public Integer getUsersCoinsInCourse(UserEntity user, CourseEntity course) {
+        int coins = course.getInitialCoins();
+
+        var usersSubmissionsInCourse = CollectionUtils.emptyIfNull(user.getSubmissions()).stream()
+                .filter(e -> e.getAssignment().getCourse().equals(course));
+
+        var usersPurchaseInCourse = CollectionUtils.emptyIfNull(user.getPurchases()).stream()
+                .filter(e -> e.getSubmissionBought().getAssignment().getCourse().equals(course));
+
+        coins += usersSubmissionsInCourse.mapToInt(e -> e.getAssignment().getCoinsPerSubmission()).sum();
+        coins -= usersPurchaseInCourse.mapToInt(e -> e.getSubmissionBought().getAssignment().getCoinsPrice()).sum();
+
+        return coins;
     }
 }

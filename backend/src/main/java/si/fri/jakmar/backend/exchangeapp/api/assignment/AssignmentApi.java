@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import si.fri.jakmar.backend.exchangeapp.api.wrappers.exceptions.ExceptionWrapper;
-import si.fri.jakmar.backend.exchangeapp.services.DTOwrappers.assignments.AssignmentDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 import si.fri.jakmar.backend.exchangeapp.services.assignments.AssignmentsServices;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessUnauthorizedException;
@@ -95,7 +95,15 @@ public class AssignmentApi {
     }
 
     @PutMapping("/archive")
-    public ResponseEntity<Boolean> archiveAssignment(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestBody AssignmentDTO assignmentDTO) {
-        return null;
+    public ResponseEntity<Object> archiveAssignment(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestBody AssignmentDTO assignmentDTO) {
+        try {
+            return ResponseEntity.ok(assignmentsServices.setArchivedStatus(personalNumber, assignmentDTO.getAssignmentId(), assignmentDTO.getArchived()));
+        } catch (DataNotFoundException e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e.getMessage()));
+        } catch (AccessForbiddenException e) {
+            logger.warning(e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionWrapper(e.getMessage()));
+        }
     }
 }
