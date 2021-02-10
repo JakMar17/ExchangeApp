@@ -3,7 +3,6 @@ package si.fri.jakmar.backend.exchangeapp.services.users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
-import si.fri.jakmar.backend.exchangeapp.mappers.UsersMappers;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataInvalidException;
@@ -14,9 +13,6 @@ public class LoginServices {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private UsersMappers usersMappers;
 
     /**
      * checks email & password combination in database and return UserDTO if combination is OK

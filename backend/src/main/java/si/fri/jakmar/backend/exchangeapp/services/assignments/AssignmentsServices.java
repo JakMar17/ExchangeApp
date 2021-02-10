@@ -7,7 +7,6 @@ import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.Assignmen
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.SubmissionCheckEntity;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.AssignmentRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
-import si.fri.jakmar.backend.exchangeapp.mappers.AssignmentMapper;
 import si.fri.jakmar.backend.exchangeapp.services.courses.CoursesServices;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessUnauthorizedException;
@@ -26,8 +25,6 @@ public class AssignmentsServices {
     private UserAccessServices userAccessServices;
     @Autowired
     private CoursesServices coursesServices;
-    @Autowired
-    private AssignmentMapper assignmentMapper;
     @Autowired
     private AssignmentRepository assignmentRepository;
 
