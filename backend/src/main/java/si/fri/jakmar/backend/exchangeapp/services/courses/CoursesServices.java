@@ -10,8 +10,8 @@ import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseAccessLevelRepository;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseAccessPasswordRepository;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseRepository;
-import si.fri.jakmar.backend.exchangeapp.mappers.CoursesMappers;
 import si.fri.jakmar.backend.exchangeapp.dtos.courses.CourseDTO;
+import si.fri.jakmar.backend.exchangeapp.mappers.CoursesMappers;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessUnauthorizedException;
 import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataNotFoundException;
@@ -41,13 +41,14 @@ public class CoursesServices {
 
     /**
      * gets CourseEntity from database with given courseId
+     *
      * @param courseId attribute for finding entity
      * @return course with given id
      * @throws DataNotFoundException course with given id doesnt exists
      */
     public CourseEntity getCourseEntityById(Integer courseId) throws DataNotFoundException {
         var o = courseRepository.findById(courseId);
-        if(o.isEmpty())
+        if (o.isEmpty())
             throw new DataNotFoundException("Iskan predmet ne obstaja");
         else
             return o.get();
@@ -64,7 +65,7 @@ public class CoursesServices {
         var coursesEntity = courseRepository.findAll();
         var dtos =
                 StreamSupport.stream(coursesEntity.spliterator(), true)
-                        .map(e -> coursesMappers.castCourseEntityToCourseBasicDTO(e)).collect(Collectors.toList());
+                        .map(CourseDTO::castBasicFromEntity).collect(Collectors.toList());
 
         if (dtos.size() == 0)
             throw new DataNotFoundException("Ne najdem predmetov");
@@ -75,7 +76,7 @@ public class CoursesServices {
     public List<CourseDTO> getAllCoursesOfUserWithBasicInfo(String personalNumber) throws DataNotFoundException {
         UserEntity user = userServices.getUserByPersonalNumber(personalNumber);
         return CollectionUtils.emptyIfNull(user.getUsersCourses()).stream()
-                .map(e -> coursesMappers.castCourseEntityToCourseBasicDTO(e))
+                .map(CourseDTO::castBasicFromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -100,7 +101,7 @@ public class CoursesServices {
         var course = courseEntityOptional.get();
 
         if (userAccessServices.userHasAccessToCourse(user, course)) {
-            var courseDto = coursesMappers.castCourseEntityToCourseDTO(course, user);
+            var courseDto = CourseDTO.castFromEntity(course, user, userServices.getUsersCoinsInCourse(user, course));
             courseDto.setUserCanEditCourse(userAccessServices.userCanEditCourse(user, course));
             return courseDto;
         } else
@@ -119,7 +120,7 @@ public class CoursesServices {
             return null;
 
         var courseEntity = courseOptional.get();
-        var dto = coursesMappers.castCourseEntityToCourseBasicDTO(courseEntity);
+        var dto = CourseDTO.castBasicFromEntity(courseEntity);
         return dto;
     }
 
@@ -165,7 +166,7 @@ public class CoursesServices {
 
         var course = cOptional.get();
         if (userAccessServices.userCanEditCourse(user, course))
-            return coursesMappers.castCourseEntityToCourseDetailedDTO(course, user);
+            return CourseDTO.castFullFromEntity(course, user, userAccessServices.userCanEditCourse(user, course), userServices.getUsersCoinsInCourse(user, course));
         else
             throw new AccessForbiddenException("Uporabnik nima pravice za dostop do podatkov");
     }
@@ -173,10 +174,11 @@ public class CoursesServices {
 
     /**
      * insert new course or update existing if course id is given
+     *
      * @param personalNumber personal number of user who is updating/inserting
-     * @param courseDto data for update/insert
+     * @param courseDto      data for update/insert
      * @return updated courseDto object
-     * @throws DataNotFoundException either user or course dont exists
+     * @throws DataNotFoundException    either user or course dont exists
      * @throws AccessForbiddenException user does not have rights for operation
      */
     public CourseDTO insertOrUpdateCourse(String personalNumber, CourseDTO courseDto) throws DataNotFoundException, AccessForbiddenException {
@@ -188,14 +190,14 @@ public class CoursesServices {
             course = new CourseEntity();
         } else {
             var courseOptional = courseRepository.findById(courseDto.getCourseId());
-            if(courseOptional.isEmpty())
+            if (courseOptional.isEmpty())
                 throw new DataNotFoundException("Predmet s podanim id-jem ne obstaja");
             else
                 course = courseOptional.get();
 
         }
 
-        if(!userAccessServices.userCanEditCourse(user, course))
+        if (!userAccessServices.userCanEditCourse(user, course))
             throw new AccessForbiddenException("Uporabnik nima dovoljenja za urejanje predmeta");
 
         course = course.courseUpdater(
@@ -225,14 +227,15 @@ public class CoursesServices {
                 false
         );
 
-        var courseEntity =  courseRepository.save(course);
-        return coursesMappers.castCourseEntityToCourseDetailedDTO(courseEntity, user);
+        var courseEntity = courseRepository.save(course);
+        return CourseDTO.castFullFromEntity(courseEntity, user, userAccessServices.userCanEditCourse(user, course), userServices.getUsersCoinsInCourse(user, course));
     }
 
     /**
      * gets user entity by either personal number or email, without throwing errors
+     *
      * @param personalNumber users personal number
-     * @param email users email
+     * @param email          users email
      * @return UserEntity if user exists or null
      */
     private UserEntity getUserEntityWithoutExceptions(String personalNumber, String email) {
@@ -246,6 +249,7 @@ public class CoursesServices {
 
     /**
      * creates course's password and return entity
+     *
      * @param password password to be created
      * @return CourseAccessPassword with given password
      */
@@ -258,13 +262,14 @@ public class CoursesServices {
 
     /**
      * gets course's access level by given description
+     *
      * @param str description of access level
      * @return CourseAccessLevelEntity with given description
      * @throws DataNotFoundException entity with given description doesn't exists
      */
     private CourseAccessLevelEntity getCourseAccessLevelEntity(String str) throws DataNotFoundException {
         var list = courseAccessLevelRepository.getCourseAccessLevelEntitiesByDescription(str);
-        if(list == null || list.isEmpty())
+        if (list == null || list.isEmpty())
             throw new DataNotFoundException("Ne najdem varnostnega mehanizma");
         else
             return list.get(0);

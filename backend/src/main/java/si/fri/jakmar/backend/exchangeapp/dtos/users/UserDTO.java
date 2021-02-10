@@ -1,9 +1,12 @@
 package si.fri.jakmar.backend.exchangeapp.dtos.users;
 
+import org.apache.commons.collections4.CollectionUtils;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.courses.CourseDTO;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class UserDTO {
     private String email;
@@ -41,6 +44,30 @@ public class UserDTO {
                 null
         );
     }
+
+    public static UserDTO castFromEntity(UserEntity entity, boolean withUserType, boolean withCourses) {
+        return new UserDTO(
+                entity.getEmail(),
+                entity.getName(),
+                entity.getSurname(),
+                entity.getPersonalNumber(),
+                withUserType
+                        ? entity.getUserType().getDescription()
+                        : null,
+                withCourses
+                        ? Stream.concat(
+                        CollectionUtils.emptyIfNull(entity.getUsersCourses()).stream(),
+                        Stream.concat(
+                                CollectionUtils.emptyIfNull(entity.getCreatedCourses()).stream(),
+                                CollectionUtils.emptyIfNull(entity.getGuardinasCourses()).stream())
+                        )
+                        .distinct()
+                        .map(CourseDTO::castBasicFromEntity)
+                        .collect(Collectors.toList())
+                        : null
+        );
+    }
+
 
     public String getEmail() {
         return email;

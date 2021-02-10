@@ -1,10 +1,15 @@
 package si.fri.jakmar.backend.exchangeapp.dtos.courses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.catalina.User;
+import org.apache.commons.collections4.CollectionUtils;
+import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
+import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CourseDTO{
@@ -33,7 +38,7 @@ public class CourseDTO{
     public CourseDTO() {
     }
 
-    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel) {
+    private CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel) {
         this.courseId = courseId;
         this.title = title;
         this.description = description;
@@ -42,7 +47,7 @@ public class CourseDTO{
         this.accessLevel = accessLevel;
     }
 
-    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments, Integer usersCoins) {
+    private CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments, Integer usersCoins) {
         this.courseId = courseId;
         this.title = title;
         this.description = description;
@@ -70,6 +75,65 @@ public class CourseDTO{
         this.initialCoins = initialCoins;
         this.accessPassword = accessPassword;
         this.usersCoins = usersCoins;
+    }
+
+    public static CourseDTO castBasicFromEntity (CourseEntity entity) {
+        return new CourseDTO(
+                entity.getCourseId(),
+                entity.getCourseTitle(),
+                entity.getCourseDescription(),
+                entity.getCourseClassroomUrl(),
+                UserDTO.castFromEntity(entity.getGuardianMain(), false, false),
+                entity.getAccessLevel().getDescription()
+        );
+    }
+
+    public static CourseDTO castFromEntity(CourseEntity entity, UserEntity user, Integer usersCoins) {
+        return new CourseDTO(
+                entity.getCourseId(),
+                entity.getCourseTitle(),
+                entity.getCourseDescription(),
+                entity.getCourseClassroomUrl(),
+                UserDTO.castFromEntity(entity.getGuardianMain(), false, false),
+                entity.getAccessLevel().getDescription(),
+                CollectionUtils.emptyIfNull(entity.getAssignments()).stream()
+                    .map(e -> AssignmentDTO.castBasicFromEntity(e, user))
+                    .collect(Collectors.toList()),
+                usersCoins
+        );
+    }
+
+    public static CourseDTO castFullFromEntity(CourseEntity entity, UserEntity user, boolean userCanEditCourse, Integer usersCoins) {
+        return new CourseDTO(
+                entity.getCourseId(),
+                entity.getCourseTitle(),
+                entity.getCourseDescription(),
+                entity.getCourseClassroomUrl(),
+                UserDTO.castFromEntity(entity.getGuardianMain(), false, false),
+                entity.getAccessLevel().getDescription(),
+                CollectionUtils.emptyIfNull(entity.getAssignments()).stream()
+                    .map(e -> AssignmentDTO.castBasicFromEntity(e, user))
+                    .collect(Collectors.toList()),
+                userCanEditCourse,
+                CollectionUtils.emptyIfNull(entity.getUsersGuardians()).stream()
+                    .map(e -> UserDTO.castFromEntity(e, false, false))
+                    .collect(Collectors.toList()),
+                CollectionUtils.emptyIfNull(entity.getUsersSignedInCourse()).stream()
+                    .map(e -> UserDTO.castFromEntity(e, false, false))
+                    .collect(Collectors.toList()),
+                CollectionUtils.emptyIfNull(entity.getUsersWhitelisted()).stream()
+                    .map(e -> UserDTO.castFromEntity(e, false, false))
+                    .collect(Collectors.toList()),
+                CollectionUtils.emptyIfNull(entity.getUsersBlacklisted()).stream()
+                    .map(e -> UserDTO.castFromEntity(e, false, false))
+                    .collect(Collectors.toList()),
+                entity.getAccessLevel().getDescription(),
+                entity.getInitialCoins(),
+                entity.getAccessPassword() == null
+                    ? null
+                    : entity.getAccessPassword().getPassword(),
+                usersCoins
+        );
     }
 
     public Integer getCourseId() {

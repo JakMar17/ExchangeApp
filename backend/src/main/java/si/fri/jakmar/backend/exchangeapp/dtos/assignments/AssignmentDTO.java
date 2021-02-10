@@ -1,5 +1,9 @@
 package si.fri.jakmar.backend.exchangeapp.dtos.assignments;
 
+import org.apache.commons.collections4.CollectionUtils;
+import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
+import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
+
 import java.time.LocalDateTime;
 
 public class AssignmentDTO {
@@ -79,6 +83,58 @@ public class AssignmentDTO {
 
     public static AssignmentDTO createFullAssignmentDto(Integer id, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, String inputExtension, String outputExtension, String testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel, Boolean archived) {
         return new AssignmentDTO(id, title, classroomUrl, description, startDate, endDate, maxSubmissionsTotal, maxSubmissionsPerStudent, coinsPerSubmission, coinsPrice, noOfSubmissionsTotal, noOfSubmissionsStudent, visible, archived, inputExtension, outputExtension, testType, notifyOnEmail, plagiarismWarning, plagiarismLevel);
+    }
+
+    public static AssignmentDTO castBasicFromEntity(AssignmentEntity entity, UserEntity user) {
+        int noOfSubmissionsStudent = (int) CollectionUtils.emptyIfNull(entity.getSubmissions()).stream()
+                .filter(e -> e.getAuthor().equals(user))
+                .count();
+
+        return new AssignmentDTO(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getClassroomUrl(),
+                entity.getDescription(),
+                entity.getStartDate(),
+                entity.getEndDate(),
+                entity.getMaxSubmissionsTotal(),
+                entity.getMaxSubmissionsPerStudent(),
+                entity.getCoinsPerSubmission(),
+                entity.getCoinsPrice(),
+                entity.getSubmissions() != null
+                    ? entity.getSubmissions().size()
+                    : 0,
+                noOfSubmissionsStudent,
+                entity.getVisible() == 1,
+                entity.getArchived()
+        );
+    }
+
+    public static AssignmentDTO castFullFromEntity(AssignmentEntity entity, Integer noOfSubmissionsStudent) {
+        return new AssignmentDTO(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getClassroomUrl(),
+                entity.getDescription(),
+                entity.getStartDate(),
+                entity.getEndDate(),
+                entity.getMaxSubmissionsTotal(),
+                entity.getMaxSubmissionsPerStudent(),
+                entity.getCoinsPerSubmission(),
+                entity.getCoinsPrice(),
+                entity.getSubmissions() != null
+                        ? entity.getSubmissions().size()
+                        : 0,
+                noOfSubmissionsStudent,
+                entity.getVisible() == 1,
+                entity.getArchived(),
+                entity.getInputDataType(),
+                entity.getOutputDataType(),
+                entity.getSubmissionCheckType().getDescription(),
+                entity.getSubmissionNotify() == 1,
+                entity.getPlagiarismWarning(),
+                entity.getPlagiarismLevel()
+        );
     }
 
     public Boolean getVisible() {

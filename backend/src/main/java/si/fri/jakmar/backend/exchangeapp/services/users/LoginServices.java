@@ -37,6 +37,6 @@ public class LoginServices {
         else if(users.get(0).getRegistrationStatus().getStatus().equals("PENDING_EMAIL"))
             throw new AccessForbiddenException("Uporabnik ni potrdil svojega epoštnega naslova");
         else
-            return usersMappers.castUserEntityToUserDTO(users.get(0), true);
+            return UserDTO.castFromEntity(users.get(0), true, true);
     }
 }
