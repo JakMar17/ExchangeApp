@@ -1,6 +1,9 @@
+import { User } from 'src/app/models/user-model';
+
 export interface Notification {
+  notificationId?: number;
   title: string;
   body: string;
-  dateCreated: Date;
-  author: string;
+  created: Date;
+  author: User;
 }

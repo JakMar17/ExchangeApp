@@ -1,4 +1,4 @@
-import { Submission } from "./submission-model";
+import { Submission } from './submission-model';
 
 export interface Assignment {
   title?: string;
@@ -21,16 +21,17 @@ export interface Assignment {
   plagiarismWarning?: number;
   plagiarismLevel?: number;
   archived?: boolean;
+  notifications?: Notification[];
 }
 
 export enum SubmissionCheck {
   NONE,
   MANUAL,
-  AUTOMATIC
+  AUTOMATIC,
 }
 
 export enum AssignmentStatus {
   ACTIVE,
   DELETED,
-  ARCHIVED
+  ARCHIVED,
 }

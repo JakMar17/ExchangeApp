@@ -72,8 +72,8 @@
   <div class="message-body">
     <p>{{ element.body }}</p>
     <p class="author-text">
-      Objavil {{ element.author }} ({{
-        element.dateCreated | date: "dd.MM.yyyy"
+      Objavil {{ element.author | userToString }} ({{
+        element.created | date: "dd.MM.yyyy"
       }})
     </p>
   </div>

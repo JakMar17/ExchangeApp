@@ -49,6 +49,7 @@ export class AssignmentComponent implements OnInit {
   }
 
   private isActive(): boolean {
+    if (this.assignment.archived) return false;
     const startDate: Date =
       this.assignment.startDate instanceof Date
         ? this.assignment.startDate
@@ -83,22 +84,24 @@ export class AssignmentComponent implements OnInit {
   }
 
   public showDownloadMySubmissionButton(): boolean {
+    if (this.assignment.archived) return false;
     /* return (this.assignment.studentSubmissions?.length ?? 0) > 0; */
     return true;
   }
 
   public showDownloadBoughtSubmissionButton(): boolean {
+    if (this.assignment.archived) return false;
     /* return (this.assignment.boughtSubmissions?.length ?? 0) > 0; */
     return true;
   }
 
   public showBuySubmissionButton(): boolean {
+    if (this.assignment.archived) return false;
     return true;
     return this.assignment.noOfSubmissionsStudent > 0;
   }
 
   public onAddSubmissionButtonPressed(): void {
-    console.log("klik");
     this.router.navigate([
       'course/' +
         this.course.courseId +

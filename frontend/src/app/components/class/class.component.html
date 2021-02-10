@@ -28,7 +28,6 @@
         <p class="subtitle is-5">
           {{ course.description }}
         </p>
-        
       </div>
 
       <app-loading
@@ -102,6 +101,7 @@
       <!-- user has rights to view or edit class -->
       <div *ngIf="courseVisibility == courseAccess.VISIBLE">
         <app-notifications
+          [course]="course"
           [boxTitle]="'Obvestila izvajalca'"
           [hasRightToEdit]="course.userCanEditCourse"
           [notifications]="course?.notifications"

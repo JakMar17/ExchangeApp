@@ -382,7 +382,7 @@
               <span> Zavrzi spremembe </span>
             </button>
           </div>
-          <div class="column">
+          <div class="column" *ngIf="!assignment.archived">
             <button
               (click)="archiveAssignment()"
               class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"

@@ -73,17 +73,6 @@ public class AssignmentDTO {
         this.plagiarismLevel = plagiarismLevel;
     }
 
-    /**
-     * creates new AssignmentDTO with basic data
-     * @return new object
-     */
-    public static AssignmentDTO createBasicAssignmentDto(Integer id, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived) {
-        return new AssignmentDTO(id, title, classroomUrl, description, startDate, endDate, maxSubmissionsTotal, maxSubmissionsPerStudent, coinsPerSubmission, coinsPrice, noOfSubmissionsTotal, noOfSubmissionsStudent, visible, archived);
-    }
-
-    public static AssignmentDTO createFullAssignmentDto(Integer id, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, String inputExtension, String outputExtension, String testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel, Boolean archived) {
-        return new AssignmentDTO(id, title, classroomUrl, description, startDate, endDate, maxSubmissionsTotal, maxSubmissionsPerStudent, coinsPerSubmission, coinsPrice, noOfSubmissionsTotal, noOfSubmissionsStudent, visible, archived, inputExtension, outputExtension, testType, notifyOnEmail, plagiarismWarning, plagiarismLevel);
-    }
 
     public static AssignmentDTO castBasicFromEntity(AssignmentEntity entity, UserEntity user) {
         int noOfSubmissionsStudent = (int) CollectionUtils.emptyIfNull(entity.getSubmissions()).stream()

@@ -13,14 +13,7 @@ import { Notification } from '../notifications/models/notification-interface';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  public notifications: Notification[] | null = [
-    {
-      title: 'Testni sistem',
-      body: 'Trenutno se nahajate na testnem sistemu.',
-      author: 'Karleto Špacapan',
-      dateCreated: new Date(),
-    },
-  ];
+  public notifications: Notification[] | null = null;
 
   public user: User | null;
   public courses: Course[] | null = null;
@@ -41,6 +34,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.getAllCourses();
     this.getUserCourses();
+    this.getNotifications();
   }
 
   private getAllCourses(): void {
@@ -54,5 +48,11 @@ export class DashboardComponent implements OnInit {
     this.coursesService
       .getMyCourses()
       .subscribe((data) => (this.userService.userLoggedIn.myCourses = data));
+  }
+
+  private getNotifications(): void {
+    this.coursesService
+      .getDashboardNotifications()
+      .subscribe((data) => (this.notifications = data));
   }
 }

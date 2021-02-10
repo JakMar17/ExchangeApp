@@ -68,7 +68,7 @@ public class UserAccessServices {
      * @param userEntity user to be checked
      * @return true if user has admin rights
      */
-    private boolean userIsAdmin(UserEntity userEntity) {
+    public boolean userIsAdmin(UserEntity userEntity) {
         return userEntity.getUserType().getId() == 1;
     }
 

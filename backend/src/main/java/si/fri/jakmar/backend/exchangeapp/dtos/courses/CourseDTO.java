@@ -6,6 +6,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.notifications.NotificationDTO;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class CourseDTO{
     private List<AssignmentDTO> assignments;
     private Boolean userCanEditCourse;
     private Integer usersCoins;
+    private List<NotificationDTO> notifications;
 
     // all info
     private List<UserDTO> guardians;
@@ -47,7 +49,7 @@ public class CourseDTO{
         this.accessLevel = accessLevel;
     }
 
-    private CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments, Integer usersCoins) {
+    private CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments, Integer usersCoins, List<NotificationDTO> notifications) {
         this.courseId = courseId;
         this.title = title;
         this.description = description;
@@ -56,9 +58,10 @@ public class CourseDTO{
         this.accessLevel = accessLevel;
         this.assignments = assignments;
         this.usersCoins = usersCoins;
+        this.notifications = notifications;
     }
 
-    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments, Boolean userCanEditCourse, List<UserDTO> guardians, List<UserDTO> studentsSignedIn, List<UserDTO> studentsWhitelisted, List<UserDTO> studentsBlacklisted, String accessType, Integer initialCoins, String accessPassword, Integer usersCoins) {
+    public CourseDTO(Integer courseId, String title, String description, String classroomURL, UserDTO guardianMain, String accessLevel, List<AssignmentDTO> assignments, Boolean userCanEditCourse, List<UserDTO> guardians, List<UserDTO> studentsSignedIn, List<UserDTO> studentsWhitelisted, List<UserDTO> studentsBlacklisted, String accessType, Integer initialCoins, String accessPassword, Integer usersCoins, List<NotificationDTO> notifications) {
         this.courseId = courseId;
         this.title = title;
         this.description = description;
@@ -75,6 +78,7 @@ public class CourseDTO{
         this.initialCoins = initialCoins;
         this.accessPassword = accessPassword;
         this.usersCoins = usersCoins;
+        this.notifications = notifications;
     }
 
     public static CourseDTO castBasicFromEntity (CourseEntity entity) {
@@ -99,7 +103,10 @@ public class CourseDTO{
                 CollectionUtils.emptyIfNull(entity.getAssignments()).stream()
                     .map(e -> AssignmentDTO.castBasicFromEntity(e, user))
                     .collect(Collectors.toList()),
-                usersCoins
+                usersCoins,
+                CollectionUtils.emptyIfNull(entity.getNotifications()).stream()
+                    .map(NotificationDTO::castFromEntity)
+                    .collect(Collectors.toList())
         );
     }
 
@@ -132,7 +139,10 @@ public class CourseDTO{
                 entity.getAccessPassword() == null
                     ? null
                     : entity.getAccessPassword().getPassword(),
-                usersCoins
+                usersCoins,
+                CollectionUtils.emptyIfNull(entity.getNotifications()).stream()
+                        .map(NotificationDTO::castFromEntity)
+                        .collect(Collectors.toList())
         );
     }
 
@@ -262,5 +272,13 @@ public class CourseDTO{
 
     public void setUsersCoins(Integer usersCoins) {
         this.usersCoins = usersCoins;
+    }
+
+    public List<NotificationDTO> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<NotificationDTO> notifications) {
+        this.notifications = notifications;
     }
 }

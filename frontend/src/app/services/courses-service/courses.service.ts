@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CourseApiService } from 'src/app/api/course-api/course-api.service';
+import { NotificationsApiService } from 'src/app/api/notifications-api/notifications-api.service';
+import { Notification } from 'src/app/components/notifications/models/notification-interface';
 import { Course } from 'src/app/models/class-model';
 import { User } from 'src/app/models/user-model';
 import { UserServiceService } from '../user-service/user-service.service';
@@ -11,7 +13,8 @@ import { UserServiceService } from '../user-service/user-service.service';
 export class CoursesService {
   constructor(
     private courseApi: CourseApiService,
-    private userService: UserServiceService
+    private userService: UserServiceService,
+    private notificationApi: NotificationsApiService
   ) {}
 
   public getAllCourses(): Observable<Course[]> {
@@ -46,5 +49,9 @@ export class CoursesService {
 
   public getMyCourses(): Observable<Course[]>{
     return this.courseApi.getUsersCourses(this.userService.userLoggedIn.personalNumber);
+  }
+
+  public getDashboardNotifications(): Observable<Notification[]> {
+    return this.notificationApi.getDashoboardNotifications();
   }
 }

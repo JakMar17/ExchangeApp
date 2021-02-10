@@ -1,7 +1,9 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.notifications;
 
+import si.fri.jakmar.backend.exchangeapp.api.notifications.NotificationsApi;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.dtos.notifications.NotificationDTO;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,6 +31,27 @@ public class NotificationEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity author;
+
+    public NotificationEntity() {
+    }
+
+    public NotificationEntity(Integer id, String title, String body, CourseEntity course, UserEntity author) {
+        this.id = id;
+        this.title = title;
+        this.body = body;
+        this.course = course;
+        this.author = author;
+    }
+
+    public static NotificationEntity castFromDto(NotificationDTO dto, CourseEntity course, UserEntity author) {
+        return new NotificationEntity(
+                dto.getNotificationId(),
+                dto.getTitle(),
+                dto.getBody(),
+                course,
+                author
+        );
+    }
 
     public Integer getId() {
         return id;

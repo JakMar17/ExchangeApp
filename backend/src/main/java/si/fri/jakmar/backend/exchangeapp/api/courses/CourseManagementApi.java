@@ -66,6 +66,7 @@ public class CourseManagementApi {
             @RequestHeader(name = "Personal-Number") String personalNumber,
             @RequestParam Integer courseId
     ) {
+
         return null;
     }
 }

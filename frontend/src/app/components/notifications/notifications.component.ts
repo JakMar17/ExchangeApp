@@ -1,4 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Course } from 'src/app/models/class-model';
+import { NotificationsServiceService } from 'src/app/services/notifications-service/notifications-service.service';
+import { UserServiceService } from 'src/app/services/user-service/user-service.service';
 import { Notification } from './models/notification-interface';
 
 @Component({
@@ -9,6 +12,7 @@ import { Notification } from './models/notification-interface';
 export class NotificationsComponent implements OnInit {
   @Input() boxTitle = 'Obvestila';
   @Input() notifications: Notification[] | null = null;
+  @Input() course: Course | null = null;
   @Input() hasRightToEdit = false;
 
   public addingNotification = false;
@@ -16,7 +20,10 @@ export class NotificationsComponent implements OnInit {
   public newNotificationTitle = '';
   public newNotificationBody = '';
 
-  constructor() {}
+  constructor(
+    private userService: UserServiceService,
+    private notificationService: NotificationsServiceService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -31,16 +38,26 @@ export class NotificationsComponent implements OnInit {
   }
 
   public addNewNotification(): void {
+    const notification = {
+      author: this.userService.userLoggedIn,
+      created: new Date(),
+      body: this.newNotificationBody,
+      title: this.newNotificationTitle,
+    };
+
     if (this.notifications == null) {
       this.notifications = [];
     }
-    this.notifications.push({
-      author: 'Karleto Špacapan',
-      dateCreated: new Date(),
-      body: this.newNotificationBody,
-      title: this.newNotificationTitle,
-    });
-    this.closeNewNotificationDialog();
+
+    this.notificationService
+      .saveNotification(notification, this.course)
+      .subscribe(
+        (data) => {
+          this.notifications.push(data);
+          this.closeNewNotificationDialog();
+        },
+        (err) => console.error(err)
+      );
   }
 
   /**
@@ -49,8 +66,18 @@ export class NotificationsComponent implements OnInit {
    * @param notification notification to be deleted
    */
   public deleteNotification(notification: Notification): void {
+    console.log(notification);
+
     if (this.notifications) {
-      this.notifications = this.notifications.filter((e) => e != notification);
+      this.notificationService
+        .deleteNotification(notification, this.course)
+        .subscribe(
+          () =>
+            (this.notifications = this.notifications.filter(
+              (e) => e != notification
+            )),
+          (err) => console.error(err)
+        );
     }
   }
 
