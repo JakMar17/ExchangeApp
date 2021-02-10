@@ -25,6 +25,10 @@ public class UserDTO {
         this.myCourses = myCourses;
     }
 
+    public static UserDTO castFromEntityWithoutCourses(UserEntity entity) {
+        return castFromEntityWithoutCourses(entity, false);
+    }
+
     public static UserDTO castFromEntityWithoutCourses(UserEntity entity, boolean withUserType) {
         return new UserDTO(
                 entity.getEmail(),

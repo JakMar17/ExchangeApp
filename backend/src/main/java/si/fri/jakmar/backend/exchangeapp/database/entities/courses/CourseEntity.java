@@ -1,8 +1,8 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.courses;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Type;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
+import si.fri.jakmar.backend.exchangeapp.database.entities.notifications.NotificationEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 
 import javax.persistence.*;
@@ -33,7 +33,6 @@ public class CourseEntity {
     @Type(type = "org.hibernate.type.NumericBooleanType")
     private Boolean archived = false;
 
-
     @ManyToOne
     @JoinColumn(name = "access_level_id", referencedColumnName = "access_level_id")
     private CourseAccessLevelEntity accessLevel;
@@ -42,34 +41,31 @@ public class CourseEntity {
     @JoinColumn(name = "access_password_id", referencedColumnName = "access_password_id")
     private CourseAccessPassword accessPassword;
 
-    @JsonIgnoreProperties({"createdCourses", "usersCourses"})
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private UserEntity guardianMain;
 
-    @JsonIgnoreProperties({"createdCourses", "usersCourses"})
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "STUDENT_SIGNED_IN", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<UserEntity> usersSignedInCourse;
 
-    @JsonIgnoreProperties({"createdCourses", "usersCourses"})
     @ManyToMany
     @JoinTable(name = "STUDENT_BLACKLIST", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<UserEntity> usersBlacklisted;
 
-    @JsonIgnoreProperties({"createdCourses", "usersCourses"})
     @ManyToMany
     @JoinTable(name = "STUDENT_WHITELIST", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<UserEntity> usersWhitelisted;
 
-    @JsonIgnoreProperties({"createdCourses", "usersCourses"})
     @ManyToMany
     @JoinTable(name = "GUARDIAN", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<UserEntity> usersGuardians;
 
-    @JsonIgnoreProperties({"course"})
     @OneToMany(mappedBy = "course")
     private List<AssignmentEntity> assignments;
+
+    @OneToMany(mappedBy = "course")
+    private List<NotificationEntity> notifications;
 
     public CourseEntity() {
     }
@@ -239,5 +235,13 @@ public class CourseEntity {
 
     public void setArchived(Boolean archived) {
         this.archived = archived;
+    }
+
+    public List<NotificationEntity> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<NotificationEntity> notifications) {
+        this.notifications = notifications;
     }
 }

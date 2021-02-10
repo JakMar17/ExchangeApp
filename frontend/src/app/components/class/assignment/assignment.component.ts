@@ -17,6 +17,9 @@ export class AssignmentComponent implements OnInit {
   @Input() course: Course;
   public showBuyingBox: boolean = false;
 
+  public showMySubmissionsTable: boolean = true;
+  public showBoughtSubmissionsTable: boolean = true;
+
   constructor(
     private router: Router,
     private assignmentServices: AssignmentService

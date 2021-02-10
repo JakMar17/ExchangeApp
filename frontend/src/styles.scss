@@ -34,3 +34,7 @@ app-assignment {
   @extend .box;
   margin-bottom: 3vh;
 }
+
+.is-clickable {
+  cursor: pointer;
+}

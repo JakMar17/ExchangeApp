@@ -4,6 +4,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Entity
 @Table(name = "login")
@@ -20,7 +21,7 @@ public class LoginEntity {
     @Column(name = "login_ip")
     private String ipAddress;
     @Column(name = "login_date")
-    private LocalDateTime loginDate;
+    private LocalDateTime loginDate = LocalDateTime.now(ZoneOffset.UTC);
 
     @ManyToOne
     @JoinColumn(name = "user_id")

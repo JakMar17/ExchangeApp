@@ -76,7 +76,12 @@
     </tr>
   </tbody>
 </table>
-<h6 class="title is-5">Moje oddaje</h6>
+<h6
+  (click)="showMySubmissionsTable = !showMySubmissionsTable"
+  class="title is-5 is-clickable"
+>
+  Moje oddaje
+</h6>
 <!-- <div
   *ngIf="
     assignment.studentSubmissions != null &&
@@ -84,7 +89,7 @@
   "
   class="table-container"
 > -->
-<div *ngIf="true" class="table-container">
+<div *ngIf="true && showMySubmissionsTable" class="table-container">
   <table class="table is-fullwidth is-hoverable">
     <thead>
       <tr>
@@ -145,7 +150,12 @@
     <button class="button is-success is-outlined">Prenesi vse oddane</button>
   </div>
 </div>
-<h6 class="title is-5">Kupljeni testni primeri</h6>
+<h6
+  (click)="showBoughtSubmissionsTable = !showBoughtSubmissionsTable"
+  class="title is-5 is-clickable"
+>
+  Kupljeni testni primeri
+</h6>
 <!-- <div
   *ngIf="
     assignment.boughtSubmissions != null &&
@@ -153,7 +163,7 @@
   "
   class="table-container"
 > -->
-<div *ngIf="true" class="table-container">
+<div *ngIf="true && showBoughtSubmissionsTable" class="table-container">
   <table class="table is-fullwidth is-hoverable">
     <thead>
       <tr>
