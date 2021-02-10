@@ -25,7 +25,9 @@ export class NotificationsComponent implements OnInit {
     private notificationService: NotificationsServiceService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log("course", this.course);
+  }
 
   public openNewNotificationDialog(): void {
     this.addingNotification = true;

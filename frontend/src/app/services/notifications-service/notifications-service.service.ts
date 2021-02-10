@@ -18,6 +18,7 @@ export class NotificationsServiceService {
     notification: Notification,
     course: Course | null
   ): Observable<Notification> {
+    console.log(course);
     return this.notificationApi.saveNotification(
       notification,
       this.userService.userLoggedIn.personalNumber ?? '',

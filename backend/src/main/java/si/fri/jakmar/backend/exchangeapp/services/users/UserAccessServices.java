@@ -1,5 +1,6 @@
 package si.fri.jakmar.backend.exchangeapp.services.users;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
@@ -72,6 +73,10 @@ public class UserAccessServices {
         return userEntity.getUserType().getId() == 1;
     }
 
+    public boolean userIsProfessor(UserEntity userEntity) {
+        return userEntity.getUserType().getId() == 2;
+    }
+
     /**
      * checks if user is guardian on course
      * @param userEntity user to be checked
@@ -93,7 +98,7 @@ public class UserAccessServices {
      * @return true if is part of list
      */
     private boolean userOnList(UserEntity user, List<UserEntity> list) {
-        return list.stream().anyMatch(user::equals);
+        return CollectionUtils.emptyIfNull(list).stream().anyMatch(user::equals);
     }
 
 
@@ -124,7 +129,14 @@ public class UserAccessServices {
      * @return true if user can edit course
      */
     public boolean userCanEditCourse(UserEntity user, CourseEntity course) {
-        return userIsAdmin(user) || userOnList(user, course.getUsersGuardians());
+        if(userIsAdmin(user))
+            return true;
+
+        //dodaja se novega, preveri, če je ali administrator ali profesor
+        if(course.getCourseId() == null)
+            return userIsProfessor(user);
+
+        return userOnList(user, course.getUsersGuardians()) || course.getGuardianMain().equals(user);
     }
 
 }

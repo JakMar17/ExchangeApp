@@ -103,7 +103,7 @@
         <app-notifications
           [course]="course"
           [boxTitle]="'Obvestila izvajalca'"
-          [hasRightToEdit]="course.userCanEditCourse"
+          [hasRightToEdit]="course?.userCanEditCourse"
           [notifications]="course?.notifications"
         ></app-notifications>
         <div class="box">
@@ -122,13 +122,19 @@
           </div>
           <div class="field has-addons">
             <div class="control">
-              <input class="input" type="text" placeholder="Iskanje" />
+              <input
+                class="input"
+                type="text"
+                placeholder="Iskanje"
+                [(ngModel)]="searchInput"
+                (keyup)="filterAssignmnets()"
+              />
             </div>
             <div class="control">
               <a class="button is-info"> Išči </a>
             </div>
           </div>
-          <div *ngFor="let element of course?.assignments">
+          <div *ngFor="let element of assignmentsShow">
             <app-assignment
               *ngIf="element.visible || course.userCanEditCourse"
               [canEdit]="course.userCanEditCourse"

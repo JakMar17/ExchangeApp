@@ -21,7 +21,6 @@ export interface Assignment {
   plagiarismWarning?: number;
   plagiarismLevel?: number;
   archived?: boolean;
-  notifications?: Notification[];
 }
 
 export enum SubmissionCheck {

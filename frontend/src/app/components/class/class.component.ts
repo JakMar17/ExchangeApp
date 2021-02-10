@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Assignment } from 'src/app/models/assignment-model';
 import { Course, CourseAccess } from 'src/app/models/class-model';
 import { User } from 'src/app/models/user-model';
 import { AccessService } from 'src/app/services/access-service/access.service';
@@ -20,8 +21,11 @@ export class ClassComponent implements OnInit {
   public showClassPasswordError: boolean = false;
 
   public course: Course | null = null;
+  public assignmentsShow: Assignment[] | null = null;
   public user: User | null = null;
   public userCanEdit: boolean = false;
+
+  public searchInput: string | null = null;
 
   public courseVisibility: CourseVisibilityToUser =
     CourseVisibilityToUser.LOADING;
@@ -58,6 +62,7 @@ export class ClassComponent implements OnInit {
       .subscribe(
         (data) => {
           this.course = data;
+          this.assignmentsShow = this.course.assignments;
           this.course.notifications = this.course.notifications ?? [];
           this.courseVisibility = CourseVisibilityToUser.VISIBLE;
         },
@@ -108,6 +113,13 @@ export class ClassComponent implements OnInit {
 
   public onEditCourseButtonPressed(): void {
     this.router.navigate(['/course/edit/' + this.course.courseId]);
+  }
+
+  public filterAssignmnets(): void {
+    if (this.searchInput == null) return;
+    this.assignmentsShow = [...this.course.assignments].filter((e) =>
+      e.title.toLowerCase().includes(this.searchInput.toLowerCase())
+    );
   }
 }
 

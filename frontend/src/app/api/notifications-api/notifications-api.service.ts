@@ -16,11 +16,16 @@ export class NotificationsApiService {
     personalNumber: string,
     courseId: number | null
   ): Observable<Notification> {
-    let headers = new HttpHeaders({
-      'Personal-Number': personalNumber,
-    });
+    const headers =
+      courseId == null
+        ? new HttpHeaders({
+            'Personal-Number': personalNumber,
+          })
+        : new HttpHeaders({
+            'Personal-Number': personalNumber,
+            'Course-Id': courseId.toString(),
+          });
 
-    if (courseId != null) headers.append('Course-Id', courseId.toString());
     return this.http.post<Notification>(this.baseUrl, notification, {
       headers,
     });
@@ -31,11 +36,15 @@ export class NotificationsApiService {
     personalNumber: string,
     courseId: number | null
   ): Observable<any> {
-    let headers = new HttpHeaders({
-      'Personal-Number': personalNumber,
-    });
-
-    if (courseId != null) headers.append('Course-Id', courseId.toString());
+    const headers =
+      courseId == null
+        ? new HttpHeaders({
+            'Personal-Number': personalNumber,
+          })
+        : new HttpHeaders({
+            'Personal-Number': personalNumber,
+            'Course-Id': courseId.toString(),
+          });
 
     return this.http.delete<any>(
       this.baseUrl + '/delete?notificationId=' + notificationId,
