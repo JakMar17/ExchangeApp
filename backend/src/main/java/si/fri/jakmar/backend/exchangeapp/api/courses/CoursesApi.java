@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import si.fri.jakmar.backend.exchangeapp.api.wrappers.exceptions.ExceptionWrapper;
+import si.fri.jakmar.backend.exchangeapp.api.exceptions.ExceptionWrapper;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseRepository;
+import si.fri.jakmar.backend.exchangeapp.exceptions.AccessForbiddenException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.AccessUnauthorizedException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.DataNotFoundException;
 import si.fri.jakmar.backend.exchangeapp.services.courses.CoursesServices;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessUnauthorizedException;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataNotFoundException;
 
 import java.util.logging.Logger;
 
@@ -19,27 +19,19 @@ import java.util.logging.Logger;
 public class CoursesApi {
 
     private final Logger logger = Logger.getLogger(CoursesApi.class.getSimpleName());
-    @Autowired CourseRepository courseRepository;
-    @Autowired private CoursesServices coursesServices;
+    @Autowired
+    CourseRepository courseRepository;
+    @Autowired
+    private CoursesServices coursesServices;
 
     @GetMapping("all")
-    public ResponseEntity<Object> getCourses() {
-        try {
-            return ResponseEntity.ok(coursesServices.getAllCoursesWithBasicInfo());
-        } catch (DataNotFoundException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e));
-        }
+    public ResponseEntity<Object> getCourses() throws DataNotFoundException {
+        return ResponseEntity.ok(coursesServices.getAllCoursesWithBasicInfo());
     }
 
     @GetMapping("my")
-    public ResponseEntity<Object> getUsersCourses(@RequestHeader(name = "Personal-Number") String personalNumber) {
-        try {
-            return ResponseEntity.ok(coursesServices.getAllCoursesOfUserWithBasicInfo(personalNumber));
-        } catch (DataNotFoundException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e.getMessage()));
-        }
+    public ResponseEntity<Object> getUsersCourses(@RequestHeader(name = "Personal-Number") String personalNumber) throws DataNotFoundException {
+        return ResponseEntity.ok(coursesServices.getAllCoursesOfUserWithBasicInfo(personalNumber));
     }
 
     @GetMapping("course")

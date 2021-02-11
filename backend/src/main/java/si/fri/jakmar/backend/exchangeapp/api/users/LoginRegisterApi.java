@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import si.fri.jakmar.backend.exchangeapp.api.wrappers.exceptions.ExceptionWrapper;
+import si.fri.jakmar.backend.exchangeapp.api.exceptions.ExceptionWrapper;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.LoginUserDTO;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.RegisterUserDTO;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataInvalidException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.AccessForbiddenException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.DataInvalidException;
 import si.fri.jakmar.backend.exchangeapp.services.users.LoginServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.RegisterServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.exceptions.UserDoesNotExistsException;
@@ -30,31 +30,15 @@ public class LoginRegisterApi {
     private LoginServices loginServices;
 
     @PostMapping("register")
-    public ResponseEntity<Object> registerNewUser(@RequestBody RegisterUserDTO user) {
-        try {
-            boolean ok = registerServices.registerNewUser(user);
-            return ResponseEntity.ok(ok);
-        } catch (UserExistsException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionWrapper(e));
-        }
+    public ResponseEntity<Object> registerNewUser(@RequestBody RegisterUserDTO user) throws UserExistsException {
+        boolean ok = registerServices.registerNewUser(user);
+        return ResponseEntity.ok(ok);
     }
 
     @PostMapping("login")
-    public ResponseEntity<Object> loginUser(@RequestBody LoginUserDTO loginData) {
-        try {
-            var data = loginServices.loginUser(loginData.getEmail(), loginData.getPassword());
-            return ResponseEntity.ok(data);
-        } catch (DataInvalidException e) {
-            logger.severe(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionWrapper(e));
-        } catch (UserDoesNotExistsException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e));
-        } catch (AccessForbiddenException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionWrapper(e));
-        }
+    public ResponseEntity<Object> loginUser(@RequestBody LoginUserDTO loginData) throws AccessForbiddenException, UserDoesNotExistsException, DataInvalidException {
+        var data = loginServices.loginUser(loginData.getEmail(), loginData.getPassword());
+        return ResponseEntity.ok(data);
     }
 
     //reset password

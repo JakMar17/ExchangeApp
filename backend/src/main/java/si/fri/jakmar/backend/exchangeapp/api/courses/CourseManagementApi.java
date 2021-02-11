@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import si.fri.jakmar.backend.exchangeapp.dtos.courses.CourseDTO;
 import si.fri.jakmar.backend.exchangeapp.services.courses.CoursesServices;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataNotFoundException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.AccessForbiddenException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.DataNotFoundException;
 
 import java.util.logging.Logger;
 
@@ -24,33 +24,17 @@ public class CourseManagementApi {
     public ResponseEntity<Object> getDetailedCouresData(
             @RequestHeader(name = "Personal-Number") String personalNumber,
             @RequestParam Integer courseId
-    ) {
-        try {
-            return ResponseEntity.ok(coursesServices.getCourseDetailed(courseId, personalNumber));
-        } catch (DataNotFoundException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (AccessForbiddenException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    ) throws AccessForbiddenException, DataNotFoundException {
+        return ResponseEntity.ok(coursesServices.getCourseDetailed(courseId, personalNumber));
     }
 
     @PostMapping
     public ResponseEntity<Object> saveCourse(
             @RequestHeader(name = "Personal-Number") String personalNumber,
             @RequestBody CourseDTO data
-    ) {
-        try {
-            var d = coursesServices.insertOrUpdateCourse(personalNumber, data);
-            return ResponseEntity.ok(d);
-        } catch (DataNotFoundException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (AccessForbiddenException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    ) throws AccessForbiddenException, DataNotFoundException {
+        var d = coursesServices.insertOrUpdateCourse(personalNumber, data);
+        return ResponseEntity.ok(d);
     }
 
     @DeleteMapping

@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import si.fri.jakmar.backend.exchangeapp.api.wrappers.exceptions.ExceptionWrapper;
+import si.fri.jakmar.backend.exchangeapp.api.exceptions.ExceptionWrapper;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 import si.fri.jakmar.backend.exchangeapp.services.assignments.AssignmentsServices;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessUnauthorizedException;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataNotFoundException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.AccessForbiddenException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.AccessUnauthorizedException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.DataNotFoundException;
 
 import java.util.logging.Logger;
 
@@ -23,87 +23,33 @@ public class AssignmentApi {
     private AssignmentsServices assignmentsServices;
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllAssignmentsOfCourse(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestParam Integer courseId) {
-        try {
-            return ResponseEntity.ok(assignmentsServices.getBasicDataForAssignmentsOfCourse(personalNumber, courseId));
-        } catch (DataNotFoundException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e.getMessage()));
-        } catch (AccessUnauthorizedException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionWrapper(e.getMessage()));
-        } catch (AccessForbiddenException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionWrapper(e.getMessage()));
-        }
+    public ResponseEntity<Object> getAllAssignmentsOfCourse(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestParam Integer courseId) throws AccessUnauthorizedException, DataNotFoundException, AccessForbiddenException {
+        return ResponseEntity.ok(assignmentsServices.getBasicDataForAssignmentsOfCourse(personalNumber, courseId));
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAssignment(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestParam Integer assignmentId) {
-        try {
-            return ResponseEntity.ok(assignmentsServices.getAssignmentsData(personalNumber, assignmentId));
-        } catch (DataNotFoundException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e.getMessage()));
-        } catch (AccessUnauthorizedException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionWrapper(e.getMessage()));
-        } catch (AccessForbiddenException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionWrapper(e.getMessage()));
-        }
+    public ResponseEntity<Object> getAssignment(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestParam Integer assignmentId) throws AccessUnauthorizedException, DataNotFoundException, AccessForbiddenException {
+        return ResponseEntity.ok(assignmentsServices.getAssignmentsData(personalNumber, assignmentId));
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Object> saveAssignment(@RequestHeader(name = "Personal-Number") String personalNumber, Integer courseId, @RequestBody AssignmentDTO data) {
-        try {
-            return ResponseEntity.ok(assignmentsServices.insertOrUpdateAssignment(personalNumber, courseId, data));
-        } catch (DataNotFoundException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e.getMessage()));
-        } catch (AccessForbiddenException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionWrapper(e.getMessage()));
-        }
+    public ResponseEntity<Object> saveAssignment(@RequestHeader(name = "Personal-Number") String personalNumber, Integer courseId, @RequestBody AssignmentDTO data) throws AccessForbiddenException, DataNotFoundException {
+        return ResponseEntity.ok(assignmentsServices.insertOrUpdateAssignment(personalNumber, courseId, data));
     }
 
     @PutMapping("/set-visibility")
-    public ResponseEntity<Object> setAssignmentsVisibility(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestParam Integer assignmentId, @RequestParam Boolean visibility) {
-        try {
-            return ResponseEntity.ok(assignmentsServices.setVisibility(personalNumber, assignmentId, visibility));
-        } catch (DataNotFoundException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e.getMessage()));
-        } catch (AccessForbiddenException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionWrapper(e.getMessage()));
-        }
+    public ResponseEntity<Object> setAssignmentsVisibility(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestParam Integer assignmentId, @RequestParam Boolean visibility) throws AccessForbiddenException, DataNotFoundException {
+        return ResponseEntity.ok(assignmentsServices.setVisibility(personalNumber, assignmentId, visibility));
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> deleteAssignment(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestParam Integer assignmentId) {
-        try {
-            assignmentsServices.deleteAssignment(personalNumber, assignmentId);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } catch (DataNotFoundException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e.getMessage()));
-        } catch (AccessForbiddenException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionWrapper(e.getMessage()));
-        }
+    public ResponseEntity<Object> deleteAssignment(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestParam Integer assignmentId) throws AccessForbiddenException, DataNotFoundException {
+        assignmentsServices.deleteAssignment(personalNumber, assignmentId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/archive")
-    public ResponseEntity<Object> archiveAssignment(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestBody AssignmentDTO assignmentDTO) {
-        try {
-            return ResponseEntity.ok(assignmentsServices.setArchivedStatus(personalNumber, assignmentDTO.getAssignmentId(), assignmentDTO.getArchived()));
-        } catch (DataNotFoundException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e.getMessage()));
-        } catch (AccessForbiddenException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionWrapper(e.getMessage()));
-        }
+    public ResponseEntity<Object> archiveAssignment(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestBody AssignmentDTO assignmentDTO) throws AccessForbiddenException, DataNotFoundException {
+        return ResponseEntity.ok(assignmentsServices.setArchivedStatus(personalNumber, assignmentDTO.getAssignmentId(), assignmentDTO.getArchived()));
     }
 }

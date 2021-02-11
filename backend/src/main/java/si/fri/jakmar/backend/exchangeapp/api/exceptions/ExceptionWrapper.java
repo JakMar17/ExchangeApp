@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.api.wrappers.exceptions;
+package si.fri.jakmar.backend.exchangeapp.api.exceptions;
 
 public class ExceptionWrapper {
     private String message;

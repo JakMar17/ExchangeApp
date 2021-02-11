@@ -8,9 +8,9 @@ import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.Submissio
 import si.fri.jakmar.backend.exchangeapp.database.repositories.AssignmentRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 import si.fri.jakmar.backend.exchangeapp.services.courses.CoursesServices;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessUnauthorizedException;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataNotFoundException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.AccessForbiddenException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.AccessUnauthorizedException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.DataNotFoundException;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserAccessServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserServices;
 

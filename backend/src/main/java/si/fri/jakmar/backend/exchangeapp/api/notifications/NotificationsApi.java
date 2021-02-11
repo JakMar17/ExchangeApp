@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import si.fri.jakmar.backend.exchangeapp.api.wrappers.exceptions.ExceptionWrapper;
+import si.fri.jakmar.backend.exchangeapp.api.exceptions.ExceptionWrapper;
 import si.fri.jakmar.backend.exchangeapp.dtos.notifications.NotificationDTO;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.AccessForbiddenException;
-import si.fri.jakmar.backend.exchangeapp.services.exceptions.DataNotFoundException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.AccessForbiddenException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.DataNotFoundException;
 import si.fri.jakmar.backend.exchangeapp.services.notifications.NotificationsServices;
 
 import java.util.logging.Logger;
@@ -28,29 +28,13 @@ public class NotificationsApi {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveNotification(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestHeader(name = "Course-Id", required = false) Integer courseId, @RequestBody NotificationDTO notification) {
-        try {
-            return ResponseEntity.ok(notificationsServices.saveNotification(notification, courseId, personalNumber));
-        } catch (DataNotFoundException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e.getMessage()));
-        } catch (AccessForbiddenException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionWrapper(e.getMessage()));
-        }
+    public ResponseEntity<Object> saveNotification(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestHeader(name = "Course-Id", required = false) Integer courseId, @RequestBody NotificationDTO notification) throws AccessForbiddenException, DataNotFoundException {
+        return ResponseEntity.ok(notificationsServices.saveNotification(notification, courseId, personalNumber));
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> deleteNotification(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestHeader(name = "Course-Id", required = false) Integer courseId, @RequestParam Integer notificationId) {
-        try {
-            notificationsServices.deleteNotification(notificationId, courseId, personalNumber);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } catch (DataNotFoundException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionWrapper(e.getMessage()));
-        } catch (AccessForbiddenException e) {
-            logger.warning(e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionWrapper(e.getMessage()));
-        }
+    public ResponseEntity<Object> deleteNotification(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestHeader(name = "Course-Id", required = false) Integer courseId, @RequestParam Integer notificationId) throws AccessForbiddenException, DataNotFoundException {
+        notificationsServices.deleteNotification(notificationId, courseId, personalNumber);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.services.exceptions;
+package si.fri.jakmar.backend.exchangeapp.exceptions;
 
 /**
  * thrown when UserEntity is unauthorized to edit/view/access given data
