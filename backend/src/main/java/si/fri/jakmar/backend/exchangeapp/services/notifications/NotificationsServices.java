@@ -8,8 +8,8 @@ import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.NotificationRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.notifications.NotificationDTO;
 import si.fri.jakmar.backend.exchangeapp.services.courses.CoursesServices;
-import si.fri.jakmar.backend.exchangeapp.exceptions.AccessForbiddenException;
-import si.fri.jakmar.backend.exchangeapp.exceptions.DataNotFoundException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserAccessServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserServices;
 

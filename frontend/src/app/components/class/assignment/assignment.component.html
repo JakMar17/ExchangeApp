@@ -12,7 +12,7 @@
   <div *ngIf="canEdit && !assignment.visible" class="column is-narrow">
     <button
       class="button is-outlined is-info is-small"
-      (click)="onSetVisibilityClick(true)"
+      (click)="onSetVisibilityClick()"
     >
       <i class="ri-eye-line"></i>
     </button>
@@ -20,13 +20,13 @@
   <div *ngIf="canEdit && assignment.visible" class="column is-narrow">
     <button
       class="button is-outlined is-info is-small"
-      (click)="onSetVisibilityClick(false)"
+      (click)="onSetVisibilityClick()"
     >
       <i class="ri-eye-off-line"></i>
     </button>
   </div>
-  <div class="column">
-    <h1 class="title">
+  <div class="column is-clickable" (click)="onAssignmentPressed()">
+    <h1 class="title has-text-primary">
       {{ assignment.title }}
       <span *ngIf="!assignment.visible">[SKRITO]</span>
       <span *ngIf="assignment.archived">[ARHIVIRANO]</span>
@@ -40,10 +40,10 @@
     <tr>
       <td>Status naloge</td>
       <td style="text-align: end">
-        <!-- {{
-          assignment.status
+        {{
+          assignment.archived
             | assignmentStatus: assignment.startDate:assignment.endDate
-        }} -->
+        }}
       </td>
     </tr>
     <tr>
@@ -76,163 +76,3 @@
     </tr>
   </tbody>
 </table>
-<h6
-  (click)="showMySubmissionsTable = !showMySubmissionsTable"
-  class="title is-5 is-clickable"
->
-  Moje oddaje
-</h6>
-<!-- <div
-  *ngIf="
-    assignment.studentSubmissions != null &&
-    assignment.studentSubmissions.length > 0
-  "
-  class="table-container"
-> -->
-<div *ngIf="true && showMySubmissionsTable" class="table-container">
-  <table class="table is-fullwidth is-hoverable">
-    <thead>
-      <tr>
-        <th>Datum oddaje</th>
-        <th>Oznaka oddaje</th>
-        <th>Status oddaje</th>
-        <th>Pridobljenih žetonov</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>12.10.2020</td>
-        <td>41524db2</td>
-        <td>oddano in potrjeno</td>
-        <td>2</td>
-        <td class="is-narrow">
-          <div class="columns">
-            <div class="column"></div>
-            <div class="column is-narrow">
-              <a class="button has-no-border has-text-info">
-                <i class="ri-eye-line"></i>
-              </a>
-            </div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>12.10.2020</td>
-        <td>41524db2</td>
-        <td>v pregledu</td>
-        <td>-</td>
-        <td class="is-narrow">
-          <div class="columns">
-            <div class="column is-narrow">
-              <a class="button has-no-border has-text-danger">
-                <i class="ri-delete-bin-7-line"></i>
-              </a>
-            </div>
-            <div class="column is-narrow">
-              <a class="button has-no-border has-text-info">
-                <i class="ri-eye-line"></i>
-              </a>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<div class="columns">
-  <div class="column is-narrow" *ngIf="showAddSubmissionButton()">
-    <button (click)="onAddSubmissionButtonPressed()" class="button is-primary">
-      Oddaj testni primer
-    </button>
-  </div>
-  <div class="column is-narrow" *ngIf="showDownloadMySubmissionButton()">
-    <button class="button is-success is-outlined">Prenesi vse oddane</button>
-  </div>
-</div>
-<h6
-  (click)="showBoughtSubmissionsTable = !showBoughtSubmissionsTable"
-  class="title is-5 is-clickable"
->
-  Kupljeni testni primeri
-</h6>
-<!-- <div
-  *ngIf="
-    assignment.boughtSubmissions != null &&
-    assignment.boughtSubmissions.length > 0
-  "
-  class="table-container"
-> -->
-<div *ngIf="true && showBoughtSubmissionsTable" class="table-container">
-  <table class="table is-fullwidth is-hoverable">
-    <thead>
-      <tr>
-        <th>Datum nakupa</th>
-        <th>Oznaka transakcije</th>
-        <th>Oznaka testnega primera</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>12.10.2020</td>
-        <td>g34ra</td>
-        <td>41524db2</td>
-        <td class="is-narrow">
-          <div class="columns">
-            <div class="column"></div>
-            <div class="column is-narrow">
-              <a class="button has-no-border has-text-success">
-                <i class="ri-download-line"></i>
-              </a>
-            </div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>12.10.2020</td>
-        <td>g34ra</td>
-        <td>41524db2</td>
-        <td class="is-narrow">
-          <div class="columns">
-            <div class="column"></div>
-            <div class="column is-narrow">
-              <a class="button has-no-border has-text-success">
-                <i class="ri-download-line"></i>
-              </a>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<div class="columns">
-  <div class="column is-narrow" *ngIf="showBuySubmissionButton()">
-    <button class="button is-primary" (click)="showBuyingBox = !showBuyingBox">
-      Kupi testne primere
-    </button>
-  </div>
-  <div class="column is-narrow" *ngIf="showDownloadBoughtSubmissionButton()">
-    <button class="button is-success is-outlined">Prenesi vse kupljene</button>
-  </div>
-</div>
-
-<div class="box" *ngIf="showBuyingBox">
-  <div class="notification is-warning">
-    <p>Trenutno število žetonov: {{ course.usersCoins }}</p>
-  </div>
-  <label class="label">Število testnih primerov</label>
-  <div class="field has-addons">
-    <div class="control">
-      <input class="input" type="number" min="1" />
-    </div>
-    <div class="control">
-      <a class="button is-success is-outlined"> Kupi </a>
-    </div>
-  </div>
-</div>
-
-<button class="button is-primary" *ngIf="assignment.archived">
-  Prenesi testne primere
-</button>

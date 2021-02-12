@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import si.fri.jakmar.backend.exchangeapp.api.exceptions.ExceptionWrapper;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 import si.fri.jakmar.backend.exchangeapp.services.assignments.AssignmentsServices;
-import si.fri.jakmar.backend.exchangeapp.exceptions.AccessForbiddenException;
-import si.fri.jakmar.backend.exchangeapp.exceptions.AccessUnauthorizedException;
-import si.fri.jakmar.backend.exchangeapp.exceptions.DataNotFoundException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
 
 import java.util.logging.Logger;
 
@@ -30,6 +29,12 @@ public class AssignmentApi {
     @GetMapping
     public ResponseEntity<Object> getAssignment(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestParam Integer assignmentId) throws AccessUnauthorizedException, DataNotFoundException, AccessForbiddenException {
         return ResponseEntity.ok(assignmentsServices.getAssignmentsData(personalNumber, assignmentId));
+    }
+
+    @GetMapping("/detailed")
+    public ResponseEntity<Object> getAssignmentWithSubmission(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestParam Integer assignmentId) throws AccessForbiddenException, DataNotFoundException {
+        var x = assignmentsServices.getAssignmentWithSubmissions(personalNumber, assignmentId);
+        return ResponseEntity.ok(x);
     }
 
     @PostMapping("/save")

@@ -1,14 +1,12 @@
 package si.fri.jakmar.backend.exchangeapp.api.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import si.fri.jakmar.backend.exchangeapp.api.exceptions.ExceptionWrapper;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.LoginUserDTO;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.RegisterUserDTO;
-import si.fri.jakmar.backend.exchangeapp.exceptions.AccessForbiddenException;
-import si.fri.jakmar.backend.exchangeapp.exceptions.DataInvalidException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataInvalidException;
 import si.fri.jakmar.backend.exchangeapp.services.users.LoginServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.RegisterServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.exceptions.UserDoesNotExistsException;

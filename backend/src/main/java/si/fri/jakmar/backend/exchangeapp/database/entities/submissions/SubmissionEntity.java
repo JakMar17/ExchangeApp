@@ -37,11 +37,33 @@ public class SubmissionEntity {
 
     @ManyToOne
     @JoinColumn(name = "submission_status_id")
-    private SubmissionStatusEntity status;
+    private SubmissionStatusEntity status = new SubmissionStatusEntity(1);
 
     @JsonIgnoreProperties({"submissionBought"})
     @OneToMany(mappedBy = "submissionBought")
     private List<PurchaseEntity> purchases;
+
+    public SubmissionEntity() {
+    }
+
+    public SubmissionEntity(Integer id, String input, String output, UserEntity author, AssignmentEntity assignment) {
+        this.id = id;
+        this.input = input;
+        this.output = output;
+        this.author = author;
+        this.assignment = assignment;
+    }
+
+    public SubmissionEntity(Integer id, String input, String output, LocalDateTime created, UserEntity author, AssignmentEntity assignment, SubmissionStatusEntity status, List<PurchaseEntity> purchases) {
+        this.id = id;
+        this.input = input;
+        this.output = output;
+        this.created = created;
+        this.author = author;
+        this.assignment = assignment;
+        this.status = status;
+        this.purchases = purchases;
+    }
 
     public Integer getId() {
         return id;

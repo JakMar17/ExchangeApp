@@ -38,15 +38,37 @@ export class AssignmentService {
     );
   }
 
-  public saveAssignment(assignment: Assignment, courseId: number): Observable<Assignment> {
-    return this.assignmentApi.postAssignment(courseId, assignment, this.userService.userLoggedIn.personalNumber);
+  public getAssignmentWithSubmissions(
+    assignment: Assignment
+  ): Observable<Assignment> {
+    return this.assignmentApi.getAssignmentWithSubmissions(
+      assignment.assignmentId,
+      this.userService.userLoggedIn.personalNumber
+    );
   }
 
-  public archiveAssignment(assignment: Assignment): Observable<Assignment>{
-    return this.assignmentApi.archiveAssignment(assignment, this.userService.userLoggedIn.personalNumber);
+  public saveAssignment(
+    assignment: Assignment,
+    courseId: number
+  ): Observable<Assignment> {
+    return this.assignmentApi.postAssignment(
+      courseId,
+      assignment,
+      this.userService.userLoggedIn.personalNumber
+    );
+  }
+
+  public archiveAssignment(assignment: Assignment): Observable<Assignment> {
+    return this.assignmentApi.archiveAssignment(
+      assignment,
+      this.userService.userLoggedIn.personalNumber
+    );
   }
 
   public deleteAssignment(assignment: Assignment): Observable<boolean> {
-    return this.assignmentApi.deleteAssignment(assignment.assignmentId, this.userService.userLoggedIn.personalNumber);
+    return this.assignmentApi.deleteAssignment(
+      assignment.assignmentId,
+      this.userService.userLoggedIn.personalNumber
+    );
   }
 }

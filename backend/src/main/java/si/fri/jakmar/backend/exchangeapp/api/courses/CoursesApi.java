@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import si.fri.jakmar.backend.exchangeapp.api.exceptions.ExceptionWrapper;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseRepository;
-import si.fri.jakmar.backend.exchangeapp.exceptions.AccessForbiddenException;
-import si.fri.jakmar.backend.exchangeapp.exceptions.AccessUnauthorizedException;
-import si.fri.jakmar.backend.exchangeapp.exceptions.DataNotFoundException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
 import si.fri.jakmar.backend.exchangeapp.services.courses.CoursesServices;
 
 import java.util.logging.Logger;

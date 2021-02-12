@@ -84,4 +84,15 @@ export class AssignmentsApiService {
       { headers }
     );
   }
+
+  public getAssignmentWithSubmissions(
+    assignmentId: number,
+    personalNumber: string
+  ): Observable<Assignment> {
+    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    return this.http.get<Assignment>(
+      this.baseUrl + '/detailed?assignmentId=' + assignmentId,
+      { headers }
+    );
+  }
 }

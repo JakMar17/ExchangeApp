@@ -4,9 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import si.fri.jakmar.backend.exchangeapp.exceptions.AccessForbiddenException;
-import si.fri.jakmar.backend.exchangeapp.exceptions.AccessUnauthorizedException;
-import si.fri.jakmar.backend.exchangeapp.exceptions.DataNotFoundException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.submissions.OverMaximumNumberOfSubmissions;
 
 import java.util.logging.Logger;
 
@@ -31,6 +33,18 @@ public class ExceptionCatcher {
     public ResponseEntity<ExceptionWrapper> handleAccessUnauthorizedException(AccessUnauthorizedException exception) {
         logger.warning(exception.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionWrapper(exception.getMessage()));
+    }
+
+    @ExceptionHandler(value = {FileException.class})
+    public ResponseEntity<ExceptionWrapper> handleFileException(Exception exception) {
+        logger.severe(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionWrapper(exception.getMessage()));
+    }
+
+    @ExceptionHandler(value = {OverMaximumNumberOfSubmissions.class})
+    public ResponseEntity<ExceptionWrapper> handleOverMaximumNumberOfSubmissionsException(Exception exception) {
+        logger.severe(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionWrapper(exception.getMessage()));
     }
 
     @ExceptionHandler(value = {Exception.class})

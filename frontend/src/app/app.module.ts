@@ -28,6 +28,7 @@ import { UserTypeToStringPipe } from './pipes/user-pipes/user-type-to-string.pip
 import { SubmissionAddComponent } from './components/submissions/submission-add/submission-add.component';
 import { SubmissionViewComponent } from './components/submissions/submission-view/submission-view.component';
 import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
+import { AssignmentDetailedComponent } from './components/assignment/assignment-detailed/assignment-detailed.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
     UserTypeToStringPipe,
     SubmissionAddComponent,
     SubmissionViewComponent,
+    AssignmentDetailedComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HighlightModule, HttpClientModule],
   providers: [

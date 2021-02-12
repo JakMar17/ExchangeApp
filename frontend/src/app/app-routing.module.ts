@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AssignmentAddComponent } from './components/assignment/assignment-add/assignment-add.component';
+import { AssignmentDetailedComponent } from './components/assignment/assignment-detailed/assignment-detailed.component';
 import { ClassAddComponent } from './components/class/class-add/class-add.component';
 import { ClassComponent } from './components/class/class.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -37,6 +38,10 @@ const routes: Routes = [
   {
     path: 'course/:courseId/assignment/edit/:assignmentId',
     component: AssignmentAddComponent,
+  },
+  {
+    path: 'course/:courseId/assignment/:assignmentId',
+    component: AssignmentDetailedComponent
   },
   {
     path: 'user/:userId/profile',

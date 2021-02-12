@@ -1,0 +1,335 @@
+<div style="min-height: 90vh">
+  <app-navbar></app-navbar>
+  <app-loading *ngIf="loading"></app-loading>
+  <div *ngIf="!loading" class="columns">
+    <app-sidemenu style="min-height: 100%"></app-sidemenu>
+    <div class="column">
+      <div class="box">
+        <h1 class="title is-2">{{ assignment.title }}</h1>
+        <h5 class="subtitle is-5">{{ assignment.description }}</h5>
+        <div class="table-container">
+          <table class="table is-fullwidth is-hoverable">
+            <tbody>
+              <tr>
+                <td>Status naloge</td>
+                <td style="text-align: end">
+                  {{
+                    assignment.archived
+                      | assignmentStatus
+                        : assignment.startDate
+                        : assignment.endDate
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>Število oddanih testnih primerov</td>
+                <td style="text-align: end">
+                  {{ assignment.noOfSubmissionsTotal }} ({{
+                    assignment.noOfSubmissionsStudent
+                  }})
+                </td>
+              </tr>
+              <tr>
+                <td>Omejitev oddaj na študenta</td>
+                <td style="text-align: end">
+                  {{
+                    assignment.maxSubmissionsPerStudent
+                      | assignmentLimitSubmissions
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>Skupna omejitev oddaj</td>
+                <td style="text-align: end">
+                  {{
+                    assignment.maxSubmissionsTotal | assignmentLimitSubmissions
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>Število pridobljenih žetonov (na uspešno oddajo)</td>
+                <td style="text-align: end">
+                  {{ assignment.coinsPerSubmission }}
+                </td>
+              </tr>
+              <tr>
+                <td>Cena testnega primera</td>
+                <td style="text-align: end">{{ assignment.coinsPrice }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="box">
+        <h3 class="title is-4">Moje oddaje</h3>
+        <div class="buttons">
+          <button
+            *ngIf="showAddSubmissionButton"
+            (click)="showAddSubmissionBox = true"
+            class="button is-outlined is-success"
+          >
+            <span class="icon">
+              <i class="ri-add-line"></i>
+            </span>
+            <span>Dodaj novo objavo</span>
+          </button>
+          <button
+            *ngIf="showDownloadMySubmissions"
+            class="button is-outlined is-info"
+          >
+            <span class="icon">
+              <i class="ri-download-line"></i>
+            </span>
+            <span>Prenesi vse oddane</span>
+          </button>
+        </div>
+        <div
+          class="table-container"
+          *ngIf="
+            assignment.mySubmissions != null &&
+            assignment.mySubmissions.length > 0
+          "
+        >
+          <table class="table is-fullwidth is-hoverable">
+            <thead>
+              <tr>
+                <th>Vhodna datoteka</th>
+                <th>Izhodna datoteka</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of assignment.mySubmissions">
+                <td>{{ item.input }}</td>
+                <td>{{ item.output }}</td>
+                <td>{{ item.status }}</td>
+                <td class="is-narrow">
+                  <div class="columns">
+                    <div class="column is-narrow">
+                      <a
+                        (click)="onTableRowViewPressed(item)"
+                        data-tooltip="Odpri testni primer"
+                        class="has-no-border is-outlined has-text-info has-tooltip-left"
+                      >
+                        <i class="ri-eye-line"></i>
+                      </a>
+                    </div>
+                    <div class="column is-narrow">
+                      <a
+                        (click)="onTableRowDeletePressed(item)"
+                        data-tooltip="Prenesi testni primer"
+                        class="has-no-border is-outlined has-text-success has-tooltip-left"
+                      >
+                        <i class="ri-download-line"></i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="box" *ngIf="showAddSubmissionBox">
+          <h3 class="title is-4">Dodajanje oddaj</h3>
+          <div class="notification is-warning">
+            <p>
+              Oddate lahko poljubno število dvojic datotek (do omejitve oddaj).
+            </p>
+            <p>
+              Dvojice naj bodo poimenovane kot pari vhodXX{{
+                assignment.inputExtension
+              }}
+              in izhodXX{{ assignment.outputExtension }}, kjer je XX številska
+              oznaka primera.
+            </p>
+          </div>
+          <div class="file is-boxed is-fullwidth">
+            <label class="file-label">
+              <input
+                class="file-input"
+                type="file"
+                multiple="multiple"
+                (change)="handleFileUpload($event)"
+              />
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="ri-upload-line"></i>
+                </span>
+                <span class="file-icon"> Naloži datoteke </span>
+              </span>
+            </label>
+          </div>
+
+          <div
+            class="table-container"
+            *ngIf="uploadQueue != null && uploadQueue.length > 0"
+          >
+            <table class="table is-fullwidth is-hoverable">
+              <thead>
+                <tr>
+                  <th>Vhodna datoteka</th>
+                  <th>Izhodna datoteka</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of uploadQueue">
+                  <td>{{ item.inputName }}</td>
+                  <td>{{ item.outputName }}</td>
+                  <td>{{ item.status }}</td>
+                  <td class="is-narrow">
+                    <div class="columns">
+                      <div class="column is-narrow">
+                        <a
+                          (click)="onTableRowViewPressed(item)"
+                          data-tooltip="Odpri testni primer"
+                          class="has-no-border is-outlined has-text-info has-tooltip-left"
+                        >
+                          <i class="ri-eye-line"></i>
+                        </a>
+                      </div>
+                      <div class="column is-narrow">
+                        <a
+                          (click)="onTableRowDeletePressed(item)"
+                          data-tooltip="Odstrani"
+                          class="has-no-border is-outlined has-text-danger has-tooltip-left"
+                        >
+                          <i class="ri-delete-bin-7-line"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="columns">
+            <div class="column">
+              <label class="checkbox is-success">
+                <input type="checkbox" [(ngModel)]="checkboxMyWork" />
+                Potrjujem, da je oddaja moje osebno delo.
+              </label>
+            </div>
+            <div class="column is-narrow">
+              <button
+                (click)="onUploadButtonPressed()"
+                class="button is-primary"
+              >
+                Oddaj
+              </button>
+            </div>
+          </div>
+          <div
+            *ngIf="errorMessageNewSubmission != null"
+            class="notification is-danger"
+          >
+            <p>{{ errorMessageNewSubmission }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h3 class="title is-4">Kupljene oddaje</h3>
+        <div class="buttons">
+          <button
+            *ngIf="showBuySubmissionsButton"
+            (click)="showBuySubmissionBox = true"
+            class="button is-outlined is-success"
+          >
+            <span class="icon">
+              <i class="ri-add-line"></i>
+            </span>
+            <span>Kupi oddaje</span>
+          </button>
+          <button
+            *ngIf="showDownloadBoughtSubmissionsButton"
+            class="button is-outlined is-info"
+          >
+            <span class="icon">
+              <i class="ri-download-line"></i>
+            </span>
+            <span>Prenesi vse kupljene</span>
+          </button>
+        </div>
+        <div
+          class="table-container"
+          *ngIf="
+            assignment.boughtSubmissions != null &&
+            assignment.boughtSubmissions.length > 0
+          "
+        >
+          <table class="table is-fullwidth is-hoverable">
+            <thead>
+              <tr>
+                <th>Vhodna datoteka</th>
+                <th>Izhodna datoteka</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of assignment.boughtSubmissions">
+                <td>{{ item.input }}</td>
+                <td>{{ item.output }}</td>
+                <td>{{ item.status }}</td>
+                <td class="is-narrow">
+                  <div class="columns">
+                    <div class="column is-narrow">
+                      <a
+                        (click)="onTableRowViewPressed(item)"
+                        data-tooltip="Odpri testni primer"
+                        class="has-no-border is-outlined has-text-info has-tooltip-left"
+                      >
+                        <i class="ri-eye-line"></i>
+                      </a>
+                    </div>
+                    <div class="column is-narrow">
+                      <a
+                        (click)="onTableRowDeletePressed(item)"
+                        data-tooltip="Prenesi testni primer"
+                        class="has-no-border is-outlined has-text-success has-tooltip-left"
+                      >
+                        <i class="ri-download-line"></i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="box" *ngIf="showBuySubmissionBox">
+          <div class="notification is-warning">
+            <p>Trenutno število žetonov: {{ course.usersCoins }}</p>
+          </div>
+          <label class="label">Število testnih primerov</label>
+          <div class="field has-addons">
+            <div class="control">
+              <input
+                class="input"
+                type="number"
+                min="1"
+                [(ngModel)]="submissionBuyQuantityInput"
+              />
+            </div>
+            <div class="control">
+              <a
+                class="button is-success is-outlined"
+                (click)="onSubmissionsBuyButtonPressed()"
+              >
+                Kupi
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

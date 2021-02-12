@@ -30,6 +30,21 @@ public class PurchaseEntity {
     @JoinColumn(name = "submission_id")
     private SubmissionEntity submissionBought;
 
+    public PurchaseEntity() {
+    }
+
+    public PurchaseEntity(UserEntity userBuying, SubmissionEntity submissionBought) {
+        this.userBuying = userBuying;
+        this.submissionBought = submissionBought;
+    }
+
+    public PurchaseEntity(Integer id, LocalDateTime created, UserEntity userBuying, SubmissionEntity submissionBought) {
+        this.id = id;
+        this.created = created;
+        this.userBuying = userBuying;
+        this.submissionBought = submissionBought;
+    }
+
     public Integer getId() {
         return id;
     }

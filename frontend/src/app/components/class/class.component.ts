@@ -84,6 +84,7 @@ export class ClassComponent implements OnInit {
         this.coursesService.getCourse(courseId).subscribe(
           (data) => {
             this.course = data;
+            this.assignmentsShow = this.course.assignments;
             this.courseVisibility = CourseVisibilityToUser.VISIBLE;
             if (this.course.notifications == null)
               this.course.notifications = [];

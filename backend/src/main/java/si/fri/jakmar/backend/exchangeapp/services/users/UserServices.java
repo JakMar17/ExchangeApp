@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
-import si.fri.jakmar.backend.exchangeapp.exceptions.DataNotFoundException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
 
 @Component
 public class UserServices {

@@ -54,11 +54,16 @@ export class AssignmentComponent implements OnInit {
       this.assignment.startDate instanceof Date
         ? this.assignment.startDate
         : new Date(this.assignment.startDate);
+
+    const todayTime = new Date().getTime();
+
+    if (this.assignment.endDate == null)
+      return startDate.getTime() <= todayTime;
+
     const endDate: Date =
       this.assignment.endDate instanceof Date
         ? this.assignment.endDate
         : new Date(this.assignment.endDate);
-    const todayTime = new Date().getTime();
 
     if (startDate.getTime() <= todayTime)
       if (endDate == null) return true;
@@ -108,6 +113,15 @@ export class AssignmentComponent implements OnInit {
         '/assignment/' +
         this.assignment.assignmentId +
         '/submission/new',
+    ]);
+  }
+
+  public onAssignmentPressed(): void {
+    this.router.navigate([
+      'course/' +
+        this.course.courseId +
+        '/assignment/' +
+        this.assignment.assignmentId,
     ]);
   }
 }

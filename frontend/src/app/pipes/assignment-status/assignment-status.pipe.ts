@@ -7,11 +7,11 @@ import { AssignmentStatus } from 'src/app/models/assignment-model';
 })
 export class AssignmentStatusPipe implements PipeTransform {
   transform(
-    assignmentStatus: AssignmentStatus,
+    archived: boolean,
     startDate: any,
     endDate: any | null
   ): string {
-    if (assignmentStatus == AssignmentStatus.ARCHIVED) return 'arhivirano';
+    if (archived) return 'arhivirano';
 
     const today = new Date().getTime();
 

@@ -11,9 +11,9 @@ import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseAcce
 import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseAccessPasswordRepository;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.courses.CourseDTO;
-import si.fri.jakmar.backend.exchangeapp.exceptions.AccessForbiddenException;
-import si.fri.jakmar.backend.exchangeapp.exceptions.AccessUnauthorizedException;
-import si.fri.jakmar.backend.exchangeapp.exceptions.DataNotFoundException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserAccessServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserServices;
 

@@ -14,6 +14,13 @@ public class SubmissionStatusEntity {
     @Column(name = "submission_status_description")
     private String status;
 
+    public SubmissionStatusEntity() {
+    }
+
+    public SubmissionStatusEntity(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

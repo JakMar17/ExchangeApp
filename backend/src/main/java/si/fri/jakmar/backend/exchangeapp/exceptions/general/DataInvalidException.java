@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.exceptions;
+package si.fri.jakmar.backend.exchangeapp.exceptions.general;
 
 /**
  * thrown when data is in some sort invalid
