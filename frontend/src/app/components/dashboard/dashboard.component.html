@@ -11,8 +11,6 @@
         [notifications]="notifications"
       ></app-notifications>
 
-      <app-error></app-error>
-
       <div class="box" *ngIf="showMyCourses">
         <h1 class="title is-3">Moji predmeti</h1>
         <app-dashboard-class
@@ -23,22 +21,27 @@
       </div>
       <div class="box">
         <h1 class="title is-3">Vsi predmeti</h1>
-        <div class="field has-addons">
-          <div class="control">
+        <div class="field">
+          <p class="control has-icons-left">
             <input
-              class="input"
+              class="input is-small"
+              [(ngModel)]="searchInput"
               type="text"
               placeholder="Iskanje"
-              [(ngModel)]="searchInput"
-              (keyup)="searchFilter()"
             />
-          </div>
-          <div class="control">
-            <a class="button is-info"> Išči </a>
-          </div>
+            <span class="icon is-small is-left">
+              <i class="ri-search-line"></i>
+            </span>
+          </p>
         </div>
+
         <div *ngIf="courses != null">
-          <div *ngFor="let element of courses" class="box card">
+          <div
+            *ngFor="
+              let element of courses | filter: filteringFuntion:searchInput
+            "
+            class="box card"
+          >
             <app-dashboard-class [course]="element"></app-dashboard-class>
           </div>
         </div>

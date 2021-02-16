@@ -29,6 +29,7 @@ import { SubmissionViewComponent } from './components/submissions/submission-vie
 import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { AssignmentDetailedComponent } from './components/assignment/assignment-detailed/assignment-detailed.component';
 import { ErrorComponent } from './components/error/error.component';
+import { FilterPipe } from './pipes/filter-pipe/filter.pipe';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { ErrorComponent } from './components/error/error.component';
     SubmissionViewComponent,
     AssignmentDetailedComponent,
     ErrorComponent,
+    FilterPipe,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HighlightModule, HttpClientModule],
   providers: [

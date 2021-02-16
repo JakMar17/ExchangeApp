@@ -25,7 +25,7 @@ export class ClassComponent implements OnInit {
   public user: User | null = null;
   public userCanEdit: boolean = false;
 
-  public searchInput: string | null = null;
+  public searchInput: string = '';
 
   public courseVisibility: CourseVisibilityToUser =
     CourseVisibilityToUser.LOADING;
@@ -48,7 +48,6 @@ export class ClassComponent implements OnInit {
   }
 
   /**
-   * TODO create service that checks if password is OK
    * checks if input password is OK and unlock class
    */
   public onPasswordInputClick(): void {
@@ -88,7 +87,6 @@ export class ClassComponent implements OnInit {
             this.courseVisibility = CourseVisibilityToUser.VISIBLE;
             if (this.course.notifications == null)
               this.course.notifications = [];
-            console.log(this.course);
           },
           (err: HttpErrorResponse) => {
             console.error(err);
@@ -116,10 +114,10 @@ export class ClassComponent implements OnInit {
     this.router.navigate(['/course/edit/' + this.course.courseId]);
   }
 
-  public filterAssignmnets(): void {
-    if (this.searchInput == null) return;
-    this.assignmentsShow = [...this.course.assignments].filter((e) =>
-      e.title.toLowerCase().includes(this.searchInput.toLowerCase())
+  public filteringFunction(element: Assignment, filter: string): boolean {
+    return (
+      element.title.toLowerCase().includes(filter.toLowerCase()) ||
+      element.description?.toLowerCase().includes(filter.toLowerCase())
     );
   }
 }

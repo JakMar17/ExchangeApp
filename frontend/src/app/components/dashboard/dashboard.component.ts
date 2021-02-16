@@ -17,10 +17,9 @@ export class DashboardComponent implements OnInit {
 
   public user: User | null;
   public courses: Course[] | null = null;
-  public coursesCopy: Course[] | null = null;
   public showMyCourses: boolean;
 
-  public searchInput: string | null = null;
+  public searchInput: string = '';
 
   constructor(
     public globalNavigationService: NavigationGlobalService,
@@ -29,7 +28,6 @@ export class DashboardComponent implements OnInit {
     private coursesService: CoursesService
   ) {
     this.user = userService.userLoggedIn;
-    console.log(this.user);
     this.showMyCourses = (this.user?.myCourses?.length ?? 0) > 0;
   }
 
@@ -42,7 +40,6 @@ export class DashboardComponent implements OnInit {
   private getAllCourses(): void {
     this.coursesService.getAllCourses().subscribe((data) => {
       this.courses = data;
-      this.coursesCopy = this.courses;
     });
   }
 
@@ -58,10 +55,8 @@ export class DashboardComponent implements OnInit {
       .subscribe((data) => (this.notifications = data));
   }
 
-  public searchFilter(): void {
-    if (this.searchInput == null) return;
-    this.courses = [...this.coursesCopy].filter((e) =>
-      e.title.toLowerCase().includes(this.searchInput.toLowerCase())
-    );
+
+  public filteringFuntion(element: Course, filter: string): boolean {
+    return element.title.toLowerCase().includes(filter.toLowerCase());
   }
 }
