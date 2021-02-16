@@ -10,7 +10,6 @@ import {
 } from 'src/app/models/submission-model';
 import { AssignmentService } from 'src/app/services/assignment-service/assignment.service';
 import { CoursesService } from 'src/app/services/courses-service/courses.service';
-import { FilesService } from 'src/app/services/files-service/files.service';
 import { SubmissionService } from 'src/app/services/submission-service/submission.service';
 import { UserServiceService } from 'src/app/services/user-service/user-service.service';
 
@@ -32,7 +31,7 @@ export class AssignmentDetailedComponent implements OnInit {
 
   public showAddSubmissionBox: boolean = false;
   public showBuySubmissionBox: boolean = false;
-  public showAddSubmissionButton: boolean = true;
+  public showAddSubmissionButton: boolean = false;
   public showDownloadMySubmissions: boolean = false;
   public showBuySubmissionsButton: boolean = false;
   public showDownloadBoughtSubmissionsButton: boolean = false;
@@ -42,7 +41,6 @@ export class AssignmentDetailedComponent implements OnInit {
   public errorMessageNewSubmission: string | null = null;
 
   constructor(
-    private fileApi: FilesService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private assignmentService: AssignmentService,
@@ -90,7 +88,18 @@ export class AssignmentDetailedComponent implements OnInit {
     )
       this.showBuySubmissionsButton = true;
 
-    if (this.assignmnetIsActive()) this.showAddSubmissionButton = true;
+    if (this.assignmnetIsActive()) {
+      if (this.assignment.maxSubmissionsPerStudent == null)
+        this.showAddSubmissionButton = true;
+      else if (
+        (this.assignment.maxSubmissionsTotal == null ||
+          this.assignment.noOfSubmissionsTotal <=
+            this.assignment.maxSubmissionsTotal) &&
+        this.assignment.noOfSubmissionsStudent <=
+          this.assignment.maxSubmissionsPerStudent
+      )
+        this.showAddSubmissionButton = true;
+    }
   }
 
   private assignmnetIsActive(): boolean {
@@ -166,21 +175,32 @@ export class AssignmentDetailedComponent implements OnInit {
 
     this.errorMessageNewSubmission = null;
 
-    [...this.uploadQueue].forEach((e) => {
-      this.fileApi
+    /* [...this.uploadQueue].forEach((e) => {
+      this.submissionService
         .uploadFilePair(e.inputFile, e.outputFile, this.assignment)
         .subscribe(
           (data) => {
             this.assignment.mySubmissions.push(data);
+            this.assignment.noOfSubmissionsStudent++;
+            this.assignment.noOfSubmissionsTotal++;
             this.removeFromQueue(e);
+
+            this.assignBooleanValuesToActionButtons();
           },
           (err: HttpErrorResponse) => {
             if (this.errorMessageNewSubmission === null)
               this.errorMessageNewSubmission = '';
-            this.errorMessageNewSubmission += err.error.message;
+            this.errorMessageNewSubmission += '\n' + err.error.message;
+            this.checkboxMyWork = true;
           }
         );
-    });
+    }); */
+
+    this.submissionService
+      .uploadFiles([...this.uploadQueue], this.assignment)
+      .then((observable) =>
+        observable.subscribe((data) => (this.assignment = data))
+      );
 
     this.uploadQueue = [];
     this.showAddSubmissionBox = false;
@@ -195,7 +215,16 @@ export class AssignmentDetailedComponent implements OnInit {
     this.uploadQueue = this.uploadQueue.filter((e) => e !== element);
   }
 
-  public onTableRowViewPressed(element: SubmissionFilePair): void {}
+  public onTableRowViewPressed(element: Submission): void {
+    this.router.navigate([
+      '/course/' +
+        this.course.courseId +
+        '/assignment/' +
+        this.assignment.assignmentId +
+        '/submission/' +
+        element.submissionId,
+    ]);
+  }
 
   public onTableRowDownloadPressed(element: Submission): void {}
 

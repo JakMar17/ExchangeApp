@@ -1,7 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Submission } from 'src/app/models/submission-model';
+import { Assignment } from 'src/app/models/assignment-model';
+import {
+  Submission,
+  SubmissionFilePair,
+  UploadModel,
+} from 'src/app/models/submission-model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -12,21 +17,24 @@ export class FilesApiService {
 
   constructor(private http: HttpClient) {}
 
-  public uploadFilePair(
-    input: File,
-    output: File,
-    assignmentId: number,
-    personalNumber: string
-  ): Observable<Submission> {
-    const formData = new FormData();
-    formData.append('input', input);
-    formData.append('output', output);
-    formData.append('assignmentId', assignmentId.toString());
-
+  public uploadFiles(
+    uploads: SubmissionFilePair[],
+    personalNumber: string,
+    assignmentId: number
+  ): Observable<Assignment> {
     const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
-
-    return this.http.post<Submission>(this.baseUrl + '/upload', formData, {
-      headers,
+    const formdata = new FormData();
+    uploads.forEach((e) => {
+      formdata.append('input', e.inputFile);
+      formdata.append('output', e.outputFile);
     });
+
+    return this.http.post<Assignment>(
+      this.baseUrl + '/upload?assignmentId=' + assignmentId,
+      formdata,
+      {
+        headers,
+      }
+    );
   }
 }

@@ -4,8 +4,8 @@
     <app-sidemenu style="min-height: 100%"></app-sidemenu>
     <div class="column">
       <div class="box">
-        <h1 class="title is-2">Pregled oddaje 4712</h1>
-        <div class="columns">
+        <h1 class="title is-2">Pregled oddaje {{submission.submissionId}}</h1>
+        <!-- <div class="columns">
           <div class="column is-narrow tags has-addons">
             <span class="tag">Test</span>
             <span class="tag is-success">OK</span>
@@ -18,8 +18,8 @@
             <span class="tag">Status</span>
             <span class="tag is-danger">zavrnjeno</span>
           </div>
-        </div>
-        <p>Datum oddaje: 21.10.2021</p>
+        </div> -->
+        <p>Datum oddaje: {{submission.created | date: 'dd.MM.yyyy'}}</p>
       </div>
 
       <div class="box">
@@ -27,17 +27,19 @@
           <div class="column">
             <h3 class="title is-4">Vhodna datoteka</h3>
             <pre style="margin: 0; padding: 0">
-              <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="code"></code>
+              <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="submission.inputFile"></code>
             </pre>
           </div>
           <div class="column">
             <h3 class="title is-4">Izhodna datoteka</h3>
-            <div id="container" style="height: 100%"></div>
+            <pre style="margin: 0; padding: 0">
+              <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="submission.outputFile"></code>
+            </pre>
           </div>
         </div>
       </div>
 
-      <div class="box">
+      <!-- <div class="box">
         <div class="columns">
           <div class="column">
             <h3 class="title is-4">Test pravilnost</h3>
@@ -49,11 +51,11 @@
 
         <h3 class="subtitle is-5">Pričakovan izhod</h3>
         <pre style="margin: 0; padding: 0" class="container">
-          <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="code"></code>
+          <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="submission.outputFile"></code>
         </pre>
-      </div>
+      </div> -->
 
-      <div class="box">
+      <!-- <div class="box">
         <div class="columns">
           <div class="column">
             <h3 class="title is-4">Test plagiatorstva</h3>
@@ -115,9 +117,9 @@
             </tbody>
           </table>
         </div>
-      </div>
+      </div> -->
 
-      <div class="box">
+      <!-- <div class="box">
         <div class="columns">
           <div class="column">
             <button class="button is-success has-icons-left is-fullwidth">
@@ -138,7 +140,7 @@
             </button>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <app-footer></app-footer>
   </div>

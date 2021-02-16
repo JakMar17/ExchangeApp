@@ -18,7 +18,6 @@ export class NotificationsServiceService {
     notification: Notification,
     course: Course | null
   ): Observable<Notification> {
-    console.log(course);
     return this.notificationApi.saveNotification(
       notification,
       this.userService.userLoggedIn.personalNumber ?? '',
@@ -30,7 +29,6 @@ export class NotificationsServiceService {
     notification: Notification,
     course: Course | null
   ): Observable<any> {
-    console.log(notification, course);
     return this.notificationApi.deleteNotification(
       notification.notificationId,
       this.userService.userLoggedIn.personalNumber,

@@ -25,10 +25,10 @@ import { AssignmentStatusPipe } from './pipes/assignment-status/assignment-statu
 import { AssignmentLimitSubmissionsPipe } from './pipes/assignment-limit-submissions/assignment-limit-submissions.pipe';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { UserTypeToStringPipe } from './pipes/user-pipes/user-type-to-string.pipe';
-import { SubmissionAddComponent } from './components/submissions/submission-add/submission-add.component';
 import { SubmissionViewComponent } from './components/submissions/submission-view/submission-view.component';
 import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { AssignmentDetailedComponent } from './components/assignment/assignment-detailed/assignment-detailed.component';
+import { ErrorComponent } from './components/error/error.component';
 
 @NgModule({
   declarations: [
@@ -53,9 +53,9 @@ import { AssignmentDetailedComponent } from './components/assignment/assignment-
     AssignmentLimitSubmissionsPipe,
     UserProfileComponent,
     UserTypeToStringPipe,
-    SubmissionAddComponent,
     SubmissionViewComponent,
     AssignmentDetailedComponent,
+    ErrorComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HighlightModule, HttpClientModule],
   providers: [

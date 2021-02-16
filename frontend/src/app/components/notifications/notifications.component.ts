@@ -68,15 +68,13 @@ export class NotificationsComponent implements OnInit {
    * @param notification notification to be deleted
    */
   public deleteNotification(notification: Notification): void {
-    console.log(notification);
-
     if (this.notifications) {
       this.notificationService
         .deleteNotification(notification, this.course)
         .subscribe(
           () =>
             (this.notifications = this.notifications.filter(
-              (e) => e != notification
+              (e) => e !== notification
             )),
           (err) => console.error(err)
         );

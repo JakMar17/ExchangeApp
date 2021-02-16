@@ -4,6 +4,8 @@ export interface Submission {
   output?: string;
   created?: Date;
   status?: string;
+  inputFile?: string;
+  outputFile?: string;
 }
 
 export interface SubmissionFilePair {
@@ -12,4 +14,11 @@ export interface SubmissionFilePair {
   inputFile?: File;
   outputFile?: File;
   status?: string;
+}
+
+export interface UploadModel {
+  inputFilename: string;
+  outputFilename: string;
+  inputFile: string;
+  outputFile: string;
 }

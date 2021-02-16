@@ -97,31 +97,28 @@ export class RegisterComponent implements OnInit {
 
   private checkInputedData(): boolean {
     this.errorMessage = null;
-
-    console.log(this.nameInput.length);
-
-    if (this.nameInput.length == 0)
+    if (this.nameInput.length === 0)
       this.errorMessage = 'Ime mora biti izpoljeno';
-    else if (this.surnameInput.length == 0)
+    else if (this.surnameInput.length === 0)
       this.errorMessage = 'Priimek mora biti izpolnjen';
-    else if (this.emailWithoutDomainInput.length == 0)
+    else if (this.emailWithoutDomainInput.length === 0)
       this.errorMessage = 'Epošta mora biti izpolnjena';
     else if (
-      this.passwordInput.length == 0 ||
-      this.passwordRepeatInput.length == 0
+      this.passwordInput.length === 0 ||
+      this.passwordRepeatInput.length === 0
     )
       this.errorMessage = 'Geslo ne sme biti prazno';
-    else if (this.passwordRepeatInput != this.passwordInput)
+    else if (this.passwordRepeatInput !== this.passwordInput)
       this.errorMessage = 'Gesli se ne ujemata';
     else if (
-      this.typeOfRegistration == LoginPanelEnum.REGISTER_OTHER &&
-      this.typeOfOtherRegistration == LoginPanelEnum.REGISTER_STUDENT &&
-      this.studentNumberInput.length != 8
+      this.typeOfRegistration === LoginPanelEnum.REGISTER_OTHER &&
+      this.typeOfOtherRegistration === LoginPanelEnum.REGISTER_STUDENT &&
+      this.studentNumberInput.length !== 8
     )
       this.errorMessage = 'Vpisna številka mora biti izpolnjena';
     else if (
-      this.typeOfRegistration == LoginPanelEnum.REGISTER_STUDENT &&
-      this.studentNumberInput.length != 8
+      this.typeOfRegistration === LoginPanelEnum.REGISTER_STUDENT &&
+      this.studentNumberInput.length !== 8
     )
       this.errorMessage = 'Vpisna številka mora biti izpolnjena';
 

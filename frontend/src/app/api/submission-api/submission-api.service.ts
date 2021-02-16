@@ -27,4 +27,15 @@ export class SubmissionApiService {
       { headers }
     );
   }
+
+  public getSubmissionDetails(
+    personalNumber: string,
+    submissionId: number
+  ): Observable<Submission> {
+    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    return this.http.get<Submission>(
+      this.baseUrl + '/details?submissionId=' + submissionId,
+      { headers }
+    );
+  }
 }
