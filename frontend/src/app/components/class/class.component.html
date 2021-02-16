@@ -5,7 +5,7 @@
     <div class="column">
       <div class="box">
         <div class="columns is-vcentered">
-          <div *ngIf="course.userCanEditCourse" class="column is-narrow">
+          <div *ngIf="course?.userCanEditCourse" class="column is-narrow">
             <button
               (click)="onEditCourseButtonPressed()"
               class="button is-small is-warning is-outlined has-icons-left"
@@ -18,7 +18,7 @@
           <div class="column">
             <h1 class="title is-2">{{ course?.title }}</h1>
             <p class="subtitle is-6">
-              Trenutno stanje žetonov: {{ course.usersCoins }}
+              Trenutno stanje žetonov: {{ course?.usersCoins }}
             </p>
           </div>
         </div>
@@ -26,7 +26,7 @@
           skrbnik: {{ course?.guardianMain | userToString }}
         </h2>
         <p class="subtitle is-5">
-          {{ course.description }}
+          {{ course?.description }}
         </p>
       </div>
 
@@ -83,20 +83,6 @@
           </p>
         </div>
       </div>
-
-      <!-- user does not have rights to see class, probably is blacklisted -->
-      <!-- <div
-        *ngIf="
-          course?.accessLevel != courseAccess.SECURED_PASSWORD && !userCanView
-        "
-      >
-        <div class="box">
-          <h1 class="title is-3">Vstop v predmet</h1>
-          <p class="has-text-danger">
-            Predmet do katerega želite dostopate je omejen.
-          </p>
-        </div>
-      </div> -->
 
       <!-- user has rights to view or edit class -->
       <div *ngIf="courseVisibility == courseAccess.VISIBLE">

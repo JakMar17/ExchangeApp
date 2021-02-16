@@ -2,7 +2,7 @@ package si.fri.jakmar.backend.exchangeapp.functions;
 
 import java.util.stream.Stream;
 
-public class RandomizerService {
+public abstract class RandomizerService {
     private static final String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int charsLength = chars.length();
 

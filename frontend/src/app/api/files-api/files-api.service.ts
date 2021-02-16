@@ -37,4 +37,52 @@ export class FilesApiService {
       }
     );
   }
+
+  public downloadMySubmissions(
+    personalNumber: string,
+    assignmentId: number
+  ): void {
+    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const options: Object = { headers, responseType: 'blob' };
+
+    this.http
+      .get<any>(
+        this.baseUrl + '/users-submissions?assignmentId=' + assignmentId,
+        options
+      )
+      .subscribe(
+        (data) => {
+          this.downloadZip(data);
+        },
+        (err) => console.error(err)
+      );
+  }
+
+  public downloadSubmission(
+    personalNumber: string,
+    submissionId: number
+  ): void {
+    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const options: Object = { headers, responseType: 'blob' };
+
+    this.http
+      .get<any>(
+        this.baseUrl + '/download-submission?submissionId=' + submissionId,
+        options
+      )
+      .subscribe(
+        (data) => {
+          this.downloadZip(data);
+        },
+        (err) => console.error(err)
+      );
+  }
+
+  private downloadZip(data: Response): void {
+    const blob = new Blob([data as any], { type: 'application/zip' });
+    const anchor = document.createElement('a');
+    anchor.download = 'testi.zip';
+    anchor.href = window.URL.createObjectURL(blob);
+    anchor.click();
+  }
 }

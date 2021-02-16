@@ -174,32 +174,9 @@ export class AssignmentDetailedComponent implements OnInit {
 
     this.errorMessageNewSubmission = null;
 
-    /* [...this.uploadQueue].forEach((e) => {
-      this.submissionService
-        .uploadFilePair(e.inputFile, e.outputFile, this.assignment)
-        .subscribe(
-          (data) => {
-            this.assignment.mySubmissions.push(data);
-            this.assignment.noOfSubmissionsStudent++;
-            this.assignment.noOfSubmissionsTotal++;
-            this.removeFromQueue(e);
-
-            this.assignBooleanValuesToActionButtons();
-          },
-          (err: HttpErrorResponse) => {
-            if (this.errorMessageNewSubmission === null)
-              this.errorMessageNewSubmission = '';
-            this.errorMessageNewSubmission += '\n' + err.error.message;
-            this.checkboxMyWork = true;
-          }
-        );
-    }); */
-
     this.submissionService
       .uploadFiles([...this.uploadQueue], this.assignment)
-      .then((observable) =>
-        observable.subscribe((data) => (this.assignment = data))
-      );
+      .subscribe((data) => (this.assignment = data));
 
     this.uploadQueue = [];
     this.showAddSubmissionBox = false;
@@ -225,7 +202,9 @@ export class AssignmentDetailedComponent implements OnInit {
     ]);
   }
 
-  public onTableRowDownloadPressed(element: Submission): void {}
+  public onTableRowDownloadPressed(element: Submission): void {
+    this.submissionService.downloadSubmission(element);
+  }
 
   public onSubmissionsBuyButtonPressed(): void {
     this.submissionService
@@ -238,5 +217,9 @@ export class AssignmentDetailedComponent implements OnInit {
           this.course.usersCoins -= this.assignment.coinsPrice;
         });
       });
+  }
+
+  public downloadMySubmissions(): void {
+    this.submissionService.downloadMySubmissions(this.assignment);
   }
 }

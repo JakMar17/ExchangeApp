@@ -1,6 +1,7 @@
 package si.fri.jakmar.backend.exchangeapp.storage;
 
 import org.hibernate.exception.DataException;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -8,10 +9,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,34 +34,13 @@ public class FileStorageServiceImpl implements FileStorageService {
         try {
             Files.copy(multipartFile.getInputStream(), root.resolve(filename));
         } catch (Exception e) {
+            e.printStackTrace();
             throw new FileException(
                     e.getMessage() == null
                     ? "Napaka pri shranjevanju"
                     : e.getMessage()
             );
         }
-    }
-
-    @Override
-    public Resource load(String filename) {
-        try {
-            Path file = root.resolve(filename);
-            Resource resource = new UrlResource(file.toUri());
-
-            if (resource.exists() || resource.isReadable())
-                return resource;
-            else
-                throw new RuntimeException();
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            throw new RuntimeException();
-        }
-    }
-
-    @Override
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(root.toFile());
     }
 
     @Override
@@ -78,18 +55,11 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public void saveFileFromString(String file, String filename) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(root.toString() + "\\" + filename));
-        writer.write(file);
-        writer.close();
-    }
-
-    @Override
-    public Stream<Path> loadAll() {
+    public InputStreamResource getInputStreamResourceOfFile(String filename) throws FileException {
         try {
-            return Files.walk(this.root, 1).filter(path -> !path.equals(this.root)).map(this.root::relativize);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not load the files!");
+            return new InputStreamResource(new FileInputStream(root.toString() + "\\filename"));
+        } catch (FileNotFoundException e) {
+            throw new FileException(e.getMessage());
         }
     }
 }

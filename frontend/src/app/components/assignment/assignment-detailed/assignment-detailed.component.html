@@ -75,6 +75,7 @@
             <span>Dodaj novo objavo</span>
           </button>
           <button
+            (click)="downloadMySubmissions()"
             *ngIf="showDownloadMySubmissions"
             class="button is-outlined is-info"
           >
@@ -118,7 +119,7 @@
                     </div>
                     <div class="column is-narrow">
                       <a
-                        
+                        (click)="onTableRowDownloadPressed(item)"
                         data-tooltip="Prenesi testni primer"
                         class="has-no-border is-outlined has-text-success has-tooltip-left"
                       >
@@ -163,10 +164,7 @@
             </label>
           </div>
 
-          <div
-            class="table-container"
-            *ngIf="uploadQueue.length > 0"
-          >
+          <div class="table-container" *ngIf="uploadQueue.length > 0">
             <table class="table is-fullwidth is-hoverable">
               <thead>
                 <tr>
@@ -281,7 +279,7 @@
                     </div>
                     <div class="column is-narrow">
                       <a
-                        
+                        (click)="onTableRowDownloadPressed(item)"
                         data-tooltip="Prenesi testni primer"
                         class="has-no-border is-outlined has-text-success has-tooltip-left"
                       >

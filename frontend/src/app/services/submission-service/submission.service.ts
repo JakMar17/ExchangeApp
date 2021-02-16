@@ -38,41 +38,28 @@ export class SubmissionService {
     );
   }
 
-  public async uploadFiles(
+  public uploadFiles(
     uploadPairs: SubmissionFilePair[],
     assignment: Assignment
-  ): Promise<Observable<Assignment>> {
-    /*const uploads: UploadModel[] = [];
-
-    for (const element of uploadPairs) {
-      const inputFile = await this.readFileContent(element.inputFile);
-      const outputFile = await this.readFileContent(element.outputFile);
-
-      uploads.push({
-        inputFilename: element.inputName,
-        outputFilename: element.outputName,
-        inputFile,
-        outputFile,
-      });
-    }*/
-
-    return this.fileApi.uploadFiles(uploadPairs, this.userService.userLoggedIn.personalNumber, assignment.assignmentId);
+  ): Observable<Assignment> {
+    return this.fileApi.uploadFiles(
+      uploadPairs,
+      this.userService.userLoggedIn.personalNumber,
+      assignment.assignmentId
+    );
   }
 
-  private readFileContent(file: File): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      if (!file) {
-        resolve('');
-      }
+  public downloadMySubmissions(assignment: Assignment): void {
+    this.fileApi.downloadMySubmissions(
+      this.userService.userLoggedIn.personalNumber,
+      assignment.assignmentId
+    );
+  }
 
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        const text = reader.result.toString();
-        resolve(text);
-      };
-
-      reader.readAsText(file);
-    });
+  public downloadSubmission(submission: Submission): void {
+    this.fileApi.downloadSubmission(
+      this.userService.userLoggedIn.personalNumber,
+      submission.submissionId
+    );
   }
 }
