@@ -164,6 +164,15 @@ public class AssignmentsServices {
         assignmentRepository.delete(assignment);
     }
 
+    /**
+     * sets assignment to archived status
+     * @param personalNumber user performing operation
+     * @param assignmentId
+     * @param isVisible setting visibility
+     * @return assignment
+     * @throws DataNotFoundException data not found
+     * @throws AccessForbiddenException user cannot perform operation
+     */
     public AssignmentDTO setArchivedStatus(String personalNumber, Integer assignmentId, Boolean isVisible) throws DataNotFoundException, AccessForbiddenException {
         var assignment = getAssignmentById(assignmentId);
         var user = userServices.getUserByPersonalNumber(personalNumber);
@@ -175,6 +184,13 @@ public class AssignmentsServices {
         return AssignmentDTO.castFullFromEntity(assignment, (int) CollectionUtils.emptyIfNull(assignment.getSubmissions()).stream().filter(e -> e.getAuthor().equals(user)).count());
     }
 
+    /**
+     * @param personalNumber user performing operation
+     * @param assignmentId to be returned
+     * @return assignment with submissions
+     * @throws DataNotFoundException data not found
+     * @throws AccessForbiddenException user cannot perform operation
+     */
     public AssignmentDTO getAssignmentWithSubmissions(String personalNumber, Integer assignmentId) throws DataNotFoundException, AccessForbiddenException {
         var assignment = getAssignmentById(assignmentId);
         var user = userServices.getUserByPersonalNumber(personalNumber);
@@ -195,6 +211,13 @@ public class AssignmentsServices {
             );
     }
 
+    /**
+     * checks if user can access assignment, if not exception is thrown
+     * @param user to perform operation
+     * @param assignment
+     * @throws DataNotFoundException data not found
+     * @throws AccessForbiddenException user cannot perform operation
+     */
     private void userCanAccessAssignment(UserEntity user, AssignmentEntity assignment) throws DataNotFoundException, AccessForbiddenException {
         var course = assignment.getCourse();
         if (course == null)

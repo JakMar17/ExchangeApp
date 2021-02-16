@@ -59,6 +59,12 @@ public class UserServices {
         return u;
     }
 
+    /**
+     * calculates user's coins in course (sum of submissions + initial coins in course - sum of user's purchases)
+     * @param user
+     * @param course
+     * @return no of coins
+     */
     public Integer getUsersCoinsInCourse(UserEntity user, CourseEntity course) {
         int coins = course.getInitialCoins();
 

@@ -18,4 +18,5 @@ public interface FileStorageService {
     public Stream<Path> loadAll();
     public void delete(String filename);
     public File getFile(String filename);
+    public void saveFileFromString(String file, String filename) throws IOException;
 }

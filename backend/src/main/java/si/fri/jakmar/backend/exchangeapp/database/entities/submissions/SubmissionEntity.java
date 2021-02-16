@@ -19,10 +19,8 @@ public class SubmissionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "input_id")
-    private String input;
-    @Column(name = "output_id")
-    private String output;
+    @Column(name = "file_key")
+    private String fileKey;
     @Column(name = "submission_created")
     private LocalDateTime created = LocalDateTime.now(ZoneOffset.UTC);
 
@@ -46,18 +44,16 @@ public class SubmissionEntity {
     public SubmissionEntity() {
     }
 
-    public SubmissionEntity(Integer id, String input, String output, UserEntity author, AssignmentEntity assignment) {
+    public SubmissionEntity(Integer id, String fileKey, UserEntity author, AssignmentEntity assignment) {
         this.id = id;
-        this.input = input;
-        this.output = output;
+        this.fileKey = fileKey;
         this.author = author;
         this.assignment = assignment;
     }
 
-    public SubmissionEntity(Integer id, String input, String output, LocalDateTime created, UserEntity author, AssignmentEntity assignment, SubmissionStatusEntity status, List<PurchaseEntity> purchases) {
+    public SubmissionEntity(Integer id, String fileKey, LocalDateTime created, UserEntity author, AssignmentEntity assignment, SubmissionStatusEntity status, List<PurchaseEntity> purchases) {
         this.id = id;
-        this.input = input;
-        this.output = output;
+        this.fileKey = fileKey;
         this.created = created;
         this.author = author;
         this.assignment = assignment;
@@ -73,20 +69,12 @@ public class SubmissionEntity {
         this.id = id;
     }
 
-    public String getInput() {
-        return input;
+    public String getFileKey() {
+        return fileKey;
     }
 
-    public void setInput(String input) {
-        this.input = input;
-    }
-
-    public String getOutput() {
-        return output;
-    }
-
-    public void setOutput(String output) {
-        this.output = output;
+    public void setFileKey(String input) {
+        this.fileKey = input;
     }
 
     public LocalDateTime getCreated() {

@@ -9,6 +9,7 @@ import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenExcep
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.submissions.OverMaximumNumberOfSubmissions;
+import si.fri.jakmar.backend.exchangeapp.services.users.exceptions.UserDoesNotExistsException;
 
 import java.util.logging.Logger;
 
@@ -29,21 +30,21 @@ public class ExceptionCatcher {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionWrapper(exception.getMessage()));
     }
 
-    @ExceptionHandler(value = {AccessUnauthorizedException.class})
-    public ResponseEntity<ExceptionWrapper> handleAccessUnauthorizedException(AccessUnauthorizedException exception) {
+    @ExceptionHandler(value = {AccessUnauthorizedException.class, UserDoesNotExistsException.class})
+    public ResponseEntity<ExceptionWrapper> handleAccessUnauthorizedException(Exception exception) {
         logger.warning(exception.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionWrapper(exception.getMessage()));
     }
 
     @ExceptionHandler(value = {FileException.class})
     public ResponseEntity<ExceptionWrapper> handleFileException(Exception exception) {
-        logger.severe(exception.getMessage());
+        logger.warning(exception.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionWrapper(exception.getMessage()));
     }
 
     @ExceptionHandler(value = {OverMaximumNumberOfSubmissions.class})
     public ResponseEntity<ExceptionWrapper> handleOverMaximumNumberOfSubmissionsException(Exception exception) {
-        logger.severe(exception.getMessage());
+        logger.warning(exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionWrapper(exception.getMessage()));
     }
 

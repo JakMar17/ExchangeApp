@@ -8,7 +8,9 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -73,6 +75,13 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public File getFile(String filename) {
         return new File(root.toString() + "\\" + filename);
+    }
+
+    @Override
+    public void saveFileFromString(String file, String filename) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(root.toString() + "\\" + filename));
+        writer.write(file);
+        writer.close();
     }
 
     @Override

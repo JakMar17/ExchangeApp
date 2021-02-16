@@ -28,6 +28,12 @@ public class NotificationsServices {
     @Autowired
     private CoursesServices coursesServices;
 
+    /**
+     * returns notification with given id
+     * @param notificationId id to be searched
+     * @return notification
+     * @throws DataNotFoundException notification with given id is not found
+     */
     public NotificationEntity getNotificationById(Integer notificationId) throws DataNotFoundException {
         var optional = notificationRepository.findById(notificationId);
         if(optional.isEmpty())
@@ -36,12 +42,24 @@ public class NotificationsServices {
             return optional.get();
     }
 
+    /**
+     * @return returns list of notifications without course (to be shown on dashboard)
+     */
     public List<NotificationDTO> getDashboardNotifications() {
         return CollectionUtils.emptyIfNull(notificationRepository.getDashboardNotifications()).stream()
                 .map(NotificationDTO::castFromEntity)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * saves notification to database
+     * @param notificationDTO data
+     * @param courseId if null save to be shown on dashboard
+     * @param personalNumber user who performs operation
+     * @return saved notification
+     * @throws DataNotFoundException data not found
+     * @throws AccessForbiddenException user cannot perform operation
+     */
     public NotificationDTO saveNotification(NotificationDTO notificationDTO, Integer courseId, String personalNumber) throws DataNotFoundException, AccessForbiddenException {
         var user = userServices.getUserByPersonalNumber(personalNumber);
 
@@ -52,6 +70,14 @@ public class NotificationsServices {
         );
     }
 
+    /**
+     * deletes notification with given id
+     * @param notificationId to be deleted
+     * @param courseId if null then on dashboard
+     * @param personalNumber user performing operation
+     * @throws DataNotFoundException data not found
+     * @throws AccessForbiddenException user cannot perform operation
+     */
     public void deleteNotification(Integer notificationId, Integer courseId, String personalNumber) throws DataNotFoundException, AccessForbiddenException {
         var user = userServices.getUserByPersonalNumber(personalNumber);
         var notification = getNotificationById(notificationId);
