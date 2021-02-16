@@ -143,8 +143,7 @@ create table submission
    submission_status_id int not null,
    user_id              int not null,
    assignment_id        int not null,
-   input_id             varchar(100) not null,
-   output_id            varchar(100) not null,
+   file_key             varchar(100) not null,
    submission_created   timestamp not null,
    primary key (submission_id)
 );
