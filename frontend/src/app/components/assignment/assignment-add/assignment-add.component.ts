@@ -42,7 +42,6 @@ export class AssignmentAddComponent implements OnInit {
           this.editing = true;
           assignmentService.getAssignment(this.assignment).subscribe((data) => {
             this.assignment = data;
-            console.log(data);
           });
         }
       }
@@ -72,7 +71,6 @@ export class AssignmentAddComponent implements OnInit {
   }
 
   public saveAssignment(): void {
-    console.log(this.courseId);
     this.errorMessage = this.checkInputs();
 
     if (this.errorMessage == null) {

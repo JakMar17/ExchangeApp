@@ -23,7 +23,6 @@ export class SubmissionViewComponent implements OnInit {
         submissionService
           .getDetailedSubmission({ submissionId })
           .subscribe((data) => {
-            console.log(data);
             this.submission = data;
           });
     });
@@ -34,5 +33,4 @@ export class SubmissionViewComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  ngAfterViewInit(): void {}
 }

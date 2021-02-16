@@ -159,7 +159,6 @@ export class AssignmentDetailedComponent implements OnInit {
 
   public onCheckboxMyWorkPressed(): void {
     this.checkboxMyWork = !this.checkboxMyWork;
-    console.log(this.checkboxMyWork);
   }
 
   public onUploadButtonPressed(): void {
@@ -232,7 +231,6 @@ export class AssignmentDetailedComponent implements OnInit {
     this.submissionService
       .buySubmissions(this.assignment, this.submissionBuyQuantityInput)
       .subscribe((data) => {
-        console.log(data);
         if (this.assignment.boughtSubmissions === null)
           this.assignment.boughtSubmissions = [];
         data.forEach((e) => {

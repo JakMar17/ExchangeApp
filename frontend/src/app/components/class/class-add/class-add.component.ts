@@ -84,7 +84,6 @@ export class ClassAddComponent implements OnInit {
           )
           .subscribe((data) => {
             this.course = data;
-            console.log('course', this.course);
             this.selectedSecurityLevel = this.securityLevels.find(
               (e) => e.key == this.course.accessLevel
             );
