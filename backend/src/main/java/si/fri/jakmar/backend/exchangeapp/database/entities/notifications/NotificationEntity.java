@@ -1,5 +1,6 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.notifications;
 
+import org.hibernate.annotations.Type;
 import si.fri.jakmar.backend.exchangeapp.api.notifications.NotificationsApi;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
@@ -24,6 +25,9 @@ public class NotificationEntity {
     private String body;
     @Column(name = "notification_created")
     private LocalDateTime created = LocalDateTime.now(ZoneOffset.UTC);
+    @Column(name = "notification_deleted")
+    @Type(type = "org.hibernate.type.NumericBooleanType")
+    private Boolean deleted = false;
 
     @ManyToOne
     @JoinColumn(name = "course_id")
@@ -99,5 +103,13 @@ public class NotificationEntity {
 
     public void setAuthor(UserEntity author) {
         this.author = author;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

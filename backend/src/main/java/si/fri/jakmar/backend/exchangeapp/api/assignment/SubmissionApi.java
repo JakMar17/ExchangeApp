@@ -8,6 +8,7 @@ import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
+import si.fri.jakmar.backend.exchangeapp.services.assignments.AssignmentsServices;
 import si.fri.jakmar.backend.exchangeapp.services.submissions.SubmissionService;
 
 import java.util.List;
@@ -19,6 +20,8 @@ public class SubmissionApi {
 
     @Autowired
     private SubmissionService submissionService;
+    @Autowired
+    private AssignmentsServices assignmentsServices;
 
     @GetMapping("/buy")
     public ResponseEntity<List<SubmissionDTO>> buySubmissions(@RequestHeader("Personal-Number") String personalNumber, @RequestParam Integer assignmentId, @RequestParam Integer noOfSubmissions) throws AccessUnauthorizedException, DataNotFoundException, AccessForbiddenException {
@@ -29,6 +32,12 @@ public class SubmissionApi {
     @GetMapping("/details")
     public ResponseEntity<SubmissionDTO> getDetailedSubmission(@RequestHeader("Personal-Number") String personalNumber, @RequestParam Integer submissionId) throws DataNotFoundException, AccessUnauthorizedException, AccessForbiddenException, FileException {
         var data = submissionService.getDetailedSubmission(personalNumber, submissionId);
+        return ResponseEntity.ok(data);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<SubmissionDTO>> getAllSubmissionsOfAssignment(@RequestHeader("Personal-Number") String personalNumber, @RequestParam Integer assignmentId) throws AccessForbiddenException, DataNotFoundException {
+        var data = assignmentsServices.getAllSubmissionsOfAssignment(personalNumber, assignmentId);
         return ResponseEntity.ok(data);
     }
 }

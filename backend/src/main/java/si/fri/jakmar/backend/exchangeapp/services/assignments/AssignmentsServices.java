@@ -211,6 +211,16 @@ public class AssignmentsServices {
             );
     }
 
+    public List<SubmissionDTO> getAllSubmissionsOfAssignment(String personalNumber, Integer assignmentId) throws DataNotFoundException, AccessForbiddenException {
+        var assignment = getAssignmentById(assignmentId);
+        var user = userServices.getUserByPersonalNumber(personalNumber);
+        userCanEditAssignment(user, assignment);
+
+        return CollectionUtils.emptyIfNull(assignment.getSubmissions()).stream()
+                .map(e -> SubmissionDTO.castFromEntity(e, e.getAuthor()))
+                .collect(Collectors.toList());
+    }
+
     /**
      * checks if user can edit assignment, if not exception is thrown
      * @param user to perform operation

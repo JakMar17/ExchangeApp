@@ -6,7 +6,9 @@ import {
   AssignmentStatus,
   SubmissionCheck,
 } from 'src/app/models/assignment-model';
+import { Submission } from 'src/app/models/submission-model';
 import { AssignmentService } from 'src/app/services/assignment-service/assignment.service';
+import { SubmissionService } from 'src/app/services/submission-service/submission.service';
 
 @Component({
   selector: 'app-assignment-add',
@@ -23,15 +25,20 @@ export class AssignmentAddComponent implements OnInit {
     visible: true,
   };
 
+  public submissions: Submission[] = [];
+
   public courseId: number | null = null;
   public editing: boolean = false;
 
   public errorMessage: string | null = null;
 
+  public submissionModalSubmission: Submission | null = null;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private assignmentService: AssignmentService
+    private assignmentService: AssignmentService,
+    private submissionService: SubmissionService
   ) {
     this.activatedRoute.params.subscribe((params) => {
       if (params != null) {
@@ -42,6 +49,11 @@ export class AssignmentAddComponent implements OnInit {
           this.editing = true;
           assignmentService.getAssignment(this.assignment).subscribe((data) => {
             this.assignment = data;
+            submissionService
+              .getAllSubmissionsOfAssignment(this.assignment)
+              .subscribe((submissions) => {
+                this.submissions = submissions;
+              });
           });
         }
       }
@@ -136,8 +148,21 @@ export class AssignmentAddComponent implements OnInit {
     this.router.navigate(['/course/' + this.courseId]);
   }
 
-  private alertAndExit(message: string) {
+  private alertAndExit(message: string): void {
     alert(message);
     this.navigateBackToCourse();
+  }
+
+
+  public onTableRowViewPressed(element: Submission): void {
+    this.submissionService
+      .getDetailedSubmission({ submissionId: element.submissionId })
+      .subscribe((data) => {
+        this.submissionModalSubmission = data;
+      });
+  }
+
+  public onSubmissionDetailedModalClosed(): void {
+    this.submissionModalSubmission = null;
   }
 }

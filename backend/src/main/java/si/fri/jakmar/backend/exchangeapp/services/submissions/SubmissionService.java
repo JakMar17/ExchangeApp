@@ -259,7 +259,6 @@ public class SubmissionService {
         return ZipperFunction.createZip(List.of(inputFile), assignment.getInputDataType(), List.of(outputFile), assignment.getOutputDataType());
     }
 
-
     /**
      * checks if file's filename contains extension
      *

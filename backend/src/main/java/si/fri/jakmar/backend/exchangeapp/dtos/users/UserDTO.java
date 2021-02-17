@@ -59,7 +59,7 @@ public class UserDTO {
                         CollectionUtils.emptyIfNull(entity.getUsersCourses()).stream(),
                         Stream.concat(
                                 CollectionUtils.emptyIfNull(entity.getCreatedCourses()).stream(),
-                                CollectionUtils.emptyIfNull(entity.getGuardinasCourses()).stream())
+                                CollectionUtils.emptyIfNull(entity.getGuardiansCourses()).stream())
                         )
                         .distinct()
                         .map(CourseDTO::castBasicFromEntity)

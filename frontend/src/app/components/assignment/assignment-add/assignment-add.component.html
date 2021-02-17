@@ -66,7 +66,6 @@
                   class="input is-disabled"
                   [ngModel]="assignment.startDate | date: 'yyyy-MM-dd'"
                   (ngModelChange)="onStartDateInputChange($event)"
-                  
                 />
               </div>
             </div>
@@ -213,9 +212,7 @@
         <h1 class="title is-3">Testiranje pravilnosti oddaje</h1>
         <div class="tabs is-centered">
           <ul>
-            <li
-              (click)="onSubmissionCheckTabChange(submissionCheckEnum.NONE)"
-            >
+            <li (click)="onSubmissionCheckTabChange(submissionCheckEnum.NONE)">
               <a>Brez</a>
             </li>
             <li
@@ -226,7 +223,7 @@
             <li
               (click)="
                 onSubmissionCheckTabChange(submissionCheckEnum.AUTOMATIC)
-"
+              "
             >
               <a>Avtomatsko testiranje</a>
             </li>
@@ -236,9 +233,7 @@
           <input
             type="checkbox"
             [checked]="assignment.notifyOnEmail"
-            (change)="
-              assignment.notifyOnEmail = !assignment.notifyOnEmail
-            "
+            (change)="assignment.notifyOnEmail = !assignment.notifyOnEmail"
           />
           Ob novi oddaji me obvesti po epošti.
         </label>
@@ -256,7 +251,11 @@
           skrbnik predmeta obveščen o podobnosti.
         </div>
         <label class="checkbox is-success">
-          <input (click)="onPlagiarismWarningCheckboxClick()" type="checkbox" [checked]="assignment.plagiarismWarning != null" />
+          <input
+            (click)="onPlagiarismWarningCheckboxClick()"
+            type="checkbox"
+            [checked]="assignment.plagiarismWarning != null"
+          />
           Nastavi opozorilno stopnjo
         </label>
 
@@ -277,7 +276,11 @@
           obravnava kot plagiat.
         </div>
         <label class="checkbox is-success">
-          <input (click)="onPlagiarismLevelCheckboxClick()" type="checkbox" [checked]="assignment.plagiarismLevel != null" />
+          <input
+            (click)="onPlagiarismLevelCheckboxClick()"
+            type="checkbox"
+            [checked]="assignment.plagiarismLevel != null"
+          />
           Nastavi stopnjo zavrnitve
         </label>
         <div *ngIf="assignment.plagiarismLevel" class="field">
@@ -299,7 +302,6 @@
           <table class="table table is-fullwidth table is-hoverable">
             <thead>
               <tr>
-                <th>Oznaka oddaje</th>
                 <th>Ime in priimek</th>
                 <th>Vpisna številka</th>
                 <th>Status oddaje</th>
@@ -307,46 +309,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>12-458</td>
-                <td>Mojca Pokraculja</td>
-                <td>6314520</td>
-                <td>Oddano</td>
+              <tr *ngFor="let item of submissions">
+                <td>{{ item.author | userToString }}</td>
+                <td>{{ item.author?.personalNumber }}</td>
+                <td>{{ item.status }}</td>
                 <td class="is-narrow">
-                  <div class="columns">
-                    <div class="column"></div>
-                    <div class="column"></div>
-                    <div class="column is-narrow">
-                      <a class="button is-info is-small is-outlined">
-                        <i class="ri-eye-line"></i>
-                      </a>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>12-458</td>
-                <td>Mojca Pokraculja</td>
-                <td>6314520</td>
-                <td>V pregledu</td>
-                <td class="is-narrow">
-                  <div class="columns">
-                    <div class="column is-narrow">
-                      <a class="button is-success is-small is-outlined">
-                        <i class="ri-check-line"></i>
-                      </a>
-                    </div>
-                    <div class="column is-narrow">
-                      <a class="button is-danger is-small is-outlined">
-                        <i class="ri-close-line"></i>
-                      </a>
-                    </div>
-                    <div class="column is-narrow">
-                      <a class="button is-info is-small is-outlined">
-                        <i class="ri-eye-line"></i>
-                      </a>
-                    </div>
-                  </div>
+                  <a
+                    (click)="onTableRowViewPressed(item)"
+                    class="button is-info is-small is-outlined"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </a>
                 </td>
               </tr>
             </tbody>
@@ -407,10 +380,20 @@
         </div>
 
         <span class="is-small">
-          <p><b>Arhiviranje naloge</b>: nadaljno oddajanje je onemogočeno, vsi oddani testni primeri postanejo javni in brezplačni.</p>
+          <p>
+            <b>Arhiviranje naloge</b>: nadaljno oddajanje je onemogočeno, vsi
+            oddani testni primeri postanejo javni in brezplačni.
+          </p>
         </span>
       </div>
     </div>
   </div>
 </div>
 <app-footer></app-footer>
+
+<!-- modal detailed submission -->
+<app-submission-detailed-modal
+  *ngIf="submissionModalSubmission != null"
+  [submission]="submissionModalSubmission"
+  (onClose)="onSubmissionDetailedModalClosed()"
+></app-submission-detailed-modal>

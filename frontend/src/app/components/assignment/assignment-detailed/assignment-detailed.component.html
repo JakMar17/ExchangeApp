@@ -132,12 +132,6 @@
             </tbody>
           </table>
         </div>
-
-        <app-submission-add
-          [assignment]="assignment"
-          (onClose)="onSubmissionAddModalClosed($event)"
-          *ngIf="showAddSubmissionBox"
-        ></app-submission-add>
       </div>
 
       <div class="box">
@@ -243,3 +237,17 @@
   </div>
 </div>
 <app-footer></app-footer>
+
+<!-- modal detailed submission -->
+<app-submission-detailed-modal
+  *ngIf="submissionModalSubmission != null"
+  [submission]="submissionModalSubmission"
+  (onClose)="onSubmissionDetailedModalClosed()"
+></app-submission-detailed-modal>
+
+<!-- modal add submission -->
+<app-submission-add
+  [assignment]="assignment"
+  (onClose)="onSubmissionAddModalClosed($event)"
+  *ngIf="showAddSubmissionBox"
+></app-submission-add>

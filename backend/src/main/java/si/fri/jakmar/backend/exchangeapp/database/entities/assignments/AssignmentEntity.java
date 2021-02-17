@@ -55,6 +55,9 @@ public class AssignmentEntity {
     @Column(name = "assignment_archived")
     @Type(type = "org.hibernate.type.NumericBooleanType")
     private Boolean archived = false;
+    @Column(name = "assignment_deleted")
+    @Type(type = "org.hibernate.type.NumericBooleanType")
+    private Boolean deleted = false;
 
     @ManyToOne
     @JoinColumn(name = "submission_check_id")
@@ -284,5 +287,13 @@ public class AssignmentEntity {
 
     public void setArchived(Boolean archived) {
         this.archived = archived;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

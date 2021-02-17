@@ -33,6 +33,8 @@ export class AssignmentDetailedComponent implements OnInit {
   public showBuySubmissionsButton: boolean = false;
   public showDownloadBoughtSubmissionsButton: boolean = false;
 
+  public submissionModalSubmission: Submission | null = null;
+
   public submissionBuyQuantityInput: number = 0;
 
   public buyingErrorMesage: string | null = null;
@@ -124,14 +126,11 @@ export class AssignmentDetailedComponent implements OnInit {
   }
 
   public onTableRowViewPressed(element: Submission): void {
-    this.router.navigate([
-      '/course/' +
-        this.course.courseId +
-        '/assignment/' +
-        this.assignment.assignmentId +
-        '/submission/' +
-        element.submissionId,
-    ]);
+    this.submissionService
+      .getDetailedSubmission({ submissionId: element.submissionId })
+      .subscribe((data) => {
+        this.submissionModalSubmission = data;
+      });
   }
 
   public onTableRowDownloadPressed(element: Submission): void {
@@ -166,5 +165,9 @@ export class AssignmentDetailedComponent implements OnInit {
     this.showAddSubmissionBox = false;
     if (assignment != null) this.assignment = assignment;
     this.assignBooleanValuesToActionButtons();
+  }
+
+  public onSubmissionDetailedModalClosed(): void {
+    this.submissionModalSubmission = null;
   }
 }

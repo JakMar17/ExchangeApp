@@ -31,6 +31,7 @@ import { AssignmentDetailedComponent } from './components/assignment/assignment-
 import { ErrorComponent } from './components/error/error.component';
 import { FilterPipe } from './pipes/filter-pipe/filter.pipe';
 import { SubmissionAddComponent } from './components/assignment/assignment-detailed/submission-add/submission-add.component';
+import { SubmissionDetailedModalComponent } from './components/submissions/submission-detailed-modal/submission-detailed-modal.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { SubmissionAddComponent } from './components/assignment/assignment-detai
     ErrorComponent,
     FilterPipe,
     SubmissionAddComponent,
+    SubmissionDetailedModalComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HighlightModule, HttpClientModule],
   providers: [

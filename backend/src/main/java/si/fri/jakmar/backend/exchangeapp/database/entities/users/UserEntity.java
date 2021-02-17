@@ -1,6 +1,7 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Type;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.purchases.PurchaseEntity;
@@ -29,6 +30,9 @@ public class UserEntity {
     private String personalNumber;
     @Column(name = "user_created")
     private LocalDateTime userCreated = LocalDateTime.now(ZoneOffset.UTC);
+    @Column(name = "user_deleted")
+    @Type(type = "org.hibernate.type.NumericBooleanType")
+    private Boolean deleted = false;
 
     @ManyToOne
     @JoinColumn(name = "user_type_id")
@@ -52,11 +56,11 @@ public class UserEntity {
 
     @JsonIgnoreProperties({"guardianMain", "usersSignedInCourse"})
     @ManyToMany(mappedBy = "usersGuardians")
-    private List<CourseEntity> guardinasCourses;
+    private List<CourseEntity> guardiansCourses;
 
     @JsonIgnoreProperties({"author"})
     @OneToMany(mappedBy = "author")
-    private List<AssignmentEntity> createdAssignemnts;
+    private List<AssignmentEntity> createdAssignments;
 
     @JsonIgnoreProperties({"author"})
     @OneToMany(mappedBy = "author")
@@ -192,20 +196,20 @@ public class UserEntity {
         this.whitelistedCourses = whitelistedCourses;
     }
 
-    public List<CourseEntity> getGuardinasCourses() {
-        return guardinasCourses;
+    public List<CourseEntity> getGuardiansCourses() {
+        return guardiansCourses;
     }
 
-    public void setGuardinasCourses(List<CourseEntity> guardinasCourses) {
-        this.guardinasCourses = guardinasCourses;
+    public void setGuardiansCourses(List<CourseEntity> guardiansCourses) {
+        this.guardiansCourses = guardiansCourses;
     }
 
-    public List<AssignmentEntity> getCreatedAssignemnts() {
-        return createdAssignemnts;
+    public List<AssignmentEntity> getCreatedAssignments() {
+        return createdAssignments;
     }
 
-    public void setCreatedAssignemnts(List<AssignmentEntity> createdAssignemnts) {
-        this.createdAssignemnts = createdAssignemnts;
+    public void setCreatedAssignments(List<AssignmentEntity> createdAssignments) {
+        this.createdAssignments = createdAssignments;
     }
 
     public List<SubmissionEntity> getSubmissions() {
@@ -230,5 +234,13 @@ public class UserEntity {
 
     public void setRegistrationStatus(UserRegistrationStage registrationStatus) {
         this.registrationStatus = registrationStatus;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

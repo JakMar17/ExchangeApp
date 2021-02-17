@@ -6,6 +6,7 @@ export interface Submission {
   status?: string;
   inputFile?: string;
   outputFile?: string;
+  author?: User
 }
 
 export interface SubmissionFilePair {

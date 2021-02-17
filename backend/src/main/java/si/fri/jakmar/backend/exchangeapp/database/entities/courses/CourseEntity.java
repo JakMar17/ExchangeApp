@@ -32,6 +32,9 @@ public class CourseEntity {
     @Column(name = "course_archived")
     @Type(type = "org.hibernate.type.NumericBooleanType")
     private Boolean archived = false;
+    @Column(name = "course_deleted")
+    @Type(type = "org.hibernate.type.NumericBooleanType")
+    private Boolean deleted = false;
 
     @ManyToOne
     @JoinColumn(name = "access_level_id", referencedColumnName = "access_level_id")
@@ -243,5 +246,13 @@ public class CourseEntity {
 
     public void setNotifications(List<NotificationEntity> notifications) {
         this.notifications = notifications;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

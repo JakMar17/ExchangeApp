@@ -62,4 +62,13 @@ export class SubmissionService {
       submission.submissionId
     );
   }
+
+  public getAllSubmissionsOfAssignment(
+    assignment: Assignment
+  ): Observable<Submission[]> {
+    return this.submissionApi.getAllSubmissionsOfAssignment(
+      this.userService.userLoggedIn.personalNumber,
+      assignment.assignmentId
+    );
+  }
 }

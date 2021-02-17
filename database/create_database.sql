@@ -16,7 +16,7 @@ create table assignment
    assignment_title     varchar(100) not null,
    assignment_classroom_url varchar(100),
    assignment_description text,
-   start_date           timestamp not null,
+   start_date           timestamp not null default utc_timestamp,
    end_date             timestamp,
    max_submissions_total int,
    max_submissions_student int,
@@ -29,7 +29,8 @@ create table assignment
    plagiarism_level     int,
    visible              int not null,
    assignment_date_created timestamp not null,
-   assignment_archived int not null,
+   assignment_archived      int not null default 0,
+   assignment_deleted       int not null default 0,
    primary key (assignment_id)
 );
 
@@ -47,7 +48,8 @@ create table course
    course_classroom_url  varchar(100),
    initial_coins        int not null,
    course_created       timestamp not null,
-   course_archived      int not null,
+   course_archived      int not null default 0,
+   course_deleted       int not null default 0,
    primary key (course_id)
 );
 
@@ -68,7 +70,6 @@ create table course_access_password
 (
    access_password      varchar(100) not null,
    access_password_id   int not null auto_increment,
-   course_id            int not null,
    primary key (access_password_id)
 );
 
@@ -143,8 +144,10 @@ create table submission
    submission_status_id int not null,
    user_id              int not null,
    assignment_id        int not null,
-   file_key             varchar(100) not null,
+   input_id             varchar(100) not null,
+   output_id            varchar(100) not null,
    submission_created   timestamp not null,
+   submission_deleted   int not null default 0,
    primary key (submission_id)
 );
 
@@ -192,6 +195,7 @@ create table user
    password             varchar(100) not null,
    personal_number      char(8) not null,
    user_created         timestamp not null,
+   user_deleted         int not null default 0,
    primary key (user_id)
 );
 
@@ -206,16 +210,19 @@ create table user_type
 );
 
 /*==============================================================*/
-/* Table: login                                                 */
+/* Table: notification                                          */
 /*==============================================================*/
-create table login
+create table notification
 (
-   login_id             int not null,
-   user_id              int not null,
-   login_date           timestamp not null,
-   login_ok             int not null,
-   login_ip             char(128),
-   primary key (login_id)
+	notification_id int auto_increment,
+	notification_title varchar(128) not null,
+	notification_body varchar(512) not null,
+	notification_created timestamp default utc_timestamp not null,
+	course_id int null,
+	user_id int not null,
+	notification_deleted int not null default 0,
+	constraint notification_pk
+		primary key (notification_id)
 );
 
 alter table assignment add constraint FK_assignment_author foreign key (user_id)
@@ -239,17 +246,11 @@ alter table course add constraint FK_course_passwod foreign key (access_password
 alter table course add constraint FK_guardian_main foreign key (user_id)
       references user (user_id) on delete restrict on update restrict;
 
-alter table course_access_password add constraint FK_course_passwod2 foreign key (course_id)
-      references course (course_id) on delete restrict on update restrict;
-
 alter table guardian add constraint FK_guardian foreign key (user_id)
       references user (user_id) on delete restrict on update restrict;
 
 alter table guardian add constraint FK_guardian2 foreign key (course_id)
       references course (course_id) on delete restrict on update restrict;
-
-alter table login add constraint FK_user_login foreign key (user_id)
-      references user (user_id) on delete restrict on update restrict;
 
 alter table purchase add constraint FK_submission_bought foreign key (submission_id)
       references submission (submission_id) on delete restrict on update restrict;
@@ -284,11 +285,17 @@ alter table submission add constraint FK_status_of_submission foreign key (submi
 alter table submission add constraint FK_submission_author foreign key (user_id)
       references user (user_id) on delete restrict on update restrict;
 
+alter table user add constraint FK_type_of_user foreign key (user_type_id)
+      references user_type (user_type_id) on delete restrict on update restrict;
+
 alter table user add constraint FK_registration_status foreign key (registration_status_id)
       references user_registration_status (registration_status_id) on delete restrict on update restrict;
 
-alter table user add constraint FK_type_of_user foreign key (user_type_id)
-      references user_type (user_type_id) on delete restrict on update restrict;
+alter table notification add constraint FK_notification_author foreign key (user_id)
+      references user (user_id) on delete restrict on update restrict;
+
+alter table notification add constraint FK_notification_course foreign key (course_id)
+      references course (course_id) on delete restrict on update restrict;
 
 
 INSERT INTO ExchangeApp.user_type (user_type_id, user_type_description) VALUES (1, 'ADMIN');
@@ -310,5 +317,21 @@ INSERT INTO ExchangeApp.submission_status (submission_status_id, submission_stat
 
 INSERT INTO ExchangeApp.user_registration_status (registration_status_id, registration_status) VALUES (1, 'PENDING_EMAIL');
 INSERT INTO ExchangeApp.user_registration_status (registration_status_id, registration_status) VALUES (2, 'REGISTERED');
+
+-- testni podatki
+INSERT INTO ExchangeApp.user (user_id, user_type_id, registration_status_id, email, name, surname, password, personal_number, user_created) VALUES (10, 1, 2, 'karleto.spacapan', 'Karleto', 'Špacapan', 'geslo', 'a_000001', '2021-02-05 17:41:38');
+INSERT INTO ExchangeApp.user (user_id, user_type_id, registration_status_id, email, name, surname, password, personal_number, user_created) VALUES (15, 1, 2, 'admin', 'Admin', 'Adminko', 'admin', 'a_000002', '2021-02-10 13:11:21');
+INSERT INTO ExchangeApp.user (user_id, user_type_id, registration_status_id, email, name, surname, password, personal_number, user_created) VALUES (16, 2, 2, 'prof', 'Janez', 'Novak', 'prof', 'p_000001', '2021-02-10 13:11:21');
+INSERT INTO ExchangeApp.user (user_id, user_type_id, registration_status_id, email, name, surname, password, personal_number, user_created) VALUES (17, 3, 2, 'student', 'Peter', 'Novak', 'student', '63180122', '2021-02-10 13:11:21');
+
+INSERT INTO ExchangeApp.course_access_password (access_password, access_password_id) VALUES ('geslo', 15);
+
+INSERT INTO ExchangeApp.course (course_id, access_password_id, access_level_id, user_id, course_title, course_description, course_classroom_url, initial_coins, course_created, course_archived) VALUES (23, null, 1, 15, 'Javni predmet', 'Ta predmet je javno odprt za vse registrirane uporabnike, razen za tiste, ki jih je izvajalec predmeta blokiral (dodal na blacklist)', null, 2, '2021-02-10 13:14:54', 0);
+INSERT INTO ExchangeApp.course (course_id, access_password_id, access_level_id, user_id, course_title, course_description, course_classroom_url, initial_coins, course_created, course_archived) VALUES (24, 15, 2, 16, 'Predmet zaklenjen z geslom', 'Do tega predmeta imajo dostop samo tisti, ki poznajo geslo. Geslo potrebujejo vpisati pri prvem   vpisu v predmet. Geslo tega predmeta je geslo', null, 20, '2021-02-10 13:24:00', 0);
+INSERT INTO ExchangeApp.course (course_id, access_password_id, access_level_id, user_id, course_title, course_description, course_classroom_url, initial_coins, course_created, course_archived) VALUES (25, null, 3, 15, 'Predmet z omejenim dostopom', 'Do tega predmeta imajo dostop samo tisti, ki jih je skrbnik določil. Med drugim ima dostop do predmeta uporabnik student, uporabnik prof pa ne.', null, 15, '2021-02-10 13:33:13', 0);
+
+INSERT INTO ExchangeApp.notification (notification_id, course_id, user_id, notification_title, notification_body, notification_created) VALUES (7, null, 15, 'Testni sistem', 'Nahajate se na testne sistemu aplikacije ExchangeApp.', '2021-02-10 13:13:55');
+INSERT INTO ExchangeApp.notification (notification_id, course_id, user_id, notification_title, notification_body, notification_created) VALUES (8, 23, 15, 'Začetno stanje žetonov', 'Začetno stanje žetonov na tem predmetu je enako 2 - to pomeni, da vsak, ki se v predmet prijavi pridobi 2 žetona.', '2021-02-10 13:17:21');
+INSERT INTO ExchangeApp.student_whitelist (user_id, course_id) VALUES (17, 25);
 
 commit;

@@ -38,4 +38,15 @@ export class SubmissionApiService {
       { headers }
     );
   }
+
+  public getAllSubmissionsOfAssignment(
+    personalNumber: string,
+    assignmentId: number
+  ): Observable<Submission[]> {
+    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    return this.http.get<Submission[]>(
+      this.baseUrl + '/all?assignmentId=' + assignmentId,
+      { headers }
+    );
+  }
 }
