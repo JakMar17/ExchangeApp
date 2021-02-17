@@ -32,7 +32,7 @@ public class AssignmentApi {
     }
 
     @GetMapping("/detailed")
-    public ResponseEntity<Object> getAssignmentWithSubmission(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestParam Integer assignmentId) throws AccessForbiddenException, DataNotFoundException {
+    public ResponseEntity<Object> getAssignmentWithSubmission(@RequestHeader(name = "Personal-Number") String personalNumber, @RequestParam Integer assignmentId) throws AccessForbiddenException, DataNotFoundException, AccessUnauthorizedException {
         var x = assignmentsServices.getAssignmentWithSubmissions(personalNumber, assignmentId);
         return ResponseEntity.ok(x);
     }

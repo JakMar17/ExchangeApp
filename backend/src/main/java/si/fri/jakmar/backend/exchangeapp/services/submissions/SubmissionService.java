@@ -163,15 +163,29 @@ public class SubmissionService {
         if (coins < noOfSubmissions * assignment.getCoinsPrice())
             throw new AccessForbiddenException("Uporabnik nima dovolj žetonov");
 
-        var submissions = submissionRepository.getSubmissionsForAssignmentNotFromUser(assignment, user);
+        var boughtSubmissionsOfThisAssignment = CollectionUtils.emptyIfNull(user.getPurchases())
+                .stream()
+                .map(PurchaseEntity::getSubmissionBought)
+                .filter(entity -> entity.getAssignment().equals(assignment))
+                .collect(Collectors.toSet());
+
+        var submissions = CollectionUtils.emptyIfNull(submissionRepository.getSubmissionsForAssignmentNotFromUser(assignment, user))
+                .stream()
+                .filter(e -> !boughtSubmissionsOfThisAssignment.contains(e))
+                .collect(Collectors.toList());
         Collections.shuffle(submissions);
 
-        return submissions.stream()
+        var list =  submissions.stream()
                 .limit(noOfSubmissions)
                 .map(e -> purchaseServices.savePurchase(user, e))
                 .map(PurchaseEntity::getSubmissionBought)
                 .map(SubmissionDTO::castFromEntity)
                 .collect(Collectors.toList());
+
+        if(list.isEmpty())
+            throw new DataNotFoundException("V tem trenutku ne obstajajo testni primeri, ki si jih ne bi že lastili");
+        else
+            return list;
     }
 
     /**

@@ -21,9 +21,6 @@ import { UserServiceService } from 'src/app/services/user-service/user-service.s
 export class AssignmentDetailedComponent implements OnInit {
   public loading: boolean = true;
 
-  public uploadQueue: SubmissionFilePair[] = [];
-  public checkboxMyWork: boolean = false;
-
   public course: Course | null = null;
   public assignment: Assignment | null = null;
   public mySubmissions: Submission[] = [];
@@ -38,7 +35,7 @@ export class AssignmentDetailedComponent implements OnInit {
 
   public submissionBuyQuantityInput: number = 0;
 
-  public errorMessageNewSubmission: string | null = null;
+  public buyingErrorMesage: string | null = null;
 
   constructor(
     private router: Router,
@@ -126,71 +123,6 @@ export class AssignmentDetailedComponent implements OnInit {
     return false;
   }
 
-  public handleFileUpload($event: any): void {
-    const files: FileList = $event.target.files;
-    const filesArray = Array.from(files);
-    const inputs = filesArray.filter((e) =>
-      e.name.toLowerCase().includes('vhod')
-    );
-    const outputs = filesArray.filter((e) =>
-      e.name.toLowerCase().includes('izhod')
-    );
-
-    this.uploadQueue = inputs.map((e) => {
-      const output = outputs.find(
-        (o) => this.getNumberOfFile(e, true) === this.getNumberOfFile(o, false)
-      );
-
-      return {
-        inputFile: e,
-        outputFile: output ?? null,
-        inputName: e.name,
-        outputName: output?.name ?? null,
-        status: e != null && output != null ? 'READY_UPLOAD' : 'ERROR',
-      };
-    });
-  }
-
-  private getNumberOfFile(file: File, input: boolean): string {
-    let name = file.name;
-    name = name.replace(input ? 'vhod' : 'izhod', '');
-    return name.replace('.txt', '');
-  }
-
-  public onCheckboxMyWorkPressed(): void {
-    this.checkboxMyWork = !this.checkboxMyWork;
-  }
-
-  public onUploadButtonPressed(): void {
-    if (this.uploadQueue == null || this.uploadQueue.length === 0) {
-      this.errorMessageNewSubmission = 'Ni kaj oddati';
-      return;
-    }
-
-    if (!this.checkboxMyWork) {
-      this.errorMessageNewSubmission = 'Oddaja mora biti vaše delo.';
-      return;
-    }
-
-    this.errorMessageNewSubmission = null;
-
-    this.submissionService
-      .uploadFiles([...this.uploadQueue], this.assignment)
-      .subscribe((data) => (this.assignment = data));
-
-    this.uploadQueue = [];
-    this.showAddSubmissionBox = false;
-    this.checkboxMyWork = false;
-  }
-
-  private removeFromQueue(element: SubmissionFilePair): void {
-    this.uploadQueue = this.uploadQueue.filter((e) => e !== element);
-  }
-
-  public onTableRowDeletePressed(element: SubmissionFilePair): void {
-    this.uploadQueue = this.uploadQueue.filter((e) => e !== element);
-  }
-
   public onTableRowViewPressed(element: Submission): void {
     this.router.navigate([
       '/course/' +
@@ -207,19 +139,32 @@ export class AssignmentDetailedComponent implements OnInit {
   }
 
   public onSubmissionsBuyButtonPressed(): void {
+    this.buyingErrorMesage = null;
     this.submissionService
       .buySubmissions(this.assignment, this.submissionBuyQuantityInput)
-      .subscribe((data) => {
-        if (this.assignment.boughtSubmissions === null)
-          this.assignment.boughtSubmissions = [];
-        data.forEach((e) => {
-          this.assignment.boughtSubmissions.push(e);
-          this.course.usersCoins -= this.assignment.coinsPrice;
-        });
-      });
+      .subscribe(
+        (data) => {
+          if (this.assignment.boughtSubmissions === null)
+            this.assignment.boughtSubmissions = [];
+          data.forEach((e) => {
+            this.assignment.boughtSubmissions.push(e);
+            this.course.usersCoins -= this.assignment.coinsPrice;
+            this.assignBooleanValuesToActionButtons();
+          });
+        },
+        (error: HttpErrorResponse) => {
+          this.buyingErrorMesage = error.error.message;
+        }
+      );
   }
 
   public downloadMySubmissions(): void {
     this.submissionService.downloadMySubmissions(this.assignment);
+  }
+
+  public onSubmissionAddModalClosed(assignment: Assignment | null): void {
+    this.showAddSubmissionBox = false;
+    if (assignment != null) this.assignment = assignment;
+    this.assignBooleanValuesToActionButtons();
   }
 }

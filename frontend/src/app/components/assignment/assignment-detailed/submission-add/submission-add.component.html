@@ -1,0 +1,96 @@
+<div class="modal is-active">
+  <div class="modal-background"></div>
+  <div class="modal-content">
+    <div class="box">
+      <h3 class="title is-4">Dodajanje oddaj</h3>
+      <div class="notification is-warning">
+        <p>Oddate lahko poljubno število dvojic datotek (do omejitve oddaj).</p>
+        <p>
+          Dvojice naj bodo poimenovane kot pari vhodXX{{
+            assignment.inputExtension
+          }}
+          in izhodXX{{ assignment.outputExtension }}, kjer je XX številska
+          oznaka primera.
+        </p>
+      </div>
+      <div class="file is-boxed is-fullwidth">
+        <label class="file-label">
+          <input
+            class="file-input"
+            type="file"
+            multiple="multiple"
+            (change)="handleFileUpload($event)"
+          />
+          <span class="file-cta">
+            <span class="file-icon">
+              <i class="ri-upload-line"></i>
+            </span>
+            <span class="file-icon"> Naloži datoteke </span>
+          </span>
+        </label>
+      </div>
+
+      <div class="table-container" *ngIf="uploadQueue.length > 0">
+        <table class="table is-fullwidth is-hoverable">
+          <thead>
+            <tr>
+              <th>Vhodna datoteka</th>
+              <th>Izhodna datoteka</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of uploadQueue">
+              <td>{{ item.inputName }}</td>
+              <td>{{ item.outputName }}</td>
+              <td>{{ item.status }}</td>
+              <td class="is-narrow">
+                <div class="columns">
+                  <div class="column is-narrow">
+                    <a
+                      (click)="onTableRowDeletePressed(item)"
+                      data-tooltip="Odstrani"
+                      class="has-no-border is-outlined has-text-danger has-tooltip-left"
+                    >
+                      <i class="ri-delete-bin-7-line"></i>
+                    </a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="columns">
+        <div class="column">
+          <label class="checkbox is-success">
+            <input type="checkbox" [(ngModel)]="checkboxMyWork" />
+            Potrjujem, da je oddaja moje osebno delo.
+          </label>
+        </div>
+        <div class="column is-narrow">
+          <button
+            (click)="onUploadButtonPressed()"
+            class="button is-primary"
+            [ngClass]="{ 'is-loading': submissionButtonLoading }"
+          >
+            Oddaj
+          </button>
+        </div>
+      </div>
+      <div
+        *ngIf="errorMessageNewSubmission != null"
+        class="notification is-danger"
+      >
+        <p>{{ errorMessageNewSubmission }}</p>
+      </div>
+    </div>
+  </div>
+  <button
+    class="modal-close is-large"
+    aria-label="close"
+    (click)="closeModal(null)"
+  ></button>
+</div>

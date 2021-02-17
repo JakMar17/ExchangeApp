@@ -132,7 +132,7 @@ public class AssignmentsServices {
     public AssignmentDTO setVisibility(String personalNumber, Integer assignmentId, Boolean isVisible) throws DataNotFoundException, AccessForbiddenException {
         var user = userServices.getUserByPersonalNumber(personalNumber);
         var assignment = getAssignmentById(assignmentId);
-        userCanAccessAssignment(user, assignment);
+        userCanEditAssignment(user, assignment);
 
         assignment.setVisible(isVisible ? 1 : 0);
         assignment = assignmentRepository.save(assignment);
@@ -143,7 +143,7 @@ public class AssignmentsServices {
     public AssignmentDTO getAssignmentsData(String personalNumber, Integer assignmentId) throws DataNotFoundException, AccessUnauthorizedException, AccessForbiddenException {
         var assignment = getAssignmentById(assignmentId);
         var user = userServices.getUserByPersonalNumber(personalNumber);
-        userCanAccessAssignment(user, assignment);
+        userCanEditAssignment(user, assignment);
 
         return AssignmentDTO.castFullFromEntity(assignment, (int) CollectionUtils.emptyIfNull(assignment.getSubmissions()).stream().filter(e -> e.getAuthor().equals(user)).count());
     }
@@ -159,7 +159,7 @@ public class AssignmentsServices {
     public void deleteAssignment(String personalNumber, Integer assignmentId) throws DataNotFoundException, AccessForbiddenException {
         var assignment = getAssignmentById(assignmentId);
         var user = userServices.getUserByPersonalNumber(personalNumber);
-        userCanAccessAssignment(user, assignment);
+        userCanEditAssignment(user, assignment);
 
         assignmentRepository.delete(assignment);
     }
@@ -176,7 +176,7 @@ public class AssignmentsServices {
     public AssignmentDTO setArchivedStatus(String personalNumber, Integer assignmentId, Boolean isVisible) throws DataNotFoundException, AccessForbiddenException {
         var assignment = getAssignmentById(assignmentId);
         var user = userServices.getUserByPersonalNumber(personalNumber);
-        userCanAccessAssignment(user, assignment);
+        userCanEditAssignment(user, assignment);
 
         assignment.setArchived(isVisible);
         assignment = assignmentRepository.save(assignment);
@@ -191,7 +191,7 @@ public class AssignmentsServices {
      * @throws DataNotFoundException data not found
      * @throws AccessForbiddenException user cannot perform operation
      */
-    public AssignmentDTO getAssignmentWithSubmissions(String personalNumber, Integer assignmentId) throws DataNotFoundException, AccessForbiddenException {
+    public AssignmentDTO getAssignmentWithSubmissions(String personalNumber, Integer assignmentId) throws DataNotFoundException, AccessForbiddenException, AccessUnauthorizedException {
         var assignment = getAssignmentById(assignmentId);
         var user = userServices.getUserByPersonalNumber(personalNumber);
         userCanAccessAssignment(user, assignment);
@@ -212,18 +212,34 @@ public class AssignmentsServices {
     }
 
     /**
+     * checks if user can edit assignment, if not exception is thrown
+     * @param user to perform operation
+     * @param assignment
+     * @throws DataNotFoundException data not found
+     * @throws AccessForbiddenException user cannot perform operation
+     */
+    private void userCanEditAssignment(UserEntity user, AssignmentEntity assignment) throws DataNotFoundException, AccessForbiddenException {
+        var course = assignment.getCourse();
+        if (course == null)
+            throw new DataNotFoundException("Ne najdem predmeta");
+
+        if (!userAccessServices.userCanEditCourse(user, course))
+            throw new AccessForbiddenException("Ni pravic");
+    }
+
+    /**
      * checks if user can access assignment, if not exception is thrown
      * @param user to perform operation
      * @param assignment
      * @throws DataNotFoundException data not found
      * @throws AccessForbiddenException user cannot perform operation
      */
-    private void userCanAccessAssignment(UserEntity user, AssignmentEntity assignment) throws DataNotFoundException, AccessForbiddenException {
+    private void userCanAccessAssignment(UserEntity user, AssignmentEntity assignment) throws DataNotFoundException, AccessForbiddenException, AccessUnauthorizedException {
         var course = assignment.getCourse();
         if (course == null)
             throw new DataNotFoundException("Ne najdem predmeta");
 
-        if (!userAccessServices.userCanEditCourse(user, course))
+        if (!userAccessServices.userHasAccessToCourse(user, course))
             throw new AccessForbiddenException("Ni pravic");
     }
 }
