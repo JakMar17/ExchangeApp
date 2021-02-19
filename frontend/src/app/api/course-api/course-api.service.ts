@@ -65,6 +65,16 @@ export class CourseApiService {
 
   public getUsersCourses(personalNumber: string): Observable<Course[]> {
     const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
-    return this.http.get<Course[]>(this.baseUrl + "my", { headers });
+    return this.http.get<Course[]>(this.baseUrl + 'my', { headers });
+  }
+
+  public deleteCourse(
+    personalNumber: string,
+    courseId: number
+  ): Observable<any> {
+    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    return this.http.delete<any>(this.baseUrlManagement + 'delete?courseId=' + courseId, {
+      headers,
+    });
   }
 }

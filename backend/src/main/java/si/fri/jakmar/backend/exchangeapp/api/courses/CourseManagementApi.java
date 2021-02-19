@@ -1,6 +1,7 @@
 package si.fri.jakmar.backend.exchangeapp.api.courses;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import si.fri.jakmar.backend.exchangeapp.dtos.courses.CourseDTO;
@@ -36,12 +37,13 @@ public class CourseManagementApi {
         return ResponseEntity.ok(d);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete")
     public ResponseEntity<Object> deleteCourse(
             @RequestHeader(name = "Personal-Number") String personalNumber,
             @RequestParam Integer courseId
-    ) {
-        return null;
+    ) throws AccessForbiddenException, DataNotFoundException {
+        coursesServices.deleteCourse(personalNumber, courseId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/archive")

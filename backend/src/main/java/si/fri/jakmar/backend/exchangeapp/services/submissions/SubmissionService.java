@@ -115,7 +115,7 @@ public class SubmissionService {
             throw new FileException("Datoteka vsebuje napačen format");
 
         var randomKey = RandomizerService.createRandomString(
-                StreamSupport.stream(submissionRepository.findAll().spliterator(), true)
+                submissionRepository.getAllNotDeleted().parallelStream()
                         .map(SubmissionEntity::getFileKey));
 
         var inputFileName = "input_" + randomKey;

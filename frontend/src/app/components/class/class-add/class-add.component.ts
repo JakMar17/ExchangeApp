@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CourseApiService } from 'src/app/api/course-api/course-api.service';
 import { Course } from 'src/app/models/class-model';
 import { User } from 'src/app/models/user-model';
+import { CoursesService } from 'src/app/services/courses-service/courses.service';
 import { UserServiceService } from 'src/app/services/user-service/user-service.service';
 import { SecurityLevel } from './models/security-level';
 
@@ -62,6 +63,7 @@ export class ClassAddComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private courseApi: CourseApiService,
+    private courseService: CoursesService,
     private userService: UserServiceService,
     private router: Router
   ) {
@@ -222,6 +224,18 @@ export class ClassAddComponent implements OnInit {
           (data) => this.router.navigate(['/course/' + data.courseId]),
           (err: HttpErrorResponse) => alert('Napaka: ' + err.error.message)
         );
+  }
+
+  public onDeleteButtonPressed(): void {
+    this.courseService.deleteCourse(this.course).subscribe(
+      (data) => {
+        alert('Predmet je bil izbrisan');
+        this.router.navigate(['/dashboard']);
+      },
+      (err: HttpErrorResponse) => {
+        this.errorMessage = err.error.message;
+      }
+    );
   }
 }
 

@@ -47,11 +47,20 @@ export class CoursesService {
     return this.courseApi.saveCourse(course, personalNumber);
   }
 
-  public getMyCourses(): Observable<Course[]>{
-    return this.courseApi.getUsersCourses(this.userService.userLoggedIn.personalNumber);
+  public getMyCourses(): Observable<Course[]> {
+    return this.courseApi.getUsersCourses(
+      this.userService.userLoggedIn.personalNumber
+    );
   }
 
   public getDashboardNotifications(): Observable<Notification[]> {
     return this.notificationApi.getDashoboardNotifications();
+  }
+
+  public deleteCourse(course: Course): Observable<any> {
+    return this.courseApi.deleteCourse(
+      this.userService.userLoggedIn.personalNumber,
+      course.courseId
+    );
   }
 }

@@ -1,6 +1,8 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.courses;
 
+import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.notifications.NotificationEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
@@ -65,6 +67,7 @@ public class CourseEntity {
     private List<UserEntity> usersGuardians;
 
     @OneToMany(mappedBy = "course")
+    @Where(clause = "assignment_deleted = false")
     private List<AssignmentEntity> assignments;
 
     @OneToMany(mappedBy = "course")
@@ -91,14 +94,13 @@ public class CourseEntity {
         this.assignments = assignments;
     }
 
-    public CourseEntity courseUpdater(String courseTitle, String courseDescription, String courseClassroomUrl, Integer initialCoins, CourseAccessLevelEntity accessLevel, CourseAccessPassword accessPassword, UserEntity guardianMain, List<UserEntity> usersSignedInCourse, List<UserEntity> usersBlacklisted, List<UserEntity> usersWhitelisted, List<UserEntity> usersGuardians, Boolean archived) {
+    public CourseEntity courseUpdater(String courseTitle, String courseDescription, String courseClassroomUrl, Integer initialCoins, CourseAccessLevelEntity accessLevel, CourseAccessPassword accessPassword, List<UserEntity> usersSignedInCourse, List<UserEntity> usersBlacklisted, List<UserEntity> usersWhitelisted, List<UserEntity> usersGuardians, Boolean archived) {
         this.courseTitle = courseTitle;
         this.courseDescription = courseDescription;
         this.courseClassroomUrl = courseClassroomUrl;
         this.initialCoins = initialCoins;
         this.accessLevel = accessLevel;
         this.accessPassword = accessPassword;
-        this.guardianMain = guardianMain;
         this.usersSignedInCourse = usersSignedInCourse;
         this.usersBlacklisted = usersBlacklisted;
         this.usersWhitelisted = usersWhitelisted;

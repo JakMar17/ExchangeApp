@@ -1,6 +1,7 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.submissions;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Type;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.purchases.PurchaseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
@@ -23,6 +24,9 @@ public class SubmissionEntity {
     private String fileKey;
     @Column(name = "submission_created")
     private LocalDateTime created = LocalDateTime.now(ZoneOffset.UTC);
+    @Column(name = "submission_deleted")
+    @Type(type = "org.hibernate.type.NumericBooleanType")
+    private Boolean deleted = false;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -89,16 +93,16 @@ public class SubmissionEntity {
         return author;
     }
 
-    public void setAuthor(UserEntity authour) {
-        this.author = authour;
+    public void setAuthor(UserEntity author) {
+        this.author = author;
     }
 
     public AssignmentEntity getAssignment() {
         return assignment;
     }
 
-    public void setAssignment(AssignmentEntity assignemnt) {
-        this.assignment = assignemnt;
+    public void setAssignment(AssignmentEntity assignment) {
+        this.assignment = assignment;
     }
 
     public SubmissionStatusEntity getStatus() {
@@ -115,5 +119,13 @@ public class SubmissionEntity {
 
     public void setPurchases(List<PurchaseEntity> purchases) {
         this.purchases = purchases;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

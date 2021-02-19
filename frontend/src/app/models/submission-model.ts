@@ -1,3 +1,5 @@
+import { User } from "./user-model";
+
 export interface Submission {
   submissionId?: number;
   input?: string;
@@ -6,7 +8,7 @@ export interface Submission {
   status?: string;
   inputFile?: string;
   outputFile?: string;
-  author?: User
+  author?: User;
 }
 
 export interface SubmissionFilePair {

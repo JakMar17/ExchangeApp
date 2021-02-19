@@ -2,6 +2,7 @@ package si.fri.jakmar.backend.exchangeapp.database.entities.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.purchases.PurchaseEntity;
@@ -40,30 +41,37 @@ public class UserEntity {
 
     @JsonIgnoreProperties({"guardianMain", "usersSignedInCourse"})
     @OneToMany(mappedBy = "guardianMain")
+    @Where(clause = "course_deleted = false")
     private List<CourseEntity> createdCourses;
 
     @JsonIgnoreProperties({"guardianMain", "usersSignedInCourse"})
     @ManyToMany(mappedBy = "usersSignedInCourse", cascade = CascadeType.ALL)
+    @Where(clause = "course_deleted = false")
     private List<CourseEntity> usersCourses;
 
     @JsonIgnoreProperties({"guardianMain", "usersSignedInCourse"})
     @ManyToMany(mappedBy = "usersBlacklisted")
+    @Where(clause = "course_deleted = false")
     private List<CourseEntity> blacklistedCourses;
 
     @JsonIgnoreProperties({"guardianMain", "usersSignedInCourse"})
     @ManyToMany(mappedBy = "usersWhitelisted")
+    @Where(clause = "course_deleted = false")
     private List<CourseEntity> whitelistedCourses;
 
     @JsonIgnoreProperties({"guardianMain", "usersSignedInCourse"})
     @ManyToMany(mappedBy = "usersGuardians")
+    @Where(clause = "course_deleted = false")
     private List<CourseEntity> guardiansCourses;
 
     @JsonIgnoreProperties({"author"})
     @OneToMany(mappedBy = "author")
+    @Where(clause = "assignment_deleted = false")
     private List<AssignmentEntity> createdAssignments;
 
     @JsonIgnoreProperties({"author"})
     @OneToMany(mappedBy = "author")
+    @Where(clause = "submission_deleted = false")
     private List<SubmissionEntity> submissions;
 
     @JsonIgnoreProperties({"userBuying"})

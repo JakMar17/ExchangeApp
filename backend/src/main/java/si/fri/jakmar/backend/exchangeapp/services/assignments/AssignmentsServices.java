@@ -149,8 +149,7 @@ public class AssignmentsServices {
     }
 
     /**
-     * delets entity from database
-     *
+     * sets assignment as deleted in database
      * @param personalNumber of user who is performing operation
      * @param assignmentId   of entity to be deleted
      * @throws DataNotFoundException    user, course or assignment doesnt exists
@@ -161,7 +160,7 @@ public class AssignmentsServices {
         var user = userServices.getUserByPersonalNumber(personalNumber);
         userCanEditAssignment(user, assignment);
 
-        assignmentRepository.delete(assignment);
+        assignmentRepository.markAsDeleted(assignment);
     }
 
     /**

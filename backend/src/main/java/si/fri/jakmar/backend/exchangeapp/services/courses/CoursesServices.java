@@ -44,24 +44,18 @@ public class CoursesServices {
      * @throws DataNotFoundException course with given id doesnt exists
      */
     public CourseEntity getCourseEntityById(Integer courseId) throws DataNotFoundException {
-        var o = courseRepository.findById(courseId);
-        if (o.isEmpty())
-            throw new DataNotFoundException("Iskan predmet ne obstaja");
-        else
-            return o.get();
+        return courseRepository.findByIdNotDeleted(courseId).orElseThrow(() -> new DataNotFoundException("Iskani predmet ne obstaja"));
     }
 
     /**
      * returns basic data of all courses in system
-     * TODO: deleted/archived
-     *
      * @return list of courses with basic data
      * @throws DataNotFoundException no courses found
      */
     public List<CourseDTO> getAllCoursesWithBasicInfo() throws DataNotFoundException {
-        var coursesEntity = courseRepository.findAll();
+        var coursesEntity = courseRepository.getAllNotDeleted();
         var dtos =
-                StreamSupport.stream(coursesEntity.spliterator(), true)
+                CollectionUtils.emptyIfNull(coursesEntity).stream()
                         .map(CourseDTO::castBasicFromEntity).collect(Collectors.toList());
 
         if (dtos.size() == 0)
@@ -90,12 +84,7 @@ public class CoursesServices {
      */
     public CourseDTO getCourseData(Integer courseId, String userPersonalNumber) throws DataNotFoundException, AccessForbiddenException, AccessUnauthorizedException {
         UserEntity user = userServices.getUserByPersonalNumber(userPersonalNumber);
-        var courseEntityOptional = courseRepository.findById(courseId);
-
-        if (courseEntityOptional.isEmpty())
-            throw new DataNotFoundException();
-
-        var course = courseEntityOptional.get();
+        var course = courseRepository.findById(courseId).orElseThrow(DataNotFoundException::new);
 
         if (userAccessServices.userHasAccessToCourse(user, course)) {
             var courseDto = CourseDTO.castFromEntity(course, user, userServices.getUsersCoinsInCourse(user, course));
@@ -181,18 +170,10 @@ public class CoursesServices {
     public CourseDTO insertOrUpdateCourse(String personalNumber, CourseDTO courseDto) throws DataNotFoundException, AccessForbiddenException {
         boolean insertNew = courseDto.getCourseId() == null;
         UserEntity user = userServices.getUserByPersonalNumber(personalNumber);
-        CourseEntity course;
-
-        if (insertNew) {
-            course = new CourseEntity();
-        } else {
-            var courseOptional = courseRepository.findById(courseDto.getCourseId());
-            if (courseOptional.isEmpty())
-                throw new DataNotFoundException("Predmet s podanim id-jem ne obstaja");
-            else
-                course = courseOptional.get();
-
-        }
+        CourseEntity course = insertNew
+                ? new CourseEntity()
+                : courseRepository.findByIdNotDeleted(courseDto.getCourseId())
+                    .orElseThrow(() -> new DataNotFoundException("Predmet s podanim ID-jem ne obstaja"));
 
         if (!userAccessServices.userCanEditCourse(user, course))
             throw new AccessForbiddenException("Uporabnik nima dovoljenja za urejanje predmeta");
@@ -204,7 +185,6 @@ public class CoursesServices {
                 courseDto.getInitialCoins(),
                 getCourseAccessLevelEntity(courseDto.getAccessLevel()),
                 createPasswordForCourse(courseDto.getAccessPassword()),
-                user,
                 null, //signed in
                 courseDto.getStudentsBlacklisted() != null
                         ? courseDto.getStudentsBlacklisted().stream()
@@ -226,6 +206,17 @@ public class CoursesServices {
 
         var courseEntity = courseRepository.save(course);
         return CourseDTO.castFullFromEntity(courseEntity, user, userAccessServices.userCanEditCourse(user, course), userServices.getUsersCoinsInCourse(user, course));
+    }
+
+
+    public void deleteCourse(String personalNumber, Integer courseId) throws DataNotFoundException, AccessForbiddenException {
+        UserEntity user = userServices.getUserByPersonalNumber(personalNumber);
+        var course = getCourseEntityById(courseId);
+
+        if(!userAccessServices.userCanEditCourse(user, course))
+            throw new AccessForbiddenException("Uporabnik nima pravice izvesti operacije");
+
+        courseRepository.markAsDeleted(course);
     }
 
     /**

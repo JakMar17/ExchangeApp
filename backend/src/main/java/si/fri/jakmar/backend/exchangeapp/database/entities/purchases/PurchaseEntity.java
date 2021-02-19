@@ -1,6 +1,7 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.purchases;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Where;
 import si.fri.jakmar.backend.exchangeapp.database.entities.submissions.SubmissionEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 
@@ -28,6 +29,7 @@ public class PurchaseEntity {
     @JsonIgnoreProperties({"purchases"})
     @ManyToOne
     @JoinColumn(name = "submission_id")
+    @Where(clause = "submission_deleted = false")
     private SubmissionEntity submissionBought;
 
     public PurchaseEntity() {
