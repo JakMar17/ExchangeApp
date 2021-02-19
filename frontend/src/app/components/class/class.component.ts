@@ -120,6 +120,11 @@ export class ClassComponent implements OnInit {
       element.description?.toLowerCase().includes(filter.toLowerCase())
     );
   }
+
+  public onCourseTitlePressed(): void {
+    if (this.course.classroomURL != null)
+      window.open(this.course.classroomURL, '_blank');
+  }
 }
 
 export enum CourseVisibilityToUser {

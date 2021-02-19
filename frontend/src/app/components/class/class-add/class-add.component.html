@@ -70,7 +70,13 @@
           <div class="field">
             <label class="label">Geslo za dostop</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Geslo" [(ngModel)]="course.accessPassword" required />
+              <input
+                class="input"
+                type="text"
+                placeholder="Geslo"
+                [(ngModel)]="course.accessPassword"
+                required
+              />
             </div>
           </div>
         </div>
@@ -159,6 +165,7 @@
               <button
                 data-tooltip="Datoteka naj vsebuje en zapis (vpisna številka ali email) na vrstico, brez ločil."
                 class="button-bottom-margin is-info is-outlined has-icons-left is-fullwidth has-tooltip-left"
+                (click)="showAddFromFileModal = true"
               >
                 <span class="icon is-small">
                   <i class="ri-file-line"></i>
@@ -420,7 +427,7 @@
           </div>
           <div class="column">
             <button
-            (click)="onDeleteButtonPressed()"
+              (click)="onDeleteButtonPressed()"
               class="button-bottom-margin is-danger is-outlined has-icons-left is-fullwidth"
             >
               <span class="icon is-small">
@@ -435,3 +442,9 @@
   </div>
 </div>
 <app-footer></app-footer>
+
+<!-- modal add from file -->
+<app-whitelist-file-modal
+  *ngIf="showAddFromFileModal"
+  (onClose)="onWhitelistModalClose($event)"
+></app-whitelist-file-modal>

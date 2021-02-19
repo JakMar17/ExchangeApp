@@ -58,6 +58,8 @@ export class ClassAddComponent implements OnInit {
   public blacklistAddEmailInput: string = null;
   public blacklistAddPersonalNumberInput: string = null;
 
+  public showAddFromFileModal: boolean = false;
+
   public errorMessage: string = null;
 
   constructor(
@@ -206,14 +208,14 @@ export class ClassAddComponent implements OnInit {
     this.errorMessage = null;
     this.course.accessLevel = this.selectedSecurityLevel.key;
 
-    if (this.course.title == null || this.course.title.length == 0)
+    if (this.course.title == null || this.course.title.length === 0)
       this.errorMessage = 'Ime predmeta mora biti izpolnjeno';
     else if (this.course.initialCoins == null)
       this.errorMessage = 'Začetno stanje žetonov mora biti izpolnjeno';
     else if (
-      this.course.accessLevel == 'PASSWORD' &&
+      this.course.accessLevel === 'PASSWORD' &&
       (this.course.accessPassword == null ||
-        this.course.accessPassword.length == 0)
+        this.course.accessPassword.length === 0)
     )
       this.errorMessage = 'Geslo mora biti izpolnjeno';
 
@@ -236,6 +238,15 @@ export class ClassAddComponent implements OnInit {
         this.errorMessage = err.error.message;
       }
     );
+  }
+
+  public onWhitelistModalClose(data: User[] | null): void {
+    if (data != null) {
+      if (this.course.studentsWhitelisted == null)
+        this.course.studentsWhitelisted = [];
+      data.forEach((e) => this.course.studentsWhitelisted.push(e));
+    }
+    this.showAddFromFileModal = false;
   }
 }
 

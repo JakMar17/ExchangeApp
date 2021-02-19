@@ -4,7 +4,7 @@
       <p class="menu-label">Nadzorna plošča</p>
       <ul class="menu-list">
         <li>
-          <a class="is-active"
+          <a (click)="goToDashboard()"
             ><span class="icon"><i class="ri-dashboard-line"></i></span
             >Pregled</a
           >
@@ -14,7 +14,10 @@
       <p *ngIf="user?.myCourses" class="menu-label">Moji predmeti</p>
       <ul *ngIf="user?.myCourses" class="menu-list">
         <li *ngFor="let element of user.myCourses">
-          <a>{{ element.title }}</a>
+          <a (click)="onCourseButtonPressed(element)">
+            <span class="icon"><i class="ri-apps-line"></i></span>
+            <span>{{ element.title }}</span></a
+          >
         </li>
       </ul>
       <p *ngIf="showClassManagmentFields" class="menu-label">
@@ -28,7 +31,7 @@
           >
         </li>
       </ul>
-      <p class="menu-label">Uporabniške nastavitve</p>
+      <!-- <p class="menu-label">Uporabniške nastavitve</p>
       <ul class="menu-list">
         <li>
           <a
@@ -48,7 +51,7 @@
             >Nastavitve</a
           >
         </li>
-      </ul>
+      </ul> -->
     </aside>
   </div>
 </div>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Course } from 'src/app/models/class-model';
 import { User } from 'src/app/models/user-model';
 import { AccessService } from 'src/app/services/access-service/access.service';
 import { NavigationGlobalService } from 'src/app/services/navigation-global/navigation-global.service';
@@ -33,6 +34,14 @@ export class SidemenuComponent implements OnInit {
    */
   public onAddNewClassButtonClick(): void {
     this.router.navigate(['/course/add']);
+  }
+
+  public onCourseButtonPressed(course: Course): void {
+    this.router.navigate(['/course/' + course.courseId]);
+  }
+
+  public goToDashboard(): void {
+    this.router.navigate(['/dashboard']);
   }
 
   private setAccesFields(): void {

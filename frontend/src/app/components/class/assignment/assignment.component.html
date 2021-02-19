@@ -32,6 +32,17 @@
       <span *ngIf="assignment.archived">[ARHIVIRANO]</span>
     </h1>
   </div>
+  <div
+    *ngIf="this.assignment.classroomUrl != null"
+    class="column is-narrow buttons"
+  >
+    <button
+      (click)="onAssignmentTitlePressed()"
+      class="button is-info is-outlined is-small"
+    >
+      <span class="icon"><i class="ri-external-link-line"></i></span>
+    </button>
+  </div>
 </div>
 
 <p class="subtitle is-5">{{ assignment.description }}</p>

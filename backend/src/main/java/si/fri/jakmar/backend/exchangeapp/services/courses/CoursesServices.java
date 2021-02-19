@@ -18,6 +18,7 @@ import si.fri.jakmar.backend.exchangeapp.services.users.UserAccessServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserServices;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -189,16 +190,19 @@ public class CoursesServices {
                 courseDto.getStudentsBlacklisted() != null
                         ? courseDto.getStudentsBlacklisted().stream()
                         .map(e -> getUserEntityWithoutExceptions(e.getPersonalNumber(), e.getEmail()))
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList())
                         : null,
                 courseDto.getStudentsWhitelisted() != null
                         ? courseDto.getStudentsWhitelisted().stream()
                         .map(e -> getUserEntityWithoutExceptions(e.getPersonalNumber(), e.getEmail()))
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList())
                         : null,
                 courseDto.getGuardians() != null
                         ? courseDto.getGuardians().stream()
                         .map(e -> getUserEntityWithoutExceptions(e.getPersonalNumber(), e.getEmail()))
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList())
                         : null,
                 false
@@ -230,7 +234,7 @@ public class CoursesServices {
         try {
             return userServices.getUserByEmailOrPersonalNumber(personalNumber, email);
         } catch (DataNotFoundException dataNotFoundException) {
-            dataNotFoundException.printStackTrace();
+            //dataNotFoundException.printStackTrace();
         }
         return null;
     }

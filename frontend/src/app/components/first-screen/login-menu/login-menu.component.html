@@ -4,25 +4,36 @@
   </div>
 </div>
 <div class="notification is-danger" *ngIf="userLoginError">
-  {{userLoginError}}
+  {{ userLoginError }}
 </div>
 <div class="field">
   <p class="control has-icons-left has-icons-right">
-    <input class="input" type="email" placeholder="Email" [(ngModel)]="email"/>
+    <input class="input" type="email" placeholder="Email" [(ngModel)]="email" />
     <span class="icon is-small is-left">
-        <i class="ri-mail-line"></i>
+      <i class="ri-mail-line"></i>
     </span>
   </p>
 </div>
 <div class="field">
   <p class="control has-icons-left">
-    <input class="input" type="password" placeholder="Password" [(ngModel)]="password" />
+    <input
+      class="input"
+      type="password"
+      placeholder="Password"
+      [(ngModel)]="password"
+    />
     <span class="icon is-small is-left">
-        <i class="ri-key-line"></i>
+      <i class="ri-key-line"></i>
     </span>
   </p>
 </div>
-<button class="button is-success" style="margin-right: 2vw;" (click)="onLoginButtonPressed()">Prijava</button>
+<button
+  class="button is-success"
+  style="margin-right: 2vw"
+  (click)="onLoginButtonPressed()"
+>
+  Prijava
+</button>
 <button class="button is-danger is-outlined">Pozabljeno geslo</button>
 
 <div class="columns" style="margin-top: 3vh">
@@ -31,15 +42,25 @@
   </div>
 </div>
 <div class="opomba">
-  <div class="notification is-info column" style="margin-bottom: 2vh">
+  <!-- <div class="notification is-info column" style="margin-bottom: 2vh">
     V kolikor nimate dostopa do študentskega emaila @student.uni-lj.si ali
     @fri.uni-lj.si, izberite ostali. V drugačnem primeru je registracija
     onemogočena.
+  </div> -->
+  <div class="notification is-danger is-fullwidth">
+    <p>
+      Registracija brez študentksega ali pedagoškega računa trenutno ni mogoča.
+      V kolikor nimate dostopa do navedenih epoštnih naslovov se obrnite na
+      administratorja sistema.
+    </p>
   </div>
 </div>
 <div class="columns has-text-centered">
   <div class="column">
-    <button class="button" (click)="onRegisterButtonClick(loginPanelEnum.REGISTER_PROF)">
+    <button
+      class="button"
+      (click)="onRegisterButtonClick(loginPanelEnum.REGISTER_PROF)"
+    >
       <span class="icon">
         <i class="ri-briefcase-2-line"></i>
       </span>
@@ -47,19 +68,22 @@
     </button>
   </div>
   <div class="column">
-    <button class="button" (click)="onRegisterButtonClick(loginPanelEnum.REGISTER_STUDENT)">
+    <button
+      class="button"
+      (click)="onRegisterButtonClick(loginPanelEnum.REGISTER_STUDENT)"
+    >
       <span class="icon">
         <i class="ri-artboard-line"></i>
       </span>
       <span>Študent</span>
     </button>
   </div>
-  <div class="column">
+  <!-- <div class="column">
     <button class="button" (click)="onRegisterButtonClick(loginPanelEnum.REGISTER_OTHER)">
       <span class="icon">
         <i class="ri-psychotherapy-line"></i>
       </span>
       <span>Ostali</span>
     </button>
-  </div>
+  </div> -->
 </div>

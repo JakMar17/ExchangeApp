@@ -13,4 +13,9 @@ public interface NotificationRepository extends CrudRepository<NotificationEntit
 
     @Query("select n from NotificationEntity n where n.course is null and n.deleted = false ")
     List<NotificationEntity> getDashboardNotifications();
+
+    default NotificationEntity markAsDeleted(NotificationEntity notificationEntity) {
+        notificationEntity.setDeleted(true);
+        return save(notificationEntity);
+    }
 }

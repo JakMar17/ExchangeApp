@@ -71,6 +71,7 @@ public class CourseEntity {
     private List<AssignmentEntity> assignments;
 
     @OneToMany(mappedBy = "course")
+    @Where(clause = "notification_deleted = false")
     private List<NotificationEntity> notifications;
 
     public CourseEntity() {

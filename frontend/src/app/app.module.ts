@@ -32,6 +32,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { FilterPipe } from './pipes/filter-pipe/filter.pipe';
 import { SubmissionAddComponent } from './components/assignment/assignment-detailed/submission-add/submission-add.component';
 import { SubmissionDetailedModalComponent } from './components/submissions/submission-detailed-modal/submission-detailed-modal.component';
+import { WhitelistFileModalComponent } from './components/class/class-add/whitelist-file-modal/whitelist-file-modal.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { SubmissionDetailedModalComponent } from './components/submissions/submi
     FilterPipe,
     SubmissionAddComponent,
     SubmissionDetailedModalComponent,
+    WhitelistFileModalComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HighlightModule, HttpClientModule],
   providers: [

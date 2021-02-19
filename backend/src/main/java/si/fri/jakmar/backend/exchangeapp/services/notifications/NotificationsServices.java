@@ -109,14 +109,14 @@ public class NotificationsServices {
         if(!userAccessServices.userCanEditCourse(user, course))
             throw new AccessForbiddenException("Uporabnik nima pravic za izvedbo operacije");
 
-        notificationRepository.delete(notification);
+        notificationRepository.markAsDeleted(notification);
     }
 
     private void deleteNotificationForDashboard(NotificationEntity notification, UserEntity user) throws AccessForbiddenException {
         if(!userAccessServices.userIsAdmin(user))
             throw new AccessForbiddenException("Uporabnik nima pravic za izvedbo operacije");
 
-        notificationRepository.delete(notification);
+        notificationRepository.markAsDeleted(notification);
     }
 
 }

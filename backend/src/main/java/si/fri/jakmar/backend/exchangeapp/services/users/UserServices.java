@@ -3,10 +3,15 @@ package si.fri.jakmar.backend.exchangeapp.services.users;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import si.fri.jakmar.backend.exchangeapp.containers.SuccessErrorContainer;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
+import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class UserServices {
@@ -78,5 +83,20 @@ public class UserServices {
         coins -= usersPurchaseInCourse.mapToInt(e -> e.getSubmissionBought().getAssignment().getCoinsPrice()).sum();
 
         return coins;
+    }
+
+    public SuccessErrorContainer<List<UserEntity>, List<DataNotFoundException>> parseListOfUsersDto(List<UserDTO> userDTOS) {
+        List<UserEntity> users = new ArrayList<>();
+        List<DataNotFoundException> exceptions = new ArrayList<>();
+
+        for(var userDto: userDTOS) {
+            var user = userRepository.findUsersByEmailOrPersonalNumber(userDto.getEmail(), userDto.getPersonalNumber());
+            if(user.isEmpty())
+                exceptions.add(new DataNotFoundException(String.format("Uporabnik ne obstaja: %s, %s", userDto.getEmail(), userDto.getPersonalNumber())));
+            else
+                users.add(user.get());
+        }
+
+        return new SuccessErrorContainer<>(users, exceptions);
     }
 }

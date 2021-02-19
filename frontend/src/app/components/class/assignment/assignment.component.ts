@@ -124,4 +124,9 @@ export class AssignmentComponent implements OnInit {
         this.assignment.assignmentId,
     ]);
   }
+
+  public onAssignmentTitlePressed(): void {
+    if (this.assignment.classroomUrl != null)
+      window.open(this.assignment.classroomUrl, '_blank');
+  }
 }
