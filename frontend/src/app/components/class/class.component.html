@@ -16,16 +16,23 @@
             </button>
           </div>
           <div class="column">
-            <h1
-              class="title is-2"
-              [ngClass]="{ 'is-clickable is-link': course.classroomURL != null }"
-              (click)="onCourseTitlePressed()"
-            >
+            <h1 class="title is-2">
               {{ course?.title }}
             </h1>
             <p class="subtitle is-6">
               Trenutno stanje žetonov: {{ course?.usersCoins }}
             </p>
+          </div>
+          <div
+            *ngIf="this.course.classroomURL != null"
+            class="column is-narrow buttons"
+          >
+            <button
+              (click)="onCourseTitlePressed()"
+              class="button is-info is-outlined is-small"
+            >
+              <span class="icon"><i class="ri-external-link-line"></i></span>
+            </button>
           </div>
         </div>
         <h2 class="subtitle is-4">
