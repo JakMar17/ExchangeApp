@@ -32,7 +32,10 @@ jobs:
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       - name: docker backend build
         run: |
-          docker build ./backend -t jakmar17/exchangeapp-backend:0.0.1
+          docker build ./backend -t docker.pkg.github.com/jakmar17/exchangeapp-diploma/exchangeapp-backend:0.0.1
+          # jakmar17/exchangeapp-backend:0.0.1
       - name: docker push
         run: |
-          docker push jakmar17/exchangeapp-backend:0.0.1
+          docker push docker.pkg.github.com/jakmar17/exchangeapp-diploma/exchangeapp-backend:0.0.1
+          
+          # docker push jakmar17/exchangeapp-backend:0.0.1
