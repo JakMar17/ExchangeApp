@@ -3,7 +3,7 @@ COPY pom.xml /tmp/
 COPY src /tmp/src/
 
 WORKDIR /tmp/
-RUN mvn package
+RUN mvn package -Dmaven.test.skip=true
 
 FROM openjdk:15.0.1-oraclelinux7
 EXPOSE 8080
