@@ -24,6 +24,15 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - name: docker login
+        env: 
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       - name: docker backend build
         run: |
           docker build ./backend -t jakmar17/exchangeapp-backend:0.0.1
+      - name: docker push
+        run: |
+          docker push jakmar17/exchangeapp-backend:0.0.1
