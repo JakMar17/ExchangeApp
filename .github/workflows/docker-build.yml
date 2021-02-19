@@ -26,4 +26,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: docker backend build
         run: |
-          docker build ./backend -t jakmar17/ExchangeApp-backend:0.0.1
+          docker build ./backend -t jakmar17/exchangeapp-backend:0.0.1
