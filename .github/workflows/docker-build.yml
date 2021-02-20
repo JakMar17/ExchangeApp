@@ -28,11 +28,16 @@ jobs:
         env: 
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          PERSONAL_ACCESS_CODE: ${{ secrets.PERSONAL_ACCESS_CODE }}
         run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          # docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          docker login docker.pkg.github.com -u jakmar17 -p $PERSONAL_ACCESS_CODE
       - name: docker backend build
         run: |
-          docker build ./backend -t jakmar17/exchangeapp-backend:0.0.1
+          docker build ./backend -t docker.pkg.github.com/jakmar17/exchangeapp-diploma/exchangeapp-backend:0.0.1
+          # jakmar17/exchangeapp-backend:0.0.1
       - name: docker push
         run: |
-          docker push jakmar17/exchangeapp-backend:0.0.1
+          docker push docker.pkg.github.com/jakmar17/exchangeapp-diploma/exchangeapp-backend:0.0.1
+          
+          # docker push jakmar17/exchangeapp-backend:0.0.1
