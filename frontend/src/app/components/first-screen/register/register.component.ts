@@ -98,7 +98,7 @@ export class RegisterComponent implements OnInit {
   private checkInputedData(): boolean {
     this.errorMessage = null;
     if (this.nameInput.length === 0)
-      this.errorMessage = 'Ime mora biti izpoljeno';
+      this.errorMessage = 'Ime mora biti izpolnjeno';
     else if (this.surnameInput.length === 0)
       this.errorMessage = 'Priimek mora biti izpolnjen';
     else if (this.emailWithoutDomainInput.length === 0)

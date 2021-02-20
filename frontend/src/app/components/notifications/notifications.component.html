@@ -3,6 +3,7 @@
 <div *ngIf="notifications != null" class="columns is-vcentered">
   <div *ngIf="hasRightToEdit" class="column is-narrow">
     <button
+      id="button-notification-add"
       (click)="openNewNotificationDialog()"
       class="button is-small is-success is-outlined has-icons-left"
     >
