@@ -4,6 +4,7 @@ FROM node:alpine AS my-app-build
 WORKDIR /app
 COPY . .
 RUN npm install -g @angular/cli
+RUN npm install
 RUN ng build --prod
 
 # stage 2
