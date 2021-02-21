@@ -1,6 +1,6 @@
 # stage 1
 
-FROM node:alpine AS my-app-build
+FROM node:latest AS my-app-build
 WORKDIR /app
 COPY . .
 RUN npm install -g @angular/cli
