@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import si.fri.jakmar.backend.exchangeapp.storage.FileStorageService;
 
 import javax.annotation.Resource;
+import java.util.Scanner;
 
 @SpringBootApplication
 public class ExchangeAppApplication implements CommandLineRunner {

@@ -3,6 +3,7 @@ package si.fri.jakmar.backend.exchangeapp.api.users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.LoginUserDTO;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.RegisterUserDTO;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
@@ -10,8 +11,10 @@ import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataInvalidException
 import si.fri.jakmar.backend.exchangeapp.services.users.LoginServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.RegisterServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.exceptions.UserDoesNotExistsException;
-import si.fri.jakmar.backend.exchangeapp.services.users.exceptions.UserExistsException;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @RestController
@@ -28,7 +31,7 @@ public class LoginRegisterApi {
     private LoginServices loginServices;
 
     @PostMapping("register")
-    public ResponseEntity<Object> registerNewUser(@RequestBody RegisterUserDTO user) throws UserExistsException {
+    public ResponseEntity<Object> registerNewUser(@RequestBody RegisterUserDTO user) throws Exception {
         boolean ok = registerServices.registerNewUser(user);
         return ResponseEntity.ok(ok);
     }

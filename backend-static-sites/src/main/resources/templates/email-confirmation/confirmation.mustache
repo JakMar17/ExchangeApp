@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Potrditev registracije</title>
+    <link rel="stylesheet" href="https://unpkg.com/bulma-fluent@0.4.3/css/bulma.min.css">
+    <script>
+        function confirmRegistration() {
+            const cid = document.getElementById("confirmationId").value;
+            alert("Povezava je ok: " + cid);
+        }
+    </script>
+</head>
+<body>
+<div style="height: 100%">
+    <div class="box is-vcentered" style="margin: 5vh">
+        <div class="is-fullwidth is-centered">
+            <h1 class="title has-text-centered is-2">Potrditev registracije</h1>
+            <p class="has-text-centered">S klikom na spodnji gumb potrdite vnešen epoštni naslov {{email}} in zaključite
+                z registracijo:</p>
+            <div class="columns" style="margin: 2vh">
+                <div class="column"></div>
+                <div class="column">
+                    <button onclick="confirmRegistration()" class="button is-fullwidth is-outlined">Potrjujem registracijo</button>
+                </div>
+                <div class="column"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="confirmationId" value="{{confirmationId}}">
+</body>
+</html>

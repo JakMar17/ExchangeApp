@@ -22,7 +22,7 @@ public class RegisterServices {
      * @return true if user has been registered in system
      * @throws UserExistsException user with given data already exists
      */
-    public Boolean registerNewUser(RegisterUserDTO user) throws UserExistsException {
+    public Boolean registerNewUser(RegisterUserDTO user) throws Exception {
         if(userRepository.findUsersByEmail(user.getEmail()).size() != 0)
             throw new UserExistsException("Uporabnik s tem epoštnim naslovom že obstaja");
 
@@ -38,9 +38,11 @@ public class RegisterServices {
      * @param registerUserDTO DTO to cast
      * @return casted UserEntity
      */
-    private UserEntity registerUserDTOToUserEntity(RegisterUserDTO registerUserDTO) {
-        int userType = 4;
+    private UserEntity registerUserDTOToUserEntity(RegisterUserDTO registerUserDTO) throws Exception {
+        if(registerUserDTO.getName() == null || registerUserDTO.getSurname() == null || registerUserDTO.getEmail() == null)
+            throw new Exception("Niso izpoljnjeni vsi potrebni podatki");
 
+        int userType = 4;
         if(registerUserDTO.getEmail().contains("@student.uni-lj.si"))
             userType = 3;
         else if(registerUserDTO.getEmail().contains("@fri1.uni-lj.si"))
