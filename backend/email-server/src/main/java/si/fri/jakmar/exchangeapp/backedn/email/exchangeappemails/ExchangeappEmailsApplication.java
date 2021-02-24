@@ -12,7 +12,7 @@ import java.util.Properties;
 import java.util.Scanner;
 
 @SpringBootApplication
-public class ExchangeappEmailsApplication implements CommandLineRunner {
+public class ExchangeappEmailsApplication {
 
     @Autowired
     Sender sender;
@@ -32,14 +32,4 @@ public class ExchangeappEmailsApplication implements CommandLineRunner {
         application.run(args);
     }
 
-    @Override
-    public void run(String... args) {
-        System.out.println("Sending Email...");
-        try {
-            sender.sendEmail("jakob.marusic17@gmail.com");
-        } catch (MessagingException | IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Done");
-    }
 }
