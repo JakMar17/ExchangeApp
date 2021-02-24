@@ -6,8 +6,14 @@
     <link rel="stylesheet" href="https://unpkg.com/bulma-fluent@0.4.3/css/bulma.min.css">
     <script>
         function confirmRegistration() {
-            const cid = document.getElementById("confirmationId").value;
-            alert("Povezava je ok: " + cid);
+            fetch("{{confirmation_api_link_base}}" + "?confirmationId=" + "{{confirmation_id}}", {
+                method: "POST",
+            }).then(() => {
+                alert("Registracija je bila uspešna");
+                window.location.href = "{{frontend_link}}";
+            }).catch((error) => {
+                alert("Prišlo je do napake: " + error.error())
+            });
         }
     </script>
 </head>
@@ -21,7 +27,9 @@
             <div class="columns" style="margin: 2vh">
                 <div class="column"></div>
                 <div class="column">
-                    <button onclick="confirmRegistration()" class="button is-fullwidth is-outlined">Potrjujem registracijo</button>
+                    <button onclick="confirmRegistration()" class="button is-fullwidth is-outlined">Potrjujem
+                        registracijo
+                    </button>
                 </div>
                 <div class="column"></div>
             </div>
@@ -29,6 +37,5 @@
     </div>
 </div>
 
-<input type="hidden" id="confirmationId" value="{{confirmationId}}">
 </body>
 </html>
