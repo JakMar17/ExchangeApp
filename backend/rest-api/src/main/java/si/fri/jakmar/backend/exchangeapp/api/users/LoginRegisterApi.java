@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.LoginUserDTO;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.RegisterUserDTO;
+import si.fri.jakmar.backend.exchangeapp.exceptions.MailException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.RequestInvalidException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataInvalidException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
 import si.fri.jakmar.backend.exchangeapp.services.users.LoginServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.RegisterServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.exceptions.UserDoesNotExistsException;
@@ -42,6 +45,21 @@ public class LoginRegisterApi {
         return ResponseEntity.ok(data);
     }
 
-    //reset password
-    //confirm mail
+    @PostMapping("confirm-registration")
+    public ResponseEntity<Object> confirmRegistration(@RequestParam String confirmationId) throws DataNotFoundException {
+        registerServices.confirmEmail(confirmationId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("reset")
+    public ResponseEntity<Object> resetPasswordRequest(@RequestHeader String email) throws DataNotFoundException, IOException, MailException {
+        registerServices.createPasswordResetRequest(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("update-password")
+    public ResponseEntity<Object> updatePassword(@RequestHeader String email, @RequestHeader String resetId, @RequestHeader String newPassword) throws RequestInvalidException, DataNotFoundException {
+        registerServices.updatePasswordForUser(email, resetId, newPassword);
+        return ResponseEntity.ok().build();
+    }
 }

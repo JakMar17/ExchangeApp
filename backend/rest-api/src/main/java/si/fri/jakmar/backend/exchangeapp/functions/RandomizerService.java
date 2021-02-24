@@ -13,7 +13,7 @@ public abstract class RandomizerService {
 
     public static String createRandomStringWithLength(Stream<String> notEqual, int length) {
         var string = random(length);
-        return notEqual.filter(e -> e.equals(string)).findAny().isEmpty()
+        return notEqual.filter(string::equals).findAny().isEmpty()
                 ? string
                 : createRandomStringWithLength(notEqual, length);
     }

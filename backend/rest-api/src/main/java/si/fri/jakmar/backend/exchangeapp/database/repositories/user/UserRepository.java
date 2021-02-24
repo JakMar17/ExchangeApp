@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.database.repositories;
+package si.fri.jakmar.backend.exchangeapp.database.repositories.user;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -24,4 +24,6 @@ public interface UserRepository extends CrudRepository<UserEntity, Integer> {
     @Query("SELECT u FROM UserEntity  u WHERE u.email = :email AND u.password = :password")
     List<UserEntity> getUserByEmailAndPassword(String email, String password);
 
+    @Query("SELECT u FROM UserEntity u WHERE u.confirmationString = :confirmationString")
+    UserEntity getUserByConfirmationString(String confirmationString);
 }

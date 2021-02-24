@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
+import si.fri.jakmar.backend.exchangeapp.exceptions.RequestInvalidException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
@@ -46,6 +47,12 @@ public class ExceptionCatcher {
     public ResponseEntity<ExceptionWrapper> handleOverMaximumNumberOfSubmissionsException(Exception exception) {
         logger.warning(exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ExceptionWrapper(exception.getMessage()));
+    }
+
+    @ExceptionHandler(value = {RequestInvalidException.class})
+    public ResponseEntity<ExceptionWrapper> handleRequestInvalidException(Exception exception) {
+        logger.warning(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionWrapper(exception.getMessage()));
     }
 
     @ExceptionHandler(value = {Exception.class})

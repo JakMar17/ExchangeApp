@@ -2,7 +2,7 @@ package si.fri.jakmar.backend.exchangeapp.services.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
+import si.fri.jakmar.backend.exchangeapp.database.repositories.user.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataInvalidException;

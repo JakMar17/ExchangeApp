@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseRepository;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.UserRepository;
+import si.fri.jakmar.backend.exchangeapp.database.repositories.user.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedException;
 

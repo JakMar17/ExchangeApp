@@ -34,6 +34,8 @@ public class UserEntity {
     @Column(name = "user_deleted")
     @Type(type = "org.hibernate.type.NumericBooleanType")
     private Boolean deleted = false;
+    @Column(name = "confirmation_string")
+    private String confirmationString;
 
     @ManyToOne
     @JoinColumn(name = "user_type_id")
@@ -93,6 +95,17 @@ public class UserEntity {
         this.personalNumber = personalNumber;
         this.registrationStatus = registrationStatus;
         this.userType = userType;
+    }
+
+    public UserEntity(String email, String name, String surname, String password, String personalNumber, String confirmationString, UserTypeEntity userType, UserRegistrationStage registrationStatus) {
+        this.email = email;
+        this.name = name;
+        this.surname = surname;
+        this.password = password;
+        this.personalNumber = personalNumber;
+        this.confirmationString = confirmationString;
+        this.userType = userType;
+        this.registrationStatus = registrationStatus;
     }
 
     @Override
@@ -250,5 +263,13 @@ public class UserEntity {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getConfirmationString() {
+        return confirmationString;
+    }
+
+    public void setConfirmationString(String confirmationString) {
+        this.confirmationString = confirmationString;
     }
 }
