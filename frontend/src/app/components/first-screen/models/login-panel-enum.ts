@@ -1,5 +1,6 @@
 export enum LoginPanelEnum {
     LOGIN,
+    PASSWORD_RESET,
     REGISTER_STUDENT,
     REGISTER_PROF,
     REGISTER_OTHER

@@ -12,8 +12,22 @@
       </div>
       <div class="divider is-vertical is-right"></div>
       <div class="column">
-        <app-login-menu *ngIf="loginPanel == loginPanelEnum.LOGIN" (registerButtonEvent)="onRegisterButtonClick($event)"></app-login-menu>
-        <app-register *ngIf="loginPanel != loginPanelEnum.LOGIN" (backButtonEvent)="onRegisterButtonClick($event)" [typeOfRegistration]="loginPanel"></app-register>
+        <app-login-menu
+          *ngIf="loginPanel == loginPanelEnum.LOGIN"
+          (registerButtonEvent)="onRegisterButtonClick($event)"
+        ></app-login-menu>
+        <app-password-reset
+          (backButtonEvent)="onRegisterButtonClick($event)"
+          *ngIf="loginPanel == loginPanelEnum.PASSWORD_RESET"
+        ></app-password-reset>
+        <app-register
+          *ngIf="
+            loginPanel != loginPanelEnum.LOGIN &&
+            loginPanel != loginPanelEnum.PASSWORD_RESET
+          "
+          (backButtonEvent)="onRegisterButtonClick($event)"
+          [typeOfRegistration]="loginPanel"
+        ></app-register>
       </div>
     </div>
   </div>

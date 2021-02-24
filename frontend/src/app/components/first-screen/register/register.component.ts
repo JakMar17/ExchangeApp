@@ -95,7 +95,10 @@ export class RegisterComponent implements OnInit {
         this.registrationInProgress = false;
         this.onBackButtonClick();
       },
-      (err) => (this.errorMessage = err.error.message)
+      (err) => {
+        this.errorMessage = err.error.message;
+        this.registrationInProgress = false;
+      }
     );
   }
 
