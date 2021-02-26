@@ -29,6 +29,8 @@ public class RegisterServices {
     private UserRepository userRepository;
     @Autowired
     private UserPasswordResetRepository userPasswordResetRepository;
+    @Autowired
+    private RequestEmailCreator requestEmailCreator;
 
     /**
      * takes register data, checks them and registers user
@@ -45,7 +47,7 @@ public class RegisterServices {
             throw new UserExistsException("Študent s to vpisno številko že obstaja");
 
         var userEntity = this.registerUserDTOToUserEntity(user);
-        RequestEmailCreator.sendEmailConfirmation(userEntity.getEmail(), userEntity.getConfirmationString());
+        requestEmailCreator.sendEmailConfirmation(userEntity.getEmail(), userEntity.getConfirmationString());
         userRepository.save(userEntity);
 
         return true;
@@ -71,7 +73,7 @@ public class RegisterServices {
                 64
         );
         var resetRequest = new UserPasswordResetEntity(requestId, user);
-        RequestEmailCreator.sendEmailPasswordReset(email, requestId);
+        requestEmailCreator.sendEmailPasswordReset(email, requestId);
         userPasswordResetRepository.save(resetRequest);
     }
 

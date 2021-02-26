@@ -19,10 +19,13 @@ public class PasswordResetService {
     @Autowired
     Sender sender;
 
+    @Autowired
+    UrlConstants urlConstants;
+
     public void generateAndSendEmail(String email, String resetId) throws MessagingException {
         String emailBody = passwordResetTemplateGenerator.createTemplate(
                 email,
-                UrlConstants.PASSWORD_RESET_URL_BASE.replace("{{id}}", resetId).replace("{{email}}", email)
+                urlConstants.PASSWORD_RESET_URL_BASE.replace("{{id}}", resetId).replace("{{email}}", email)
         );
         sender.sendEmailTemplate(email, subject, emailBody);
     }

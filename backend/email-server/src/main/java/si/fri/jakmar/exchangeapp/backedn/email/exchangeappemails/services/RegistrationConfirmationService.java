@@ -19,8 +19,11 @@ public class RegistrationConfirmationService {
     @Autowired
     Sender sender;
 
+    @Autowired
+    UrlConstants urlConstants;
+
     public void generateAndSendEmail(String email, String registrationId) throws MessagingException {
-        String link = UrlConstants.EMAIL_CONFIRMATION_URL_BASE.replace("{{email}}", email).replace("{{id}}", registrationId);
+        String link = urlConstants.EMAIL_CONFIRMATION_URL_BASE.replace("{{email}}", email).replace("{{id}}", registrationId);
         String emailBody = registrationConfirmationTemplateGenerator.createTemplate(email, link);
         sender.sendEmailTemplate(email, subject, emailBody);
     }
