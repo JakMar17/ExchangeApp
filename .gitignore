@@ -11,3 +11,6 @@ vscode/*
 history/
 
 uploads/
+logs/
+
+docker-compose.yml
