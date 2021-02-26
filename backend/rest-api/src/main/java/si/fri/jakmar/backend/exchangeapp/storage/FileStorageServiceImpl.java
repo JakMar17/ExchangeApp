@@ -1,6 +1,7 @@
 package si.fri.jakmar.backend.exchangeapp.storage;
 
 import org.hibernate.exception.DataException;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -18,7 +19,13 @@ import java.util.stream.Stream;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
-    private final Path root = Paths.get("Z:\\02-izobrazevanje\\02-faks\\diploma\\uploads");
+    private final Path root;
+
+    public FileStorageServiceImpl(Environment environment) {
+        String path = environment.getProperty("fileserver.path");
+        root = Paths.get(path);
+        System.out.println("PATH: " + path);
+    }
 
     @Override
     public void init() {
@@ -45,19 +52,19 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public void delete(String filename) {
-        File file = new File(root.toString() + "\\" + filename);
+        File file = new File(root.toString() + "/" + filename);
         file.delete();
     }
 
     @Override
     public File getFile(String filename) {
-        return new File(root.toString() + "\\" + filename);
+        return new File(root.toString() + "/" + filename);
     }
 
     @Override
     public InputStreamResource getInputStreamResourceOfFile(String filename) throws FileException {
         try {
-            return new InputStreamResource(new FileInputStream(root.toString() + "\\filename"));
+            return new InputStreamResource(new FileInputStream(root.toString() + "/" + filename));
         } catch (FileNotFoundException e) {
             throw new FileException(e.getMessage());
         }

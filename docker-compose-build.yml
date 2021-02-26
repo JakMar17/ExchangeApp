@@ -5,23 +5,28 @@ services:
     build: frontend
     ports:
     - "8000:80"
-    image: docker.pkg.github.com/jakmar17/exchangeapp-diploma/exchangeapp-frontend:0.0.1
 
   restapi:
     build: backend/rest-api
+    environment:
+      EMAIL_SERVER_BASE_URL: http://email/
     ports:
     - "8001:80"
-    image: docker.pkg.github.com/jakmar17/exchangeapp-diploma/exchangeapp-restapi:0.0.1
 
   static-sites:
     build: backend/static-sites
+    environment:
+      RESTAPI_URL: http://localhost:8001/
+      FRONTEND_URL: http://localhost:8000/
     ports:
     - "8002:80"
-    image: docker.pkg.github.com/jakmar17/exchangeapp-diploma/exchangeapp-staticsites:0.0.1
 
   email:
     build: backend/email-server
-    image: docker.pkg.github.com/jakmar17/exchangeapp-diploma/exchangeapp-email:0.0.1
+    environment:
+      EMAIL_USERNAME: jakob.marusic@outlook.com
+      EMAIL_PASSWORD: ozltmrmpzopebdkj
+      STATIC_SITES_BASE_URL: http://localhost:8002/
 
 #  db:
 #    image: mariadb
