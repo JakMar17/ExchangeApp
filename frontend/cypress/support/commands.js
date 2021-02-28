@@ -10,23 +10,23 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
+// Cypress.Commands.add('login', (email, password) => { ... })
 //
 //
 // -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
+// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
 //
 //
 // -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
+// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
 //
 //
 // -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('login', (email, password) => {
-  cy.visit("http://localhost:4200");
-  cy.get("input[placeholder=Email]").clear().type(email);
-  cy.get("input[placeholder=Password]").clear().type(password);
-  cy.get("button").contains("Prijava").click();
+  cy.visit('http://localhost:4200');
+  cy.get('input[placeholder=Email]').clear().type(email);
+  cy.get('input[placeholder=Password]').clear().type(password);
+  cy.get('button').contains('Prijava').click();
 });
