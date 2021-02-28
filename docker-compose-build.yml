@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  frontend:
+    build: frontend
+    ports:
+    - "8000:80"
+
+  restapi:
+    build: backend/rest-api
+    environment:
+      EMAIL_SERVER_BASE_URL: http://email/
+    ports:
+    - "8001:80"
+
+  static-sites:
+    build: backend/static-sites
+    environment:
+      RESTAPI_URL: http://localhost:8001/
+      FRONTEND_URL: http://localhost:8000/
+    ports:
+    - "8002:80"
+
+  email:
+    build: backend/email-server
+    environment:
+      EMAIL_USERNAME: jakob.marusic@outlook.com
+      EMAIL_PASSWORD: ozltmrmpzopebdkj
+      STATIC_SITES_BASE_URL: http://localhost:8002/
+
+#  db:
+#    image: mariadb
+#    volumes:
+#      - ./database-data:/var/lib/mysql
+#      - ./database-init-files:/docker-entrypoint-initdb.d
+#    restart: on-failure
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: MarelaGoriva

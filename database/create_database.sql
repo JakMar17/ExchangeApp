@@ -17,7 +17,7 @@ create table assignment
    assignment_classroom_url varchar(100),
    assignment_description text,
    start_date           timestamp not null default utc_timestamp,
-   end_date             timestamp,
+   end_date             timestamp null,
    max_submissions_total int,
    max_submissions_student int,
    coins_per_submission int not null,
@@ -195,6 +195,7 @@ create table user
    personal_number      char(8) not null,
    user_created         timestamp not null,
    user_deleted         int not null default 0,
+   confirmation_string    varchar(32)                           null,
    primary key (user_id)
 );
 
@@ -222,6 +223,20 @@ create table notification
 	notification_deleted int not null default 0,
 	constraint notification_pk
 		primary key (notification_id)
+);
+
+create table user_password_reset
+(
+    reset_id          int auto_increment
+        primary key,
+    user_id           int                               not null,
+    reset_key         varchar(64)                       not null,
+    reset_key_created timestamp default utc_timestamp() not null,
+    reset_key_used    int       default 0               not null,
+    constraint user_password_reset_reset_key_uindex
+        unique (reset_key),
+    constraint user_password_reset_user_id_fk
+        foreign key (user_id) references user (user_id)
 );
 
 alter table assignment add constraint FK_assignment_author foreign key (user_id)

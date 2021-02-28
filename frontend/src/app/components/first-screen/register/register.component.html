@@ -128,6 +128,6 @@
   [(ngModel)]="description"
   placeholder="Razlog za neuporabo univerzitetnega emaila (pomembno pri obravnavi vloge)"
 ></textarea>
-<button class="button is-primary" (click)="onRegisterButtonPressed()">
+<button class="button is-primary" (click)="onRegisterButtonPressed()" [ngClass]="{'is-loading': registrationInProgress}">
   Registracija
 </button>

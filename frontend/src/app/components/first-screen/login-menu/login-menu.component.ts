@@ -56,4 +56,8 @@ export class LoginMenuComponent implements OnInit {
       }
     );
   }
+
+  public onPasswordResetButtonClick(): void {
+    this.registerButtonEvent.emit(LoginPanelEnum.PASSWORD_RESET);
+  }
 }

@@ -26,6 +26,8 @@ export class RegisterComponent implements OnInit {
   public studentNumberInput: string = '';
   public description: string = '';
 
+  public registrationInProgress: boolean = false;
+
   constructor(private loginRegisterApi: LoginRegisterApiService) {}
 
   ngOnInit(): void {
@@ -84,14 +86,19 @@ export class RegisterComponent implements OnInit {
         this.studentNumberInput.length == 8 ? this.studentNumberInput : null,
     };
 
+    this.registrationInProgress = true;
     this.loginRegisterApi.register(registerModel).subscribe(
       (data) => {
         alert(
           'Registracija je bila uspešna, na vnešeni epoštni naslov je bil poslan potrditveni email'
         );
+        this.registrationInProgress = false;
         this.onBackButtonClick();
       },
-      (err) => (this.errorMessage = err.error.message)
+      (err) => {
+        this.errorMessage = err.error.message;
+        this.registrationInProgress = false;
+      }
     );
   }
 

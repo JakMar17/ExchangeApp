@@ -33,6 +33,7 @@ import { FilterPipe } from './pipes/filter-pipe/filter.pipe';
 import { SubmissionAddComponent } from './components/assignment/assignment-detailed/submission-add/submission-add.component';
 import { SubmissionDetailedModalComponent } from './components/submissions/submission-detailed-modal/submission-detailed-modal.component';
 import { WhitelistFileModalComponent } from './components/class/class-add/whitelist-file-modal/whitelist-file-modal.component';
+import { PasswordResetComponent } from './components/first-screen/password-reset/password-reset.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { WhitelistFileModalComponent } from './components/class/class-add/whitel
     SubmissionAddComponent,
     SubmissionDetailedModalComponent,
     WhitelistFileModalComponent,
+    PasswordResetComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HighlightModule, HttpClientModule],
   providers: [
