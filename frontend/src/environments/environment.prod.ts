@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  BASE_API_URL: 'http://marela.local:8001/',
+  BASE_API_URL: 'http://localhost:8001/',
 };
