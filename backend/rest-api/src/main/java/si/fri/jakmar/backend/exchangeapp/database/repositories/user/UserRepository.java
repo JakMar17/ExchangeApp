@@ -12,16 +12,16 @@ public interface UserRepository extends CrudRepository<UserEntity, Integer> {
     @Query("SELECT u FROM UserEntity u WHERE u.personalNumber = :personalNumber")
     List<UserEntity> findUsersByPersonalNumber(String personalNumber);
 
-    @Query("SELECT u FROM UserEntity u WHERE u.email = :email")
-    List<UserEntity> findUsersByEmail(String email);
+    @Query("SELECT u FROM UserEntity u WHERE u.username = :email")
+    Optional<UserEntity> findUsersByEmail(String email);
 
-    @Query("SELECT u FROM UserEntity u WHERE u.email = :email OR u.personalNumber = :personalNumber")
+    @Query("SELECT u FROM UserEntity u WHERE u.username = :email OR u.personalNumber = :personalNumber")
     Optional<UserEntity> findUsersByEmailOrPersonalNumber(String email, String personalNumber);
 
     @Query("SELECT u FROM UserEntity u WHERE u.userType.id = 2 ORDER BY u.userCreated DESC")
     List<UserEntity> getLastInsertedProfessor();
 
-    @Query("SELECT u FROM UserEntity  u WHERE u.email = :email AND u.password = :password")
+    @Query("SELECT u FROM UserEntity  u WHERE u.username = :email AND u.password = :password")
     List<UserEntity> getUserByEmailAndPassword(String email, String password);
 
     @Query("SELECT u FROM UserEntity u WHERE u.confirmationString = :confirmationString")

@@ -1,10 +1,12 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.users;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "user_type")
-public class UserTypeEntity {
+public class UserTypeEntity implements GrantedAuthority {
 
     @Id
     @Column(name = "user_type_id")
@@ -35,5 +37,10 @@ public class UserTypeEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String getAuthority() {
+        return description;
     }
 }

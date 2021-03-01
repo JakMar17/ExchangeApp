@@ -2,7 +2,6 @@ package si.fri.jakmar.backend.exchangeapp.services.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import si.fri.jakmar.backend.exchangeapp.constants.UrlConstants;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserPasswordResetEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserRegistrationStage;
@@ -18,8 +17,6 @@ import si.fri.jakmar.backend.exchangeapp.functions.RequestEmailCreator;
 import si.fri.jakmar.backend.exchangeapp.services.users.exceptions.UserExistsException;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.stream.StreamSupport;
 
 @Component
@@ -40,14 +37,14 @@ public class RegisterServices {
      * @throws UserExistsException user with given data already exists
      */
     public Boolean registerNewUser(RegisterUserDTO user) throws Exception {
-        if(userRepository.findUsersByEmail(user.getEmail()).size() != 0)
+        if(userRepository.findUsersByEmail(user.getEmail()).isPresent())
             throw new UserExistsException("Uporabnik s tem epoštnim naslovom že obstaja");
 
         if(user.getStudentNumber() != null && userRepository.findUsersByPersonalNumber(user.getStudentNumber()).size() != 0)
             throw new UserExistsException("Študent s to vpisno številko že obstaja");
 
         var userEntity = this.registerUserDTOToUserEntity(user);
-        requestEmailCreator.sendEmailConfirmation(userEntity.getEmail(), userEntity.getConfirmationString());
+        requestEmailCreator.sendEmailConfirmation(userEntity.getUsername(), userEntity.getConfirmationString());
         userRepository.save(userEntity);
 
         return true;
@@ -66,7 +63,7 @@ public class RegisterServices {
         var users = userRepository.findUsersByEmail(email);
         if(users.isEmpty())
             throw new DataNotFoundException("Uporabnik s podanim emailom ne obstaja");
-        var user = users.get(0);
+        var user = users.get();
         var requestId = RandomizerService.createRandomStringWithLength(
                 StreamSupport.stream(userPasswordResetRepository.findAll().spliterator(), false)
                     .map(UserPasswordResetEntity::getResetKey),
@@ -84,10 +81,10 @@ public class RegisterServices {
 
         var resetRequest = userPasswordResetRepository.getByResetKey(resetId).orElseThrow(() -> new RequestInvalidException("Zahteva za spremebo gela ne obstaja"));
         
-        if(!resetRequest.isActive() || !email.equals(resetRequest.getUser().getEmail()))
+        if(!resetRequest.isActive() || !email.equals(resetRequest.getUser().getUsername()))
             throw new RequestInvalidException("Napaka pri obdelavi zahteve");
 
-        var user = users.get(0);
+        var user = users.get();
         user.setPassword(newPassword);
         userRepository.save(user);
         resetRequest.setUsed(true);

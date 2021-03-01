@@ -21,14 +21,6 @@ public class ExchangeappEmailsApplication {
 
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(ExchangeappEmailsApplication.class);
-//        String emailUsername = args[0];
-//        String emailPassword = args[1];
-//
-//        Properties properties = new Properties();
-//        properties.put("spring.mail.username", emailUsername);
-//        properties.put("spring.mail.password", emailPassword);
-//        application.setDefaultProperties(properties);
-
         application.run(args);
     }
 

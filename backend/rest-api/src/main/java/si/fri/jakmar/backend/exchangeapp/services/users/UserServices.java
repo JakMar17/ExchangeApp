@@ -41,10 +41,10 @@ public class UserServices {
      */
     public UserEntity getUserByEmail(String email) throws DataNotFoundException {
         var users = userRepository.findUsersByEmail(email);
-        if(users == null || users.size() == 0)
+        if(users.isEmpty())
             throw new DataNotFoundException("Uporabnik s podanim epoštnim naslovom ne obstaja");
         else
-            return users.get(0);
+            return users.get();
     }
 
     /**

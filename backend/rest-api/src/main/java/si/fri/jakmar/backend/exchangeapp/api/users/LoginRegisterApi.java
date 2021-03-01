@@ -2,8 +2,8 @@ package si.fri.jakmar.backend.exchangeapp.api.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.LoginUserDTO;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.RegisterUserDTO;
 import si.fri.jakmar.backend.exchangeapp.exceptions.MailException;
@@ -16,8 +16,6 @@ import si.fri.jakmar.backend.exchangeapp.services.users.RegisterServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.exceptions.UserDoesNotExistsException;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 @RestController
@@ -25,7 +23,7 @@ import java.util.logging.Logger;
 @CrossOrigin("*")
 public class LoginRegisterApi {
 
-    private static final  Logger logger = Logger.getLogger(LoginRegisterApi.class.getSimpleName());
+    private static final Logger logger = Logger.getLogger(LoginRegisterApi.class.getSimpleName());
 
     @Autowired
     private RegisterServices registerServices;
@@ -33,8 +31,12 @@ public class LoginRegisterApi {
     @Autowired
     private LoginServices loginServices;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @PostMapping("register")
     public ResponseEntity<Object> registerNewUser(@RequestBody RegisterUserDTO user) throws Exception {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         boolean ok = registerServices.registerNewUser(user);
         return ResponseEntity.ok(ok);
     }

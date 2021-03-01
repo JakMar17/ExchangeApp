@@ -3,6 +3,8 @@ package si.fri.jakmar.backend.exchangeapp.database.entities.users;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.purchases.PurchaseEntity;
@@ -11,19 +13,21 @@ import si.fri.jakmar.backend.exchangeapp.database.entities.submissions.Submissio
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "user")
-public class UserEntity {
+public class UserEntity implements UserDetails {
 
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String email;
+    @Column(name = "email")
+    private String username;
     private String name;
     private String surname;
     private String password;
@@ -87,8 +91,8 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public UserEntity(String email, String name, String surname, String password, String personalNumber, UserRegistrationStage registrationStatus, UserTypeEntity userType) {
-        this.email = email;
+    public UserEntity(String username, String name, String surname, String password, String personalNumber, UserRegistrationStage registrationStatus, UserTypeEntity userType) {
+        this.username = username;
         this.name = name;
         this.surname = surname;
         this.password = password;
@@ -97,8 +101,8 @@ public class UserEntity {
         this.userType = userType;
     }
 
-    public UserEntity(String email, String name, String surname, String password, String personalNumber, String confirmationString, UserTypeEntity userType, UserRegistrationStage registrationStatus) {
-        this.email = email;
+    public UserEntity(String username, String name, String surname, String password, String personalNumber, String confirmationString, UserTypeEntity userType, UserRegistrationStage registrationStatus) {
+        this.username = username;
         this.name = name;
         this.surname = surname;
         this.password = password;
@@ -106,6 +110,31 @@ public class UserEntity {
         this.confirmationString = confirmationString;
         this.userType = userType;
         this.registrationStatus = registrationStatus;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return isEnabled();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isEnabled();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isEnabled();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return registrationStatus.getId() == 2 && !deleted;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(userType);
     }
 
     @Override
@@ -129,12 +158,12 @@ public class UserEntity {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getName() {

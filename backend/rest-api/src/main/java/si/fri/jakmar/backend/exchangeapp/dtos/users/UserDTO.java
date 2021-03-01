@@ -34,7 +34,7 @@ public class UserDTO {
 
     public static UserDTO castFromEntityWithoutCourses(UserEntity entity, boolean withUserType) {
         return new UserDTO(
-                entity.getEmail(),
+                entity.getUsername(),
                 entity.getName(),
                 entity.getSurname(),
                 entity.getPersonalNumber(),
@@ -47,7 +47,7 @@ public class UserDTO {
 
     public static UserDTO castFromEntity(UserEntity entity, boolean withUserType, boolean withCourses) {
         return new UserDTO(
-                entity.getEmail(),
+                entity.getUsername(),
                 entity.getName(),
                 entity.getSurname(),
                 entity.getPersonalNumber(),
