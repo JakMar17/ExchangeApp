@@ -2,7 +2,6 @@ package si.fri.jakmar.backend.exchangeapp.api.upload;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,14 +37,9 @@ public class FileApi {
 
 
     @PostMapping("/upload")
-    public ResponseEntity<AssignmentDTO> uploadFile(@RequestParam Integer assignmentId, @AuthenticationPrincipal UserEntity userEntity, @RequestParam List<MultipartFile> input, @RequestParam List<MultipartFile> output) throws AccessUnauthorizedException, DataNotFoundException, AccessForbiddenException, OverMaximumNumberOfSubmissions {
-        try {
-            var data = submissionService.saveSubmissions(assignmentId, userEntity.getPersonalNumber(), input, output);
-            return ResponseEntity.ok(data);
-        } catch (FileException exception) {
-            logger.warning(exception.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(assignmentsServices.getAssignmentWithSubmissions(userEntity.getPersonalNumber(), assignmentId));
-        }
+    public ResponseEntity<AssignmentDTO> uploadFile(@RequestParam Integer assignmentId, @AuthenticationPrincipal UserEntity userEntity, @RequestParam List<MultipartFile> input, @RequestParam List<MultipartFile> output) throws AccessUnauthorizedException, DataNotFoundException, AccessForbiddenException, OverMaximumNumberOfSubmissions, FileException {
+        var data = submissionService.saveSubmissions(assignmentId, userEntity.getPersonalNumber(), input, output);
+        return ResponseEntity.ok(data);
     }
 
     @GetMapping("/download-submission")

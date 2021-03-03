@@ -1,6 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Assignment } from 'src/app/models/assignment-model';
 import { SubmissionFilePair } from 'src/app/models/submission-model';
+import { AssignmentService } from 'src/app/services/assignment-service/assignment.service';
 import { SubmissionService } from 'src/app/services/submission-service/submission.service';
 
 @Component({
@@ -18,7 +20,10 @@ export class SubmissionAddComponent implements OnInit {
 
   public submissionButtonLoading: boolean = false;
 
-  constructor(private submissionService: SubmissionService) {}
+  constructor(
+    private submissionService: SubmissionService,
+    private assignmentService: AssignmentService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -67,11 +72,28 @@ export class SubmissionAddComponent implements OnInit {
     this.submissionButtonLoading = true;
     this.submissionService
       .uploadFiles(this.uploadQueue, this.assignment)
-      .subscribe((data) => {
-        this.assignment = data;
-        this.closeModal(this.assignment);
-        this.resetValues();
-      });
+      .subscribe(
+        (data) => {
+          this.assignment = data;
+          this.closeModal(this.assignment);
+          this.resetValues();
+        },
+        (error: HttpErrorResponse) => {
+          console.error(error);
+
+          if (error.status === 406) {
+            alert(error.error.message);
+
+            this.assignmentService
+              .getAssignmentWithSubmissions(this.assignment)
+              .subscribe((data) => {
+                this.assignment = data;
+                this.closeModal(this.assignment);
+                this.resetValues();
+              });
+          }
+        }
+      );
   }
 
   public onTableRowDeletePressed(element: SubmissionFilePair): void {

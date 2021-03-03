@@ -92,9 +92,9 @@ export class AssignmentDetailedComponent implements OnInit {
         this.showAddSubmissionButton = true;
       else if (
         (this.assignment.maxSubmissionsTotal == null ||
-          this.assignment.noOfSubmissionsTotal <=
+          this.assignment.noOfSubmissionsTotal <
             this.assignment.maxSubmissionsTotal) &&
-        this.assignment.noOfSubmissionsStudent <=
+        this.assignment.noOfSubmissionsStudent <
           this.assignment.maxSubmissionsPerStudent
       )
         this.showAddSubmissionButton = true;

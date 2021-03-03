@@ -28,9 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class SubmissionService {
@@ -69,23 +67,30 @@ public class SubmissionService {
         var user = userServices.getUserByPersonalNumber(personalNumber);
         if (assignment.getCourse() == null)
             throw new DataNotFoundException("Ne najdem predmeta");
+        userAccessServices.userHasAccessToCourse(user, assignment.getCourse());
 
-        for (var input : inputs) {
-            userCanAddSubmission(user, assignment);
-            var data0 = Objects.requireNonNull(input.getOriginalFilename()).split("\\.");
-            var data1 = data0[0];
-            var data2 = data1.split("vhod");
-            var inputFileNumber = data2[1];
-            var output = outputs.stream().filter(e -> {
-                var outputFileNumber = Objects.requireNonNull(e.getOriginalFilename()).split("\\.")[0].split("izhod")[1];
-                return inputFileNumber.equals(outputFileNumber);
-            }).findFirst().orElseThrow();
+        List<InputOutputPairWrapper> inputOutputPairs = InputOutputPairWrapper.generateWrapperListFromInputsOutputs(inputs, outputs);
+        Integer maxSubmissionsUserCanAdd = maxSubmissionsUserCanAdd(user, assignment);
+        int noOfSubmissionsToAdd;
+        if (maxSubmissionsUserCanAdd == null || maxSubmissionsUserCanAdd >= inputOutputPairs.size())
+            noOfSubmissionsToAdd = inputOutputPairs.size();
+        else
+            noOfSubmissionsToAdd = maxSubmissionsUserCanAdd;
 
-            saveSubmission(assignment, user, input, output);
-            assignment = assignmentsServices.getAssignmentById(assignmentId);
+        var submissions = assignment.getSubmissions();
+        for (int i = 0; i < noOfSubmissionsToAdd; i++) {
+            var pair = inputOutputPairs.get(i);
+            submissions.add(saveSubmission(assignment, user, pair.getInput(), pair.getOutput()));
         }
 
-        var finalAssignment = assignment;
+        if(noOfSubmissionsToAdd < inputOutputPairs.size())
+            throw new OverMaximumNumberOfSubmissions(
+                    String.format("Število oddanih testnih primerov (%d), presega maksimalno dovoljeno število testnih primerov (%d). Razlika (%d) ni bila shranjena.",
+                            inputOutputPairs.size(), noOfSubmissionsToAdd, inputOutputPairs.size() - noOfSubmissionsToAdd
+                        )
+            );
+
+        assignment.setSubmissions(submissions);
         return AssignmentDTO.castFromEntityWithSubmissions(
                 assignment,
                 assignment.getSubmissions().stream()
@@ -94,7 +99,7 @@ public class SubmissionService {
                         .collect(Collectors.toList()),
                 user.getPurchases().stream()
                         .map(PurchaseEntity::getSubmissionBought)
-                        .filter(entity -> finalAssignment.equals(entity.getAssignment()))
+                        .filter(entity -> assignment.equals(entity.getAssignment()))
                         .map(SubmissionDTO::castFromEntity)
                         .collect(Collectors.toList())
         );
@@ -115,7 +120,7 @@ public class SubmissionService {
             throw new FileException("Datoteka vsebuje napačen format");
 
         var randomKey = RandomizerService.createRandomString(
-                submissionRepository.getAllNotDeleted().parallelStream()
+                submissionRepository.findAll().parallelStream()
                         .map(SubmissionEntity::getFileKey));
 
         var inputFileName = "input_" + randomKey;
@@ -175,14 +180,14 @@ public class SubmissionService {
                 .collect(Collectors.toList());
         Collections.shuffle(submissions);
 
-        var list =  submissions.stream()
+        var list = submissions.stream()
                 .limit(noOfSubmissions)
                 .map(e -> purchaseServices.savePurchase(user, e))
                 .map(PurchaseEntity::getSubmissionBought)
                 .map(SubmissionDTO::castFromEntity)
                 .collect(Collectors.toList());
 
-        if(list.isEmpty())
+        if (list.isEmpty())
             throw new DataNotFoundException("V tem trenutku ne obstajajo testni primeri, ki si jih ne bi že lastili");
         else
             return list;
@@ -245,7 +250,7 @@ public class SubmissionService {
         //check if user can download submission
         if (
                 !submission.getAuthor().equals(user)
-                && CollectionUtils.emptyIfNull(user.getPurchases()).stream()
+                        && CollectionUtils.emptyIfNull(user.getPurchases()).stream()
                         .map(PurchaseEntity::getSubmissionBought)
                         .noneMatch(e -> e.equals(submission))
         ) {
@@ -291,5 +296,40 @@ public class SubmissionService {
         if (assignment.getMaxSubmissionsTotal() != null && assignment.getMaxSubmissionsTotal() < assignment.getSubmissions().size())
             throw new OverMaximumNumberOfSubmissions("Naloga je dosegla maksimalno število oddaj");
 
+    }
+
+    private Integer maxSubmissionsUserCanAdd(UserEntity userEntity, AssignmentEntity assignmentEntity) {
+        /*
+         * max total | max student
+         * null      | null        | null
+         * null      | non null    | max student - students
+         * non null  | null        | max total - submissions
+         * non null  | non null    | min(max total - submissions, max student - students)
+         */
+
+        if (assignmentEntity.getMaxSubmissionsTotal() == null) {
+            if (assignmentEntity.getMaxSubmissionsPerStudent() == null) {
+                return null;
+            } else {
+                return assignmentEntity.getMaxSubmissionsPerStudent() -
+                        Math.toIntExact(assignmentEntity.getSubmissions().stream()
+                                .filter(e -> e.getAuthor().equals(userEntity))
+                                .count());
+            }
+        } else {
+            if (assignmentEntity.getMaxSubmissionsPerStudent() == null) {
+                return assignmentEntity.getMaxSubmissionsTotal() -
+                        assignmentEntity.getSubmissions().size();
+            } else {
+                return Math.min(
+                        assignmentEntity.getMaxSubmissionsPerStudent() -
+                                Math.toIntExact(assignmentEntity.getSubmissions().stream()
+                                        .filter(e -> e.getAuthor().equals(userEntity))
+                                        .count()),
+                        assignmentEntity.getMaxSubmissionsTotal() -
+                                assignmentEntity.getSubmissions().size()
+                );
+            }
+        }
     }
 }
