@@ -14,9 +14,9 @@ export class AssignmentsApiService {
 
   public getAssignments(
     courseId: number,
-    personalNumber: string
+    Authorization: string
   ): Observable<Assignment[]> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = { Authorization };
     return this.http.get<Assignment[]>(
       this.baseUrl + '/all?courseId=' + courseId,
       { headers }
@@ -25,10 +25,10 @@ export class AssignmentsApiService {
 
   public setAssignmentsVisibility(
     assignmentId: number,
-    personalNumber: string,
+    Authorization: string,
     visibility: boolean
   ): Observable<Assignment> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = { Authorization };
     return this.http.put<Assignment>(
       this.baseUrl +
         '/set-visibility?assignmentId=' +
@@ -42,9 +42,9 @@ export class AssignmentsApiService {
 
   public getAssignmentById(
     assignmentId: number,
-    personalNumber: string
+    Authorization: string
   ): Observable<Assignment> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = { Authorization };
     return this.http.get<Assignment>(
       this.baseUrl + '?assignmentId=' + assignmentId,
       { headers }
@@ -54,9 +54,9 @@ export class AssignmentsApiService {
   public postAssignment(
     courseId: number,
     assignment: Assignment,
-    personalNumber: string
+    Authorization: string
   ): Observable<Assignment> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = { Authorization };
     return this.http.post<Assignment>(
       this.baseUrl + '/save?courseId=' + courseId,
       assignment,
@@ -66,9 +66,9 @@ export class AssignmentsApiService {
 
   public archiveAssignment(
     assignment: Assignment,
-    personalNumber: string
+    Authorization: string
   ): Observable<Assignment> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = { Authorization };
     return this.http.put<Assignment>(this.baseUrl + '/archive', assignment, {
       headers,
     });
@@ -76,9 +76,9 @@ export class AssignmentsApiService {
 
   public deleteAssignment(
     assignmentId: number,
-    personalNumber: string
+    Authorization: string
   ): Observable<boolean> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = { Authorization };
     return this.http.delete<boolean>(
       this.baseUrl + '/delete?assignmentId=' + assignmentId,
       { headers }
@@ -87,9 +87,9 @@ export class AssignmentsApiService {
 
   public getAssignmentWithSubmissions(
     assignmentId: number,
-    personalNumber: string
+    Authorization: string
   ): Observable<Assignment> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = { Authorization };
     return this.http.get<Assignment>(
       this.baseUrl + '/detailed?assignmentId=' + assignmentId,
       { headers }

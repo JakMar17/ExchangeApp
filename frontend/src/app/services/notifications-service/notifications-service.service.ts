@@ -20,7 +20,7 @@ export class NotificationsServiceService {
   ): Observable<Notification> {
     return this.notificationApi.saveNotification(
       notification,
-      this.userService.userLoggedIn.personalNumber ?? '',
+      this.userService.bearer,
       course == null ? null : course.courseId
     );
   }
@@ -31,7 +31,7 @@ export class NotificationsServiceService {
   ): Observable<any> {
     return this.notificationApi.deleteNotification(
       notification.notificationId,
-      this.userService.userLoggedIn.personalNumber,
+      this.userService.bearer,
       course == null ? null : course.courseId
     );
   }

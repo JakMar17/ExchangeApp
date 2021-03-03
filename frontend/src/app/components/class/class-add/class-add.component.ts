@@ -82,10 +82,7 @@ export class ClassAddComponent implements OnInit {
         this.courseId = params.classID;
 
         this.courseApi
-          .getCourseDetailedData(
-            this.courseId,
-            this.userService.userLoggedIn.personalNumber
-          )
+          .getCourseDetailedData(this.courseId, this.userService.bearer)
           .subscribe((data) => {
             this.course = data;
             this.selectedSecurityLevel = this.securityLevels.find(
@@ -220,12 +217,10 @@ export class ClassAddComponent implements OnInit {
       this.errorMessage = 'Geslo mora biti izpolnjeno';
 
     if (this.errorMessage == null)
-      this.courseApi
-        .saveCourse(this.course, this.userService.userLoggedIn.personalNumber)
-        .subscribe(
-          (data) => this.router.navigate(['/course/' + data.courseId]),
-          (err: HttpErrorResponse) => alert('Napaka: ' + err.error.message)
-        );
+      this.courseApi.saveCourse(this.course, this.userService.bearer).subscribe(
+        (data) => this.router.navigate(['/course/' + data.courseId]),
+        (err: HttpErrorResponse) => alert('Napaka: ' + err.error.message)
+      );
   }
 
   public onDeleteButtonPressed(): void {

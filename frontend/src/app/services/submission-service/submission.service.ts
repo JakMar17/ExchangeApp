@@ -25,7 +25,7 @@ export class SubmissionService {
     noOfSubmissions: number
   ): Observable<Submission[]> {
     return this.submissionApi.buySubmissions(
-      this.userService.userLoggedIn.personalNumber,
+      this.userService.bearer,
       assignment.assignmentId,
       noOfSubmissions
     );
@@ -33,7 +33,7 @@ export class SubmissionService {
 
   public getDetailedSubmission(submission: Submission): Observable<Submission> {
     return this.submissionApi.getSubmissionDetails(
-      this.userService.userLoggedIn.personalNumber,
+      this.userService.bearer,
       submission.submissionId
     );
   }
@@ -44,21 +44,21 @@ export class SubmissionService {
   ): Observable<Assignment> {
     return this.fileApi.uploadFiles(
       uploadPairs,
-      this.userService.userLoggedIn.personalNumber,
+      this.userService.bearer,
       assignment.assignmentId
     );
   }
 
   public downloadMySubmissions(assignment: Assignment): void {
     this.fileApi.downloadMySubmissions(
-      this.userService.userLoggedIn.personalNumber,
+      this.userService.bearer,
       assignment.assignmentId
     );
   }
 
   public downloadSubmission(submission: Submission): void {
     this.fileApi.downloadSubmission(
-      this.userService.userLoggedIn.personalNumber,
+      this.userService.bearer,
       submission.submissionId
     );
   }
@@ -67,7 +67,7 @@ export class SubmissionService {
     assignment: Assignment
   ): Observable<Submission[]> {
     return this.submissionApi.getAllSubmissionsOfAssignment(
-      this.userService.userLoggedIn.personalNumber,
+      this.userService.bearer,
       assignment.assignmentId
     );
   }

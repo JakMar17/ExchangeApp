@@ -18,14 +18,11 @@ export class CoursesService {
   ) {}
 
   public getAllCourses(): Observable<Course[]> {
-    return this.courseApi.getAll();
+    return this.courseApi.getAll(this.userService.bearer);
   }
 
   public getCourse(courseId: number): Observable<Course> {
-    return this.courseApi.getCourse(
-      courseId,
-      this.userService.userLoggedIn.personalNumber
-    );
+    return this.courseApi.getCourse(courseId, this.userService.bearer);
   }
 
   public checkCoursePassword(
@@ -35,31 +32,28 @@ export class CoursesService {
   ): Observable<Course> {
     return this.courseApi.checkPasswordAndGetCourse(
       courseId,
-      user.personalNumber,
+      this.userService.bearer,
       insertedPassword
     );
   }
 
-  public saveCourse(
-    course: Course,
-    personalNumber: string
-  ): Observable<Course> {
-    return this.courseApi.saveCourse(course, personalNumber);
+  public saveCourse(course: Course): Observable<Course> {
+    return this.courseApi.saveCourse(course, this.userService.bearer);
   }
 
   public getMyCourses(): Observable<Course[]> {
-    return this.courseApi.getUsersCourses(
-      this.userService.userLoggedIn.personalNumber
-    );
+    return this.courseApi.getUsersCourses(this.userService.bearer);
   }
 
   public getDashboardNotifications(): Observable<Notification[]> {
-    return this.notificationApi.getDashoboardNotifications();
+    return this.notificationApi.getDashoboardNotifications(
+      this.userService.bearer
+    );
   }
 
   public deleteCourse(course: Course): Observable<any> {
     return this.courseApi.deleteCourse(
-      this.userService.userLoggedIn.personalNumber,
+      this.userService.bearer,
       course.courseId
     );
   }

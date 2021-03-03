@@ -17,7 +17,7 @@ export class AssignmentService {
   public getCourseAssignments(course: Course): Observable<Assignment[]> {
     return this.assignmentApi.getAssignments(
       course.courseId,
-      this.userService.userLoggedIn.personalNumber
+      this.userService.bearer
     );
   }
 
@@ -26,7 +26,7 @@ export class AssignmentService {
   ): Observable<Assignment> {
     return this.assignmentApi.setAssignmentsVisibility(
       assignment.assignmentId,
-      this.userService.userLoggedIn.personalNumber,
+      this.userService.bearer,
       !assignment.visible
     );
   }
@@ -34,7 +34,7 @@ export class AssignmentService {
   public getAssignment(assignment: Assignment): Observable<Assignment> {
     return this.assignmentApi.getAssignmentById(
       assignment.assignmentId,
-      this.userService.userLoggedIn.personalNumber
+      this.userService.bearer
     );
   }
 
@@ -43,7 +43,7 @@ export class AssignmentService {
   ): Observable<Assignment> {
     return this.assignmentApi.getAssignmentWithSubmissions(
       assignment.assignmentId,
-      this.userService.userLoggedIn.personalNumber
+      this.userService.bearer
     );
   }
 
@@ -54,21 +54,21 @@ export class AssignmentService {
     return this.assignmentApi.postAssignment(
       courseId,
       assignment,
-      this.userService.userLoggedIn.personalNumber
+      this.userService.bearer
     );
   }
 
   public archiveAssignment(assignment: Assignment): Observable<Assignment> {
     return this.assignmentApi.archiveAssignment(
       assignment,
-      this.userService.userLoggedIn.personalNumber
+      this.userService.bearer
     );
   }
 
   public deleteAssignment(assignment: Assignment): Observable<boolean> {
     return this.assignmentApi.deleteAssignment(
       assignment.assignmentId,
-      this.userService.userLoggedIn.personalNumber
+      this.userService.bearer
     );
   }
 }

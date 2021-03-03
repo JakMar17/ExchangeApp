@@ -13,15 +13,16 @@ export class CourseApiService {
 
   constructor(private http: HttpClient) {}
 
-  public getAll(): Observable<Course[]> {
-    return this.http.get<Course[]>(this.baseUrl + 'all');
+  public getAll(Authorization: string): Observable<Course[]> {
+    const headers = new HttpHeaders({ Authorization });
+    return this.http.get<Course[]>(this.baseUrl + 'all', { headers });
   }
 
   public getCourse(
     courseId: number,
-    personalNumber: string
+    Authorization: string
   ): Observable<Course> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = new HttpHeaders({ Authorization });
     return this.http.get<Course>(this.baseUrl + 'course?courseId=' + courseId, {
       headers,
     });
@@ -29,11 +30,11 @@ export class CourseApiService {
 
   public checkPasswordAndGetCourse(
     courseId: number,
-    personalNumber: string,
+    Authorization: string,
     password: string
   ): Observable<Course> {
     const headers = new HttpHeaders({
-      'Personal-Number': personalNumber,
+      Authorization,
       'Course-Password': password,
     });
     return this.http.get<Course>(
@@ -46,35 +47,35 @@ export class CourseApiService {
 
   public getCourseDetailedData(
     courseId: number,
-    personalNumber: string
+    Authorization: string
   ): Observable<Course> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = new HttpHeaders({ Authorization });
     return this.http.get<Course>(
       this.baseUrlManagement + 'detailed?courseId=' + courseId,
       { headers }
     );
   }
 
-  public saveCourse(
-    course: Course,
-    personalNumber: string
-  ): Observable<Course> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+  public saveCourse(course: Course, Authorization: string): Observable<Course> {
+    const headers = new HttpHeaders({ Authorization });
     return this.http.post<Course>(this.baseUrlManagement, course, { headers });
   }
 
-  public getUsersCourses(personalNumber: string): Observable<Course[]> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+  public getUsersCourses(Authorization: string): Observable<Course[]> {
+    const headers = new HttpHeaders({ Authorization });
     return this.http.get<Course[]>(this.baseUrl + 'my', { headers });
   }
 
   public deleteCourse(
-    personalNumber: string,
+    Authorization: string,
     courseId: number
   ): Observable<any> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
-    return this.http.delete<any>(this.baseUrlManagement + 'delete?courseId=' + courseId, {
-      headers,
-    });
+    const headers = new HttpHeaders({ Authorization });
+    return this.http.delete<any>(
+      this.baseUrlManagement + 'delete?courseId=' + courseId,
+      {
+        headers,
+      }
+    );
   }
 }

@@ -19,10 +19,10 @@ export class FilesApiService {
 
   public uploadFiles(
     uploads: SubmissionFilePair[],
-    personalNumber: string,
+    Authorization: string,
     assignmentId: number
   ): Observable<Assignment> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = new HttpHeaders({ Authorization });
     const formdata = new FormData();
     uploads.forEach((e) => {
       formdata.append('input', e.inputFile);
@@ -39,10 +39,10 @@ export class FilesApiService {
   }
 
   public downloadMySubmissions(
-    personalNumber: string,
+    Authorization: string,
     assignmentId: number
   ): void {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = new HttpHeaders({ Authorization });
     const options: Object = { headers, responseType: 'blob' };
 
     this.http
@@ -59,10 +59,10 @@ export class FilesApiService {
   }
 
   public downloadSubmission(
-    personalNumber: string,
+    Authorization: string,
     submissionId: number
   ): void {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = new HttpHeaders({ Authorization });
     const options: Object = { headers, responseType: 'blob' };
 
     this.http

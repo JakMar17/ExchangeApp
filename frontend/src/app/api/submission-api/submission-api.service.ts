@@ -13,11 +13,11 @@ export class SubmissionApiService {
   constructor(private http: HttpClient) {}
 
   public buySubmissions(
-    personalNumber: string,
+    Authorization: string,
     assignmentId: number,
     noOfSubmissions: number
   ): Observable<Submission[]> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = new HttpHeaders({ Authorization });
     return this.http.get<Submission[]>(
       this.baseUrl +
         '/buy?assignmentId=' +
@@ -29,10 +29,10 @@ export class SubmissionApiService {
   }
 
   public getSubmissionDetails(
-    personalNumber: string,
+    Authorization: string,
     submissionId: number
   ): Observable<Submission> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = new HttpHeaders({ Authorization });
     return this.http.get<Submission>(
       this.baseUrl + '/details?submissionId=' + submissionId,
       { headers }
@@ -40,10 +40,10 @@ export class SubmissionApiService {
   }
 
   public getAllSubmissionsOfAssignment(
-    personalNumber: string,
+    Authorization: string,
     assignmentId: number
   ): Observable<Submission[]> {
-    const headers = new HttpHeaders({ 'Personal-Number': personalNumber });
+    const headers = new HttpHeaders({ Authorization });
     return this.http.get<Submission[]>(
       this.baseUrl + '/all?assignmentId=' + assignmentId,
       { headers }

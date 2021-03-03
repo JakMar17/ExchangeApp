@@ -13,16 +13,16 @@ export class NotificationsApiService {
 
   public saveNotification(
     notification: Notification,
-    personalNumber: string,
+    Authorization: string,
     courseId: number | null
   ): Observable<Notification> {
     const headers =
       courseId == null
         ? new HttpHeaders({
-            'Personal-Number': personalNumber,
+            Authorization,
           })
         : new HttpHeaders({
-            'Personal-Number': personalNumber,
+            Authorization,
             'Course-Id': courseId.toString(),
           });
 
@@ -33,16 +33,16 @@ export class NotificationsApiService {
 
   public deleteNotification(
     notificationId: number,
-    personalNumber: string,
+    Authorization: string,
     courseId: number | null
   ): Observable<any> {
     const headers =
       courseId == null
         ? new HttpHeaders({
-            'Personal-Number': personalNumber,
+            Authorization,
           })
         : new HttpHeaders({
-            'Personal-Number': personalNumber,
+            Authorization,
             'Course-Id': courseId.toString(),
           });
 
@@ -52,7 +52,12 @@ export class NotificationsApiService {
     );
   }
 
-  public getDashoboardNotifications(): Observable<Notification[]> {
-    return this.http.get<Notification[]>(this.baseUrl + '/dashboard');
+  public getDashoboardNotifications(
+    Authorization: string
+  ): Observable<Notification[]> {
+    const headers = { Authorization };
+    return this.http.get<Notification[]>(this.baseUrl + '/dashboard', {
+      headers,
+    });
   }
 }
