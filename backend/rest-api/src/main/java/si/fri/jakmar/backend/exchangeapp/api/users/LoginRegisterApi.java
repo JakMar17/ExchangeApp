@@ -2,8 +2,11 @@ package si.fri.jakmar.backend.exchangeapp.api.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.LoginUserDTO;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.RegisterUserDTO;
 import si.fri.jakmar.backend.exchangeapp.exceptions.MailException;
@@ -19,7 +22,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/user/")
+@RequestMapping("/user")
 @CrossOrigin("*")
 public class LoginRegisterApi {
 
@@ -34,32 +37,32 @@ public class LoginRegisterApi {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @PostMapping("register")
-    public ResponseEntity<Object> registerNewUser(@RequestBody RegisterUserDTO user) throws Exception {
+    @PostMapping("/register")
+    public ResponseEntity<Object> registerNewUser(@RequestBody RegisterUserDTO user, @RequestParam(required = false, defaultValue = "true") Boolean sendEmail) throws Exception {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        boolean ok = registerServices.registerNewUser(user);
+        boolean ok = registerServices.registerNewUser(user, sendEmail);
         return ResponseEntity.ok(ok);
     }
 
-    @PostMapping("login")
-    public ResponseEntity<Object> loginUser(@RequestBody LoginUserDTO loginData) throws AccessForbiddenException, UserDoesNotExistsException, DataInvalidException {
-        var data = loginServices.loginUser(loginData.getEmail(), loginData.getPassword());
+    @GetMapping
+    public ResponseEntity<Object> loginUser(@AuthenticationPrincipal UserEntity userEntity) throws AccessForbiddenException, UserDoesNotExistsException, DataInvalidException {
+        var data = loginServices.loginUser(userEntity.getUsername());
         return ResponseEntity.ok(data);
     }
 
-    @PostMapping("confirm-registration")
+    @PostMapping("/confirm-registration")
     public ResponseEntity<Object> confirmRegistration(@RequestParam String confirmationId) throws DataNotFoundException {
         registerServices.confirmEmail(confirmationId);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("reset")
+    @GetMapping("/reset")
     public ResponseEntity<Object> resetPasswordRequest(@RequestHeader String email) throws DataNotFoundException, IOException, MailException {
         registerServices.createPasswordResetRequest(email);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("update-password")
+    @PostMapping("/update-password")
     public ResponseEntity<Object> updatePassword(@RequestHeader String email, @RequestHeader String resetId, @RequestHeader String newPassword) throws RequestInvalidException, DataNotFoundException {
         registerServices.updatePasswordForUser(email, resetId, newPassword);
         return ResponseEntity.ok().build();

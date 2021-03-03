@@ -4,21 +4,16 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.constants.JwtConstants;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.LoginUserDTO;
 
-import javax.servlet.DispatcherType;
 import javax.servlet.FilterChain;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +21,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.EnumSet;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -34,12 +28,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
     private final Integer expirationTime;
     private final String jwtSecret;
+    private final Integer refreshTime;
 
-    public AuthenticationFilter(AuthenticationManager authenticationManager, String jwtSecret, Integer expirationTime) {
+    public AuthenticationFilter(AuthenticationManager authenticationManager, String jwtSecret, Integer expirationTime, Integer refreshTime) {
         super(authenticationManager);
         this.authenticationManager = authenticationManager;
         this.expirationTime = expirationTime;
         this.jwtSecret = jwtSecret;
+        this.refreshTime = refreshTime;
     }
 
     @Override
@@ -68,7 +64,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
                 .sign(Algorithm.HMAC512(jwtSecret.getBytes(StandardCharsets.UTF_8)));
 
-        response.addHeader(JwtConstants.HEADER_STRING, JwtConstants.TOKEN_PREFIX + token);
+        response.addHeader(
+                JwtConstants.EXPOSE_HEADER_NAME,
+                String.format("%s, %s", JwtConstants.AUTHORIZATION_HEADER_NAME, JwtConstants.REFRESH_TIME_HEADER_NAME)
+        );
+        response.addHeader(JwtConstants.AUTHORIZATION_HEADER_NAME, JwtConstants.TOKEN_PREFIX + token);
+        response.addHeader(JwtConstants.REFRESH_TIME_HEADER_NAME, refreshTime.toString());
     }
 
 

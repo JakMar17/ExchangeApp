@@ -36,7 +36,7 @@ public class RegisterServices {
      * @return true if user has been registered in system
      * @throws UserExistsException user with given data already exists
      */
-    public Boolean registerNewUser(RegisterUserDTO user) throws Exception {
+    public Boolean registerNewUser(RegisterUserDTO user, boolean sendEmail) throws Exception {
         if(userRepository.findUsersByEmail(user.getEmail()).isPresent())
             throw new UserExistsException("Uporabnik s tem epoštnim naslovom že obstaja");
 
@@ -44,7 +44,8 @@ public class RegisterServices {
             throw new UserExistsException("Študent s to vpisno številko že obstaja");
 
         var userEntity = this.registerUserDTOToUserEntity(user);
-        requestEmailCreator.sendEmailConfirmation(userEntity.getUsername(), userEntity.getConfirmationString());
+        if(sendEmail)
+            requestEmailCreator.sendEmailConfirmation(userEntity.getUsername(), userEntity.getConfirmationString());
         userRepository.save(userEntity);
 
         return true;

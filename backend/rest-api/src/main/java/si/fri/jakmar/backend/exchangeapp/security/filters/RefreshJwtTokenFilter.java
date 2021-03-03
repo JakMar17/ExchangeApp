@@ -2,12 +2,8 @@ package si.fri.jakmar.backend.exchangeapp.security.filters;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import si.fri.jakmar.backend.exchangeapp.constants.JwtConstants;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -31,7 +27,7 @@ public class RefreshJwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String header = request.getHeader(JwtConstants.HEADER_STRING);
+        String header = request.getHeader(JwtConstants.AUTHORIZATION_HEADER_NAME);
         if(header == null || !header.startsWith(JwtConstants.TOKEN_PREFIX)) {
             filterChain.doFilter(request, response);
             return;
@@ -40,7 +36,7 @@ public class RefreshJwtTokenFilter extends OncePerRequestFilter {
         var token = header.replace(JwtConstants.TOKEN_PREFIX, "");
         if(tokenShouldBeRefreshed(token)) {
             token = createNewToken(token);
-            response.addHeader(JwtConstants.HEADER_STRING, JwtConstants.TOKEN_PREFIX + token);
+            response.addHeader(JwtConstants.AUTHORIZATION_HEADER_NAME, JwtConstants.TOKEN_PREFIX + token);
         }
 
         filterChain.doFilter(request, response);

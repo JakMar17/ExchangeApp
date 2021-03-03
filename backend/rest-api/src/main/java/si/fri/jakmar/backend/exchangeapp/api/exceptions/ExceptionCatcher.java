@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import si.fri.jakmar.backend.exchangeapp.exceptions.BadRequestException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.RequestInvalidException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
@@ -53,6 +54,12 @@ public class ExceptionCatcher {
     public ResponseEntity<ExceptionWrapper> handleRequestInvalidException(Exception exception) {
         logger.warning(exception.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionWrapper(exception.getMessage()));
+    }
+
+    @ExceptionHandler(value = {BadRequestException.class})
+    public ResponseEntity<ExceptionWrapper> handleBadRequestException(Exception exception) {
+        logger.severe(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionWrapper(exception.getMessage()));
     }
 
     @ExceptionHandler(value = {Exception.class})

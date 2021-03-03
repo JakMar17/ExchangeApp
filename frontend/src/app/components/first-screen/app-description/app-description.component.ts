@@ -17,7 +17,7 @@ export class AppDescriptionComponent implements OnInit {
   ngOnInit(): void {}
 
   public adminLogin(): void {
-    this.userService.loginUserIn('admin', 'admin').subscribe(
+    this.userService.loginUserIn('admin', 'admin').then(
       (user) => {
         this.userService.userLoggedIn = user;
         this.router.navigate(['/dashboard']);
@@ -29,7 +29,7 @@ export class AppDescriptionComponent implements OnInit {
   }
 
   public profLogin(): void {
-    this.userService.loginUserIn('prof', 'prof').subscribe(
+    this.userService.loginUserIn('prof', 'prof').then(
       (user) => {
         this.userService.userLoggedIn = user;
         this.router.navigate(['/dashboard']);
@@ -41,7 +41,7 @@ export class AppDescriptionComponent implements OnInit {
   }
 
   public studentLogin(): void {
-    this.userService.loginUserIn('student', 'student').subscribe(
+    this.userService.loginUserIn('student', 'student').then(
       (user) => {
         this.userService.userLoggedIn = user;
         this.router.navigate(['/dashboard']);

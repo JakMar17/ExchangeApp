@@ -45,16 +45,16 @@ export class LoginMenuComponent implements OnInit {
    */
   public onLoginButtonPressed(): void {
     this.userLoginError = null;
-    this.userService.loginUserIn(this.email, this.password).subscribe(
-      (user) => {
-        this.userService.userLoggedIn = user;
+    this.userService
+      .loginUserIn(this.email, this.password)
+      .then((user) => {
+        console.log("navigate");
         this.router.navigate(['/dashboard']);
-      },
-      (err: HttpErrorResponse) => {
-        (this.userLoginError = err.error.message);
+      })
+      .catch((err) => {
+        this.userLoginError = err;
         console.error(err);
-      }
-    );
+      });
   }
 
   public onPasswordResetButtonClick(): void {

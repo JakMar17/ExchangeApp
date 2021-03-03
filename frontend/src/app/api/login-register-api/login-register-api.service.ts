@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/models/user-model';
@@ -10,23 +10,31 @@ import { RegisterRequestModel } from './models/register-request-model';
   providedIn: 'root',
 })
 export class LoginRegisterApiService {
-  private baseUrl = environment.BASE_API_URL + 'user/';
-  private httpJsonHeader: HttpHeaders = new HttpHeaders({
-    'Content-Type': 'application/json',
-  });
+  private baseUrl = environment.BASE_API_URL;
 
   constructor(private http: HttpClient) {}
 
-  public login(loginModel: LoginRequestModel): Observable<User> {
-    return this.http.post<User>(this.baseUrl + 'login', loginModel);
+  public login(loginModel: LoginRequestModel): Observable<HttpResponse<any>> {
+    console.log(this.baseUrl);
+    return this.http.post<any>(this.baseUrl + 'login', loginModel, {
+      observe: 'response',
+    });
+  }
+
+  public getUserData(Authorization: string) {
+    const headers = {Authorization};
+    return this.http.get<User>(this.baseUrl + 'user', {headers});
   }
 
   public register(registerModel: RegisterRequestModel): Observable<boolean> {
-    return this.http.post<boolean>(this.baseUrl + 'register', registerModel);
+    return this.http.post<boolean>(
+      this.baseUrl + 'user/register',
+      registerModel
+    );
   }
 
   public resetPassword(email: string): Observable<any> {
     const headers = { email };
-    return this.http.get<any>(this.baseUrl + 'reset', { headers });
+    return this.http.get<any>(this.baseUrl + 'user/reset', { headers });
   }
 }
