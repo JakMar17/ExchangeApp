@@ -34,6 +34,7 @@ import { SubmissionAddComponent } from './components/assignment/assignment-detai
 import { SubmissionDetailedModalComponent } from './components/submissions/submission-detailed-modal/submission-detailed-modal.component';
 import { WhitelistFileModalComponent } from './components/class/class-add/whitelist-file-modal/whitelist-file-modal.component';
 import { PasswordResetComponent } from './components/first-screen/password-reset/password-reset.component';
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,13 @@ import { PasswordResetComponent } from './components/first-screen/password-reset
     WhitelistFileModalComponent,
     PasswordResetComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HighlightModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    HighlightModule,
+    HttpClientModule,
+  ],
   providers: [
     {
       provide: HIGHLIGHT_OPTIONS,
@@ -75,6 +82,8 @@ import { PasswordResetComponent } from './components/first-screen/password-reset
         fullLibraryLoader: () => import('highlight.js'),
       },
     },
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
+    JwtHelperService,
   ],
   bootstrap: [AppComponent],
 })

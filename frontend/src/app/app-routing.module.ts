@@ -8,47 +8,57 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FirstScreenComponent } from './components/first-screen/first-screen.component';
 import { SubmissionViewComponent } from './components/submissions/submission-view/submission-view.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { UserServiceService } from './services/user-service/user-service.service';
 
 const routes: Routes = [
   {
     path: '',
-    component: FirstScreenComponent,
+    component: FirstScreenComponent
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
+    canActivate: [UserServiceService]
   },
   {
     path: 'course/add',
     component: ClassAddComponent,
+    canActivate: [UserServiceService]
   },
   {
     path: 'course/edit/:classID',
     component: ClassAddComponent,
+    canActivate: [UserServiceService]
   },
   {
     path: 'course/:classID',
     component: ClassComponent,
+    canActivate: [UserServiceService]
   },
   {
     path: 'course/:courseId/assignment/add',
     component: AssignmentAddComponent,
+    canActivate: [UserServiceService]
   },
   {
     path: 'course/:courseId/assignment/edit/:assignmentId',
     component: AssignmentAddComponent,
+    canActivate: [UserServiceService]
   },
   {
     path: 'course/:courseId/assignment/:assignmentId',
-    component: AssignmentDetailedComponent
+    component: AssignmentDetailedComponent,
+    canActivate: [UserServiceService]
   },
   {
     path: 'user/:userId/profile',
-    component: UserProfileComponent
+    component: UserProfileComponent,
+    canActivate: [UserServiceService]
   },
   {
     path: 'course/:courseId/assignment/:assignmentId/submission/:submissionId',
-    component: SubmissionViewComponent
+    component: SubmissionViewComponent,
+    canActivate: [UserServiceService]
   }
 ];
 
