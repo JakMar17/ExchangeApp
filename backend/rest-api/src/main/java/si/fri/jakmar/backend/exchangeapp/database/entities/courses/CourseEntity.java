@@ -77,6 +77,10 @@ public class CourseEntity {
     public CourseEntity() {
     }
 
+    public CourseEntity(UserEntity guardianMain) {
+        this.guardianMain = guardianMain;
+    }
+
     public CourseEntity(Integer courseId, String courseTitle, String courseDescription, String courseClassroomUrl, Integer initialCoins, LocalDateTime courseCreated, Boolean archived, CourseAccessLevelEntity accessLevel, CourseAccessPassword accessPassword, UserEntity guardianMain, List<UserEntity> usersSignedInCourse, List<UserEntity> usersBlacklisted, List<UserEntity> usersWhitelisted, List<UserEntity> usersGuardians, List<AssignmentEntity> assignments) {
         this.courseId = courseId;
         this.courseTitle = courseTitle;

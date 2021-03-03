@@ -33,11 +33,11 @@ export class NavbarComponent implements OnInit {
   }
 
   /**
-   * TODO: create service that logs off user and deletes cookies
    * logs off user
    */
   public onLogOffButtonClick(): void {
     //logoff user
+    this.userService.logUserOff();
     this.router.navigate(['/']);
   }
 

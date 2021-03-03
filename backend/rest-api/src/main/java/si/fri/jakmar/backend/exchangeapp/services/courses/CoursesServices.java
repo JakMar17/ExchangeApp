@@ -172,7 +172,7 @@ public class CoursesServices {
         boolean insertNew = courseDto.getCourseId() == null;
         UserEntity user = userServices.getUserByPersonalNumber(personalNumber);
         CourseEntity course = insertNew
-                ? new CourseEntity()
+                ? new CourseEntity(user)
                 : courseRepository.findByIdNotDeleted(courseDto.getCourseId())
                     .orElseThrow(() -> new DataNotFoundException("Predmet s podanim ID-jem ne obstaja"));
 
