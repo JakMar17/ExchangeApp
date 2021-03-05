@@ -12,6 +12,7 @@ history/
 
 uploads/
 logs/
+tests/
 
 docker-compose.yml
 docker-compose-build-local.yml
