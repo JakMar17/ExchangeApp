@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { interval, Observable, Subject } from 'rxjs';
 import { AssignmentsApiService } from 'src/app/api/assignments-api/assignments-api.service';
 import { Assignment } from 'src/app/models/assignment-model';
 import { Course } from 'src/app/models/class-model';

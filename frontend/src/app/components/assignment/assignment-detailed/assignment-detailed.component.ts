@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FilesApiService } from 'src/app/api/files-api/files-api.service';
 import { Assignment } from 'src/app/models/assignment-model';
@@ -12,13 +12,14 @@ import { AssignmentService } from 'src/app/services/assignment-service/assignmen
 import { CoursesService } from 'src/app/services/courses-service/courses.service';
 import { SubmissionService } from 'src/app/services/submission-service/submission.service';
 import { UserServiceService } from 'src/app/services/user-service/user-service.service';
+import { workerData } from 'worker_threads';
 
 @Component({
   selector: 'app-assignment-detailed',
   templateUrl: './assignment-detailed.component.html',
   styleUrls: ['./assignment-detailed.component.scss'],
 })
-export class AssignmentDetailedComponent implements OnInit {
+export class AssignmentDetailedComponent implements OnInit, OnDestroy {
   public loading: boolean = true;
 
   public course: Course | null = null;
@@ -38,6 +39,8 @@ export class AssignmentDetailedComponent implements OnInit {
   public submissionBuyQuantityInput: number = 0;
 
   public buyingErrorMesage: string | null = null;
+
+  public updateWorker: any | null = null;
 
   constructor(
     private router: Router,
@@ -165,9 +168,22 @@ export class AssignmentDetailedComponent implements OnInit {
     this.showAddSubmissionBox = false;
     if (assignment != null) this.assignment = assignment;
     this.assignBooleanValuesToActionButtons();
+
+    this.updateWorker = setInterval(() => {
+      console.log("posodabljam")
+      this.assignmentService.getAssignmentWithSubmissions(assignment)
+        .toPromise()
+        .then((a) => this.assignment = a)
+        .catch(() => console.log('error'));
+    }, 10000);
   }
 
   public onSubmissionDetailedModalClosed(): void {
     this.submissionModalSubmission = null;
+  }
+
+  ngOnDestroy(): void {
+    if(this.updateWorker != null)
+      clearInterval(this.updateWorker);
   }
 }
