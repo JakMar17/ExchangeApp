@@ -12,7 +12,7 @@ public interface SubmissionRepository extends CrudRepository<SubmissionEntity, I
     @Query("select s from SubmissionEntity s where s.deleted = false")
     List<SubmissionEntity> getAllNotDeleted();
 
-    @Query("select s from SubmissionEntity s where s.assignment = :assignment and s.author <> :author and s.deleted = true")
+    @Query("select s from SubmissionEntity s where s.assignment = :assignment and s.author <> :author and s.deleted = false")
     List<SubmissionEntity> getSubmissionsForAssignmentNotFromUser(AssignmentEntity assignment, UserEntity author);
 
     List<SubmissionEntity> findAll();
