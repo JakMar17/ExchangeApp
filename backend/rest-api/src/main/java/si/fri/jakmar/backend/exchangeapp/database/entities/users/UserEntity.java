@@ -1,9 +1,12 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
@@ -18,6 +21,8 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "user")
 public class UserEntity implements UserDetails {
 
@@ -41,57 +46,49 @@ public class UserEntity implements UserDetails {
     @Column(name = "confirmation_string")
     private String confirmationString;
 
-    @ManyToOne
-    @JoinColumn(name = "user_type_id")
-    private UserTypeEntity userType;
+    @Column(name = "user_type")
+    @Enumerated(EnumType.STRING)
+    private UserType userType = UserType.OTHER;
 
-    @JsonIgnoreProperties({"guardianMain", "usersSignedInCourse"})
     @OneToMany(mappedBy = "guardianMain")
     @Where(clause = "course_deleted = false")
     private List<CourseEntity> createdCourses;
 
-    @JsonIgnoreProperties({"guardianMain", "usersSignedInCourse"})
     @ManyToMany(mappedBy = "usersSignedInCourse", cascade = CascadeType.ALL)
     @Where(clause = "course_deleted = false")
     private List<CourseEntity> usersCourses;
 
-    @JsonIgnoreProperties({"guardianMain", "usersSignedInCourse"})
     @ManyToMany(mappedBy = "usersBlacklisted")
     @Where(clause = "course_deleted = false")
     private List<CourseEntity> blacklistedCourses;
 
-    @JsonIgnoreProperties({"guardianMain", "usersSignedInCourse"})
     @ManyToMany(mappedBy = "usersWhitelisted")
     @Where(clause = "course_deleted = false")
     private List<CourseEntity> whitelistedCourses;
 
-    @JsonIgnoreProperties({"guardianMain", "usersSignedInCourse"})
     @ManyToMany(mappedBy = "usersGuardians")
     @Where(clause = "course_deleted = false")
     private List<CourseEntity> guardiansCourses;
 
-    @JsonIgnoreProperties({"author"})
     @OneToMany(mappedBy = "author")
     @Where(clause = "assignment_deleted = false")
     private List<AssignmentEntity> createdAssignments;
 
-    @JsonIgnoreProperties({"author"})
     @OneToMany(mappedBy = "author")
     @Where(clause = "submission_deleted = false")
     private List<SubmissionEntity> submissions;
 
-    @JsonIgnoreProperties({"userBuying"})
     @OneToMany(mappedBy = "userBuying")
     private List<PurchaseEntity> purchases;
 
-    @ManyToOne
-    @JoinColumn(name = "registration_status_id")
-    private UserRegistrationStage registrationStatus;
+    @Column(name = "registration_status")
+    @Enumerated(EnumType.STRING)
+    private UserRegistrationStatus registrationStatus = UserRegistrationStatus.PENDING_CONFIRMATION;
 
     public UserEntity() {
     }
 
-    public UserEntity(String username, String name, String surname, String password, String personalNumber, UserRegistrationStage registrationStatus, UserTypeEntity userType) {
+    public UserEntity(String username, String name, String surname, String password, String personalNumber, UserRegistrationStatus registrationStatus, UserType userType) {
         this.username = username;
         this.name = name;
         this.surname = surname;
@@ -101,7 +98,7 @@ public class UserEntity implements UserDetails {
         this.userType = userType;
     }
 
-    public UserEntity(String username, String name, String surname, String password, String personalNumber, String confirmationString, UserTypeEntity userType, UserRegistrationStage registrationStatus) {
+    public UserEntity(String username, String name, String surname, String password, String personalNumber, String confirmationString, UserType userType, UserRegistrationStatus registrationStatus) {
         this.username = username;
         this.name = name;
         this.surname = surname;
@@ -129,12 +126,12 @@ public class UserEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return registrationStatus.getId() == 2 && !deleted;
+        return registrationStatus == UserRegistrationStatus.REGISTERED && !deleted;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(userType);
+        return List.of(new SimpleGrantedAuthority(userType.name()));
     }
 
     @Override
@@ -148,157 +145,5 @@ public class UserEntity implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPersonalNumber() {
-        return personalNumber;
-    }
-
-    public void setPersonalNumber(String personalNumber) {
-        this.personalNumber = personalNumber;
-    }
-
-    public LocalDateTime getUserCreated() {
-        return userCreated;
-    }
-
-    public void setUserCreated(LocalDateTime userCreated) {
-        this.userCreated = userCreated;
-    }
-
-    public UserTypeEntity getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserTypeEntity userType) {
-        this.userType = userType;
-    }
-
-    public List<CourseEntity> getCreatedCourses() {
-        return createdCourses;
-    }
-
-    public void setCreatedCourses(List<CourseEntity> createdCourses) {
-        this.createdCourses = createdCourses;
-    }
-
-    public List<CourseEntity> getUsersCourses() {
-        return usersCourses;
-    }
-
-    public void setUsersCourses(List<CourseEntity> usersCourses) {
-        this.usersCourses = usersCourses;
-    }
-
-    public List<CourseEntity> getBlacklistedCourses() {
-        return blacklistedCourses;
-    }
-
-    public void setBlacklistedCourses(List<CourseEntity> blacklistedCourses) {
-        this.blacklistedCourses = blacklistedCourses;
-    }
-
-    public List<CourseEntity> getWhitelistedCourses() {
-        return whitelistedCourses;
-    }
-
-    public void setWhitelistedCourses(List<CourseEntity> whitelistedCourses) {
-        this.whitelistedCourses = whitelistedCourses;
-    }
-
-    public List<CourseEntity> getGuardiansCourses() {
-        return guardiansCourses;
-    }
-
-    public void setGuardiansCourses(List<CourseEntity> guardiansCourses) {
-        this.guardiansCourses = guardiansCourses;
-    }
-
-    public List<AssignmentEntity> getCreatedAssignments() {
-        return createdAssignments;
-    }
-
-    public void setCreatedAssignments(List<AssignmentEntity> createdAssignments) {
-        this.createdAssignments = createdAssignments;
-    }
-
-    public List<SubmissionEntity> getSubmissions() {
-        return submissions;
-    }
-
-    public void setSubmissions(List<SubmissionEntity> submissions) {
-        this.submissions = submissions;
-    }
-
-    public List<PurchaseEntity> getPurchases() {
-        return purchases;
-    }
-
-    public void setPurchases(List<PurchaseEntity> purchases) {
-        this.purchases = purchases;
-    }
-
-    public UserRegistrationStage getRegistrationStatus() {
-        return registrationStatus;
-    }
-
-    public void setRegistrationStatus(UserRegistrationStage registrationStatus) {
-        this.registrationStatus = registrationStatus;
-    }
-
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public String getConfirmationString() {
-        return confirmationString;
-    }
-
-    public void setConfirmationString(String confirmationString) {
-        this.confirmationString = confirmationString;
     }
 }

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Assignment } from 'src/app/models/assignment-model';
@@ -58,10 +58,7 @@ export class FilesApiService {
       );
   }
 
-  public downloadSubmission(
-    Authorization: string,
-    submissionId: number
-  ): void {
+  public downloadSubmission(Authorization: string, submissionId: number): void {
     const headers = new HttpHeaders({ Authorization });
     const options: Object = { headers, responseType: 'blob' };
 
@@ -82,6 +79,58 @@ export class FilesApiService {
     const blob = new Blob([data as any], { type: 'application/zip' });
     const anchor = document.createElement('a');
     anchor.download = 'testi.zip';
+    anchor.href = window.URL.createObjectURL(blob);
+    anchor.click();
+  }
+
+  public uploadSourceCode(
+    source: File,
+    Authorization: string,
+    assignmentId: string,
+    programName: string,
+    programLanguage: string,
+    timeout: string
+  ): Observable<Assignment> {
+    const headers = new HttpHeaders({ Authorization });
+    const formdata = new FormData();
+    formdata.append('source', source);
+    formdata.append('assignmentId', assignmentId);
+    formdata.append('programName', programName);
+    formdata.append('programLanguage', programLanguage);
+    formdata.append('timeout', timeout);
+
+    return this.http.post<Assignment>(
+      this.baseUrl + '/upload-source',
+      formdata,
+      { headers }
+    );
+  }
+
+  public downloadSource(Authorization: string, assignmentId: number): void {
+    const headers = new HttpHeaders({ Authorization });
+    const options: Object = {
+      headers,
+      responseType: 'blob',
+      observe: 'response',
+    };
+
+    this.http
+      .get<any>(
+        this.baseUrl + '/download-source?assignmentId=' + assignmentId,
+        options
+      )
+      .subscribe(
+        (data: HttpResponse<any>) => {
+          this.downloadFile(data.body, data.headers.get('File-Name'));
+        },
+        (err) => console.error(err)
+      );
+  }
+
+  private downloadFile(data: Response, filename: string): void {
+    const blob = new Blob([data as any], { type: 'application/octet-streama' });
+    const anchor = document.createElement('a');
+    anchor.download = filename;
     anchor.href = window.URL.createObjectURL(blob);
     anchor.click();
   }

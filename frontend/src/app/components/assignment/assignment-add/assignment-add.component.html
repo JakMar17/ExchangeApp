@@ -212,15 +212,26 @@
         <h1 class="title is-3">Testiranje pravilnosti oddaje</h1>
         <div class="tabs is-centered">
           <ul>
-            <li (click)="onSubmissionCheckTabChange(submissionCheckEnum.NONE)">
+            <li
+              [class.is-active]="
+                assignment.testType === submissionCheckEnum.NONE
+              "
+              (click)="onSubmissionCheckTabChange(submissionCheckEnum.NONE)"
+            >
               <a>Brez</a>
             </li>
-            <li
+            <!-- <li
+              [class.is-active]="
+                submissionCheckPanel === submissionCheckEnum.MANUAL
+              "
               (click)="onSubmissionCheckTabChange(submissionCheckEnum.MANUAL)"
             >
               <a>Ročno testiranje</a>
-            </li>
+            </li> -->
             <li
+              [class.is-active]="
+                assignment.testType === submissionCheckEnum.AUTOMATIC
+              "
               (click)="
                 onSubmissionCheckTabChange(submissionCheckEnum.AUTOMATIC)
               "
@@ -229,14 +240,99 @@
             </li>
           </ul>
         </div>
-        <label class="checkbox is-success">
-          <input
-            type="checkbox"
-            [checked]="assignment.notifyOnEmail"
-            (change)="assignment.notifyOnEmail = !assignment.notifyOnEmail"
-          />
-          Ob novi oddaji me obvesti po epošti.
-        </label>
+
+        <div *ngIf="assignment.testType == submissionCheckEnum.NONE"></div>
+        <div
+          class="columns is-vcentered"
+          *ngIf="assignment.testType == submissionCheckEnum.AUTOMATIC"
+        >
+          <div class="column">
+            <div class="field">
+              <label class="label has-text-weight-bold">Ime programa</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="AbsolutnaVrednost"
+                  [(ngModel)]="assignment.sourceName"
+                />
+                <p class="help is-warning">
+                  V primeru Javanske vhodne datoteke ime "glavnega" razreda.
+                </p>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label has-text-weight-bold"
+                >Časovna omejitev enega testnega primera (v sekundah)</label
+              >
+              <div class="control">
+                <input
+                  class="input"
+                  type="number"
+                  placeholder="1"
+                  [(ngModel)]="assignment.sourceTimeout"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label class="label has-text-weight-bold">Programski jezik</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="java"
+                  [(ngModel)]="assignment.sourceLanguage"
+                />
+                <p class="help is-warning">
+                  Podprti programski jeziki: "java", "c", "cpp", "python".
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="file is-boxed is-fullwidth">
+              <label class="file-label">
+                <input
+                  class="file-input"
+                  type="file"
+                  (change)="handleFileUpload($event)"
+                />
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i *ngIf="sourceFile == null" class="ri-upload-line"></i>
+                    <i
+                      *ngIf="sourceFile != null"
+                      class="ri-exchange-box-line"
+                    ></i>
+                  </span>
+                  <span
+                    class="file-icon"
+                    *ngIf="assignment.sourceId == null && sourceFile == null"
+                  >
+                    Naloži izvorno kodo programa
+                  </span>
+                  <span
+                    class="file-icon"
+                    *ngIf="assignment.sourceId != null || sourceFile != null"
+                  >
+                    Zamenjaj izvorno kodo programa
+                  </span>
+                </span>
+              </label>
+            </div>
+            <button
+              (click)="onSubmissionDownloadButtonPressed()"
+              class="button is-info is-outlined is-fullwidth"
+              style="margin-top: 1vh"
+              *ngIf="assignment.sourceId != null"
+            >
+              <span class="icon">
+                <i class="ri-download-2-line"></i>
+              </span>
+              <span>Prenesi datoteko</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="box">

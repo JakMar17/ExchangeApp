@@ -1,13 +1,18 @@
 package si.fri.jakmar.backend.exchangeapp.dtos.assignments;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
+import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.SubmissionCheck;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
 public class AssignmentDTO {
     private Integer assignmentId;
     private String title;
@@ -27,7 +32,7 @@ public class AssignmentDTO {
     private String inputExtension;
     private String outputExtension;
 
-    private String testType;
+    private SubmissionCheck testType;
     private Boolean notifyOnEmail;
     private Integer plagiarismWarning;
     private Integer plagiarismLevel;
@@ -35,8 +40,10 @@ public class AssignmentDTO {
     private List<SubmissionDTO> mySubmissions;
     private List<SubmissionDTO> boughtSubmissions;
 
-    public AssignmentDTO() {
-    }
+    private Integer sourceId;
+    private String sourceName;
+    private String sourceLanguage;
+    private Integer sourceTimeout;
 
     private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived) {
         this.assignmentId = assignmentId;
@@ -55,7 +62,7 @@ public class AssignmentDTO {
         this.archived = archived;
     }
 
-    private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived, String inputExtension, String outputExtension, String testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel) {
+    private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived, String inputExtension, String outputExtension, SubmissionCheck testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel, Integer sourceId, String sourceName, String sourceLanguage, Integer sourceTimeout) {
         this.assignmentId = assignmentId;
         this.title = title;
         this.classroomUrl = classroomUrl;
@@ -76,9 +83,13 @@ public class AssignmentDTO {
         this.notifyOnEmail = notifyOnEmail;
         this.plagiarismWarning = plagiarismWarning;
         this.plagiarismLevel = plagiarismLevel;
+        this.sourceId = sourceId;
+        this.sourceName = sourceName;
+        this.sourceLanguage = sourceLanguage;
+        this.sourceTimeout = sourceTimeout;
     }
 
-    private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived, String inputExtension, String outputExtension, String testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel, List<SubmissionDTO> mySubmissions, List<SubmissionDTO> boughtSubmissions) {
+    private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived, String inputExtension, String outputExtension, SubmissionCheck testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel, List<SubmissionDTO> mySubmissions, List<SubmissionDTO> boughtSubmissions) {
         this.assignmentId = assignmentId;
         this.title = title;
         this.classroomUrl = classroomUrl;
@@ -123,12 +134,14 @@ public class AssignmentDTO {
                     ? entity.getSubmissions().size()
                     : 0,
                 noOfSubmissionsStudent,
-                entity.getVisible() == 1,
+                entity.getVisible(),
                 entity.getArchived()
         );
     }
 
     public static AssignmentDTO castFullFromEntity(AssignmentEntity entity, Integer noOfSubmissionsStudent) {
+        var source = entity.getSource();
+
         return new AssignmentDTO(
                 entity.getId(),
                 entity.getTitle(),
@@ -144,14 +157,18 @@ public class AssignmentDTO {
                         ? entity.getSubmissions().size()
                         : 0,
                 noOfSubmissionsStudent,
-                entity.getVisible() == 1,
+                entity.getVisible(),
                 entity.getArchived(),
                 entity.getInputDataType(),
                 entity.getOutputDataType(),
-                entity.getSubmissionCheckType().getDescription(),
-                entity.getSubmissionNotify() == 1,
+                entity.getSubmissionCheck(),
+                entity.getSubmissionNotify(),
                 entity.getPlagiarismWarning(),
-                entity.getPlagiarismLevel()
+                entity.getPlagiarismLevel(),
+                source != null ? source.getId() : null,
+                source != null ? source.getProgramName() : null,
+                source != null ? source.getProgramLanguage() : null,
+                source != null ? source.getTimeout() : null
         );
     }
 
@@ -173,192 +190,16 @@ public class AssignmentDTO {
                 usersSubmissions != null
                     ? usersSubmissions.size()
                     : 0,
-                entity.getVisible() == 1,
+                entity.getVisible(),
                 entity.getArchived(),
                 entity.getInputDataType(),
                 entity.getOutputDataType(),
-                entity.getSubmissionCheckType().getDescription(),
-                entity.getSubmissionNotify() == 1,
+                entity.getSubmissionCheck(),
+                entity.getSubmissionNotify(),
                 entity.getPlagiarismLevel(),
                 entity.getPlagiarismLevel(),
                 usersSubmissions,
                 boughtSubmissions
         );
-    }
-
-    public Boolean getVisible() {
-        return visible;
-    }
-
-    public void setVisible(Boolean visible) {
-        this.visible = visible;
-    }
-
-    public Integer getAssignmentId() {
-        return assignmentId;
-    }
-
-    public void setAssignmentId(Integer assignmentId) {
-        this.assignmentId = assignmentId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getClassroomUrl() {
-        return classroomUrl;
-    }
-
-    public void setClassroomUrl(String classroomUrl) {
-        this.classroomUrl = classroomUrl;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
-
-    public Integer getMaxSubmissionsTotal() {
-        return maxSubmissionsTotal;
-    }
-
-    public void setMaxSubmissionsTotal(Integer maxSubmissionsTotal) {
-        this.maxSubmissionsTotal = maxSubmissionsTotal;
-    }
-
-    public Integer getMaxSubmissionsPerStudent() {
-        return maxSubmissionsPerStudent;
-    }
-
-    public void setMaxSubmissionsPerStudent(Integer maxSubmissionsPerStudent) {
-        this.maxSubmissionsPerStudent = maxSubmissionsPerStudent;
-    }
-
-    public Integer getCoinsPerSubmission() {
-        return coinsPerSubmission;
-    }
-
-    public void setCoinsPerSubmission(Integer coinsPerSubmission) {
-        this.coinsPerSubmission = coinsPerSubmission;
-    }
-
-    public Integer getCoinsPrice() {
-        return coinsPrice;
-    }
-
-    public void setCoinsPrice(Integer coinsPrice) {
-        this.coinsPrice = coinsPrice;
-    }
-
-    public Integer getNoOfSubmissionsTotal() {
-        return noOfSubmissionsTotal;
-    }
-
-    public void setNoOfSubmissionsTotal(Integer noOfSubmissionsTotal) {
-        this.noOfSubmissionsTotal = noOfSubmissionsTotal;
-    }
-
-    public Integer getNoOfSubmissionsStudent() {
-        return noOfSubmissionsStudent;
-    }
-
-    public void setNoOfSubmissionsStudent(Integer noOfSubmissionsStudent) {
-        this.noOfSubmissionsStudent = noOfSubmissionsStudent;
-    }
-
-    public String getInputExtension() {
-        return inputExtension;
-    }
-
-    public void setInputExtension(String inputExtension) {
-        this.inputExtension = inputExtension;
-    }
-
-    public String getOutputExtension() {
-        return outputExtension;
-    }
-
-    public void setOutputExtension(String outputExtension) {
-        this.outputExtension = outputExtension;
-    }
-
-    public String getTestType() {
-        return testType;
-    }
-
-    public void setTestType(String testType) {
-        this.testType = testType;
-    }
-
-    public Boolean getNotifyOnEmail() {
-        return notifyOnEmail;
-    }
-
-    public void setNotifyOnEmail(Boolean notifyOnEmail) {
-        this.notifyOnEmail = notifyOnEmail;
-    }
-
-    public Integer getPlagiarismWarning() {
-        return plagiarismWarning;
-    }
-
-    public void setPlagiarismWarning(Integer plagiarismWarning) {
-        this.plagiarismWarning = plagiarismWarning;
-    }
-
-    public Integer getPlagiarismLevel() {
-        return plagiarismLevel;
-    }
-
-    public void setPlagiarismLevel(Integer plagiarismLevel) {
-        this.plagiarismLevel = plagiarismLevel;
-    }
-
-    public Boolean getArchived() {
-        return archived;
-    }
-
-    public void setArchived(Boolean archived) {
-        this.archived = archived;
-    }
-
-    public List<SubmissionDTO> getMySubmissions() {
-        return mySubmissions;
-    }
-
-    public void setMySubmissions(List<SubmissionDTO> mySubmissions) {
-        this.mySubmissions = mySubmissions;
-    }
-
-    public List<SubmissionDTO> getBoughtSubmissions() {
-        return boughtSubmissions;
-    }
-
-    public void setBoughtSubmissions(List<SubmissionDTO> boughtSubmissions) {
-        this.boughtSubmissions = boughtSubmissions;
     }
 }

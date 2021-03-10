@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserType;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseRepository;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.user.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
@@ -70,11 +71,11 @@ public class UserAccessServices {
      * @return true if user has admin rights
      */
     public boolean userIsAdmin(UserEntity userEntity) {
-        return userEntity.getUserType().getId() == 1;
+        return userEntity.getUserType() == UserType.ADMIN;
     }
 
     public boolean userIsProfessor(UserEntity userEntity) {
-        return userEntity.getUserType().getId() == 2;
+        return userEntity.getUserType() == UserType.PROFESSOR;
     }
 
     /**

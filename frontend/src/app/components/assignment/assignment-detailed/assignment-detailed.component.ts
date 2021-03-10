@@ -1,18 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FilesApiService } from 'src/app/api/files-api/files-api.service';
 import { Assignment } from 'src/app/models/assignment-model';
 import { Course } from 'src/app/models/class-model';
-import {
-  Submission,
-  SubmissionFilePair,
-} from 'src/app/models/submission-model';
+import { Submission } from 'src/app/models/submission-model';
 import { AssignmentService } from 'src/app/services/assignment-service/assignment.service';
 import { CoursesService } from 'src/app/services/courses-service/courses.service';
 import { SubmissionService } from 'src/app/services/submission-service/submission.service';
-import { UserServiceService } from 'src/app/services/user-service/user-service.service';
-import { workerData } from 'worker_threads';
 
 @Component({
   selector: 'app-assignment-detailed',
@@ -170,10 +164,11 @@ export class AssignmentDetailedComponent implements OnInit, OnDestroy {
     this.assignBooleanValuesToActionButtons();
 
     this.updateWorker = setInterval(() => {
-      console.log("posodabljam")
-      this.assignmentService.getAssignmentWithSubmissions(assignment)
+      console.log('posodabljam');
+      this.assignmentService
+        .getAssignmentWithSubmissions(assignment)
         .toPromise()
-        .then((a) => this.assignment = a)
+        .then((a) => (this.assignment = a))
         .catch(() => console.log('error'));
     }, 10000);
   }
@@ -183,7 +178,6 @@ export class AssignmentDetailedComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if(this.updateWorker != null)
-      clearInterval(this.updateWorker);
+    if (this.updateWorker != null) clearInterval(this.updateWorker);
   }
 }

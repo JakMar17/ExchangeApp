@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import {
   Assignment,
   AssignmentStatus,
@@ -23,6 +24,7 @@ export class AssignmentAddComponent implements OnInit {
     coinsPrice: 1,
     notifyOnEmail: false,
     visible: true,
+    testType: SubmissionCheck.NONE,
   };
 
   public submissions: Submission[] = [];
@@ -31,8 +33,9 @@ export class AssignmentAddComponent implements OnInit {
   public editing: boolean = false;
 
   public errorMessage: string | null = null;
-
   public submissionModalSubmission: Submission | null = null;
+
+  public sourceFile: File | null = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -49,6 +52,7 @@ export class AssignmentAddComponent implements OnInit {
           this.editing = true;
           assignmentService.getAssignment(this.assignment).subscribe((data) => {
             this.assignment = data;
+            console.log(data);
             submissionService
               .getAllSubmissionsOfAssignment(this.assignment)
               .subscribe((submissions) => {
@@ -80,18 +84,38 @@ export class AssignmentAddComponent implements OnInit {
 
   public onSubmissionCheckTabChange(submissionCheck: SubmissionCheck): void {
     //this.assignment.submissionCheck = submissionCheck;
+    this.assignment.testType = submissionCheck;
   }
 
-  public saveAssignment(): void {
+  public async saveAssignment(): Promise<void> {
     this.errorMessage = this.checkInputs();
 
     if (this.errorMessage == null) {
-      this.assignmentService
+      const assignment: Assignment = await this.assignmentService
         .saveAssignment(this.assignment, this.courseId)
-        .subscribe(
-          () => this.alertAndExit('Naloga je bila shranjena'),
+        .toPromise()
+        .catch(
           (err: HttpErrorResponse) => (this.errorMessage = err.error.message)
         );
+
+      console.log('assignment', assignment);
+
+      if (assignment.testType === SubmissionCheck.AUTOMATIC) {
+        await this.assignmentService
+          .saveSourceCodeForAssignment(
+            assignment,
+            this.assignment.sourceName,
+            this.assignment.sourceLanguage,
+            this.assignment.sourceTimeout,
+            this.sourceFile
+          )
+          .toPromise()
+          .catch(
+            (err: HttpErrorResponse) => (this.errorMessage = err.error.message)
+          );
+      }
+
+      this.alertAndExit('Naloga je bila shranjena');
     }
   }
 
@@ -124,10 +148,20 @@ export class AssignmentAddComponent implements OnInit {
     if (this.assignment.outputExtension == null)
       return 'Tip izhodne datoteke mora biti izpolnjen';
 
-    /* if (this.assignment.status == null)
-      this.assignment.status = AssignmentStatus.ACTIVE; */
+    if (this.assignment.testType === SubmissionCheck.AUTOMATIC) {
+      if (this.emptyString(this.assignment.sourceName))
+        return 'Ime programa ne sme biti prazno';
+      if (this.emptyString(this.assignment.sourceLanguage))
+        return 'Ime programskega jezika ne sme biti prazno';
+      if (this.sourceFile == null && this.assignment.sourceId == null)
+        return 'Izvorna koda za testiranje mora biti izbrana';
+    }
 
     return null;
+  }
+
+  private emptyString(x: string): boolean {
+    return x === null || x.length === 0;
   }
 
   public get submissionCheckEnum(): typeof SubmissionCheck {
@@ -153,7 +187,6 @@ export class AssignmentAddComponent implements OnInit {
     this.navigateBackToCourse();
   }
 
-
   public onTableRowViewPressed(element: Submission): void {
     this.submissionService
       .getDetailedSubmission({ submissionId: element.submissionId })
@@ -164,5 +197,14 @@ export class AssignmentAddComponent implements OnInit {
 
   public onSubmissionDetailedModalClosed(): void {
     this.submissionModalSubmission = null;
+  }
+
+  public handleFileUpload($event: any): void {
+    const files: FileList = $event.target.files;
+    this.sourceFile = files[0];
+  }
+
+  public onSubmissionDownloadButtonPressed(): void {
+    this.assignmentService.downloadSource(this.assignment);
   }
 }

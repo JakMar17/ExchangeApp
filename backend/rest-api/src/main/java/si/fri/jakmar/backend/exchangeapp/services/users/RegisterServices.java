@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserPasswordResetEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserRegistrationStage;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserTypeEntity;
+import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserRegistrationStatus;
+import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserType;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.user.UserPasswordResetRepository;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.user.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.RegisterUserDTO;
@@ -56,7 +56,7 @@ public class RegisterServices {
         if(user == null)
             throw new DataNotFoundException("Uporabnik bodisi ne obstaja ali je registracijo že potrdil");
         user.setConfirmationString(null);
-        user.setRegistrationStatus(new UserRegistrationStage(2));
+        user.setRegistrationStatus(UserRegistrationStatus.REGISTERED);
         userRepository.save(user);
     }
 
@@ -101,11 +101,11 @@ public class RegisterServices {
         if(registerUserDTO.getName() == null || registerUserDTO.getSurname() == null || registerUserDTO.getEmail() == null)
             throw new Exception("Niso izpoljnjeni vsi potrebni podatki");
 
-        int userType = 4;
+        UserType userType = UserType.OTHER;
         if(registerUserDTO.getEmail().contains("@student.uni-lj.si"))
-            userType = 3;
+            userType = UserType.STUDENT;
         else if(registerUserDTO.getEmail().contains("@fri1.uni-lj.si"))
-            userType = 2;
+            userType = UserType.PROFESSOR;
 
         return new UserEntity(
                 registerUserDTO.getEmail(),
@@ -114,8 +114,8 @@ public class RegisterServices {
                 registerUserDTO.getPassword(),
                 registerUserDTO.getStudentNumber() != null ? registerUserDTO.getStudentNumber() : generatePersonalNumberForProfessor(),
                 generateConfirmationId(),
-                new UserTypeEntity(userType),
-                new UserRegistrationStage(1)
+                userType,
+                UserRegistrationStatus.PENDING_CONFIRMATION
         );
     }
 

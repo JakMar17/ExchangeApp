@@ -39,7 +39,7 @@ public class UserDTO {
                 entity.getSurname(),
                 entity.getPersonalNumber(),
                 withUserType
-                        ? entity.getUserType().getDescription()
+                        ? entity.getUserType().name()
                         : null,
                 null
         );
@@ -52,7 +52,7 @@ public class UserDTO {
                 entity.getSurname(),
                 entity.getPersonalNumber(),
                 withUserType
-                        ? entity.getUserType().getDescription()
+                        ? entity.getUserType().name()
                         : null,
                 withCourses
                         ? Stream.concat(

@@ -1,35 +1,38 @@
 package si.fri.jakmar.backend.exchangeapp.services.assignments;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import si.fri.jakmar.backend.exchangeapp.containers.DoubleWrapper;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.SubmissionCheckEntity;
+import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentSourceEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.purchases.PurchaseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.AssignmentRepository;
+import si.fri.jakmar.backend.exchangeapp.database.repositories.assignmnets.AssignmentRepository;
+import si.fri.jakmar.backend.exchangeapp.database.repositories.assignmnets.AssignmentSourceRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionDTO;
-import si.fri.jakmar.backend.exchangeapp.services.courses.CoursesServices;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
+import si.fri.jakmar.backend.exchangeapp.services.courses.CoursesServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserAccessServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserServices;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class AssignmentsServices {
-    @Autowired
-    private UserServices userServices;
-    @Autowired
-    private UserAccessServices userAccessServices;
-    @Autowired
-    private CoursesServices coursesServices;
-    @Autowired
-    private AssignmentRepository assignmentRepository;
+    private final UserServices userServices;
+    private final UserAccessServices userAccessServices;
+    private final CoursesServices coursesServices;
+    private final AssignmentRepository assignmentRepository;
+    private final AssignmentSourceRepository assignmentSourceRepository;
 
     /**
      * return entity from database
@@ -72,51 +75,47 @@ public class AssignmentsServices {
      *
      * @param personalNumber of user performing operation
      * @param courseId       where updated or inserted assignment is (parent)
-     * @param assignmentDTO  data for inserting/updating
+     * @param dto            data for inserting/updating
      * @return updated object
      * @throws DataNotFoundException    course, user or assignment does not exists
      * @throws AccessForbiddenException user has no rights to perform operation
      */
-    public AssignmentDTO insertOrUpdateAssignment(String personalNumber, Integer courseId, AssignmentDTO assignmentDTO) throws DataNotFoundException, AccessForbiddenException {
-        boolean insertNew = assignmentDTO.getAssignmentId() == null;
+    public AssignmentDTO insertOrUpdateAssignment(String personalNumber, Integer courseId, AssignmentDTO dto) throws DataNotFoundException, AccessForbiddenException {
         var user = userServices.getUserByPersonalNumber(personalNumber);
         var course = coursesServices.getCourseEntityById(courseId);
-
-        AssignmentEntity assignmentEntity;
-        if (insertNew) {
-            assignmentEntity = new AssignmentEntity();
-        } else {
-            assignmentEntity = getAssignmentById(assignmentDTO.getAssignmentId());
-        }
 
         if (!userAccessServices.userCanEditCourse(user, course))
             throw new AccessForbiddenException("Uporabnik nima dovoljenja za urejanje predmeta");
 
-        assignmentEntity.assignmentUpdater(
-                assignmentDTO.getTitle(),
-                assignmentDTO.getClassroomUrl(),
-                assignmentDTO.getDescription(),
-                assignmentDTO.getStartDate(),
-                assignmentDTO.getEndDate(),
-                assignmentDTO.getMaxSubmissionsTotal(),
-                assignmentDTO.getMaxSubmissionsPerStudent(),
-                assignmentDTO.getCoinsPerSubmission(),
-                assignmentDTO.getCoinsPrice(),
-                assignmentDTO.getInputExtension(),
-                assignmentDTO.getOutputExtension(),
-                assignmentDTO.getNotifyOnEmail() ? 1 : 0,
-                assignmentDTO.getPlagiarismWarning(),
-                assignmentDTO.getPlagiarismLevel(),
-                assignmentDTO.getVisible() ? 1 : 0,
-                new SubmissionCheckEntity(1),//assignmentDTO.getTestType()
-                null,
+        var assignment = new AssignmentEntity(
+                dto.getAssignmentId(),
+                dto.getTitle(),
+                dto.getClassroomUrl(),
+                dto.getDescription(),
+                dto.getStartDate(),
+                dto.getEndDate(),
+                dto.getMaxSubmissionsTotal(),
+                dto.getMaxSubmissionsPerStudent(),
+                dto.getCoinsPerSubmission(),
+                dto.getCoinsPrice(),
+                dto.getInputExtension(),
+                dto.getOutputExtension(),
+                dto.getNotifyOnEmail(),
+                dto.getPlagiarismWarning(),
+                dto.getPlagiarismLevel(),
+                dto.getVisible(),
+                dto.getArchived(),
+                dto.getTestType(),
                 course,
-                user,
-                false
+                user
         );
 
-        assignmentEntity = assignmentRepository.save(assignmentEntity);
-        return AssignmentDTO.castFullFromEntity(assignmentEntity, (int) CollectionUtils.emptyIfNull(assignmentEntity.getSubmissions()).stream().filter(e -> e.getAuthor().equals(user)).count());
+        assignment = assignmentRepository.save(assignment);
+        return AssignmentDTO.castFullFromEntity(
+                assignment,
+                (int) CollectionUtils.emptyIfNull(assignment.getSubmissions()).stream()
+                    .filter(e -> e.getAuthor().equals(user)).count()
+        );
     }
 
     /**
@@ -134,7 +133,7 @@ public class AssignmentsServices {
         var assignment = getAssignmentById(assignmentId);
         userCanEditAssignment(user, assignment);
 
-        assignment.setVisible(isVisible ? 1 : 0);
+        assignment.setVisible(isVisible);
         assignment = assignmentRepository.save(assignment);
 
         return AssignmentDTO.castFullFromEntity(assignment, (int) CollectionUtils.emptyIfNull(assignment.getSubmissions()).stream().filter(e -> e.getAuthor().equals(user)).count());
@@ -150,6 +149,7 @@ public class AssignmentsServices {
 
     /**
      * sets assignment as deleted in database
+     *
      * @param personalNumber of user who is performing operation
      * @param assignmentId   of entity to be deleted
      * @throws DataNotFoundException    user, course or assignment doesnt exists
@@ -165,11 +165,12 @@ public class AssignmentsServices {
 
     /**
      * sets assignment to archived status
+     *
      * @param personalNumber user performing operation
      * @param assignmentId
-     * @param isVisible setting visibility
+     * @param isVisible      setting visibility
      * @return assignment
-     * @throws DataNotFoundException data not found
+     * @throws DataNotFoundException    data not found
      * @throws AccessForbiddenException user cannot perform operation
      */
     public AssignmentDTO setArchivedStatus(String personalNumber, Integer assignmentId, Boolean isVisible) throws DataNotFoundException, AccessForbiddenException {
@@ -185,9 +186,9 @@ public class AssignmentsServices {
 
     /**
      * @param personalNumber user performing operation
-     * @param assignmentId to be returned
+     * @param assignmentId   to be returned
      * @return assignment with submissions
-     * @throws DataNotFoundException data not found
+     * @throws DataNotFoundException    data not found
      * @throws AccessForbiddenException user cannot perform operation
      */
     public AssignmentDTO getAssignmentWithSubmissions(String personalNumber, Integer assignmentId) throws DataNotFoundException, AccessForbiddenException, AccessUnauthorizedException {
@@ -197,17 +198,17 @@ public class AssignmentsServices {
 
         var mySubmissions =
                 CollectionUtils.emptyIfNull(assignment.getSubmissions()).stream()
-                .filter(e -> e.getAuthor().equals(user));
+                        .filter(e -> e.getAuthor().equals(user));
         var boughtSubmission =
                 CollectionUtils.emptyIfNull(user.getPurchases()).stream()
-                .map(PurchaseEntity::getSubmissionBought)
-                .filter(entity -> entity.getAssignment().equals(assignment));
+                        .map(PurchaseEntity::getSubmissionBought)
+                        .filter(entity -> entity.getAssignment().equals(assignment));
 
         return AssignmentDTO.castFromEntityWithSubmissions(
                 assignment,
                 mySubmissions.map(SubmissionDTO::castFromEntity).collect(Collectors.toList()),
                 boughtSubmission.map(SubmissionDTO::castFromEntity).collect(Collectors.toList())
-            );
+        );
     }
 
     public List<SubmissionDTO> getAllSubmissionsOfAssignment(String personalNumber, Integer assignmentId) throws DataNotFoundException, AccessForbiddenException {
@@ -222,9 +223,10 @@ public class AssignmentsServices {
 
     /**
      * checks if user can edit assignment, if not exception is thrown
-     * @param user to perform operation
+     *
+     * @param user       to perform operation
      * @param assignment
-     * @throws DataNotFoundException data not found
+     * @throws DataNotFoundException    data not found
      * @throws AccessForbiddenException user cannot perform operation
      */
     private void userCanEditAssignment(UserEntity user, AssignmentEntity assignment) throws DataNotFoundException, AccessForbiddenException {
@@ -238,9 +240,10 @@ public class AssignmentsServices {
 
     /**
      * checks if user can access assignment, if not exception is thrown
-     * @param user to perform operation
+     *
+     * @param user       to perform operation
      * @param assignment
-     * @throws DataNotFoundException data not found
+     * @throws DataNotFoundException    data not found
      * @throws AccessForbiddenException user cannot perform operation
      */
     private void userCanAccessAssignment(UserEntity user, AssignmentEntity assignment) throws DataNotFoundException, AccessForbiddenException, AccessUnauthorizedException {
@@ -250,5 +253,37 @@ public class AssignmentsServices {
 
         if (!userAccessServices.userHasAccessToCourse(user, course))
             throw new AccessForbiddenException("Ni pravic");
+    }
+
+    public void saveSource(
+            Integer assignmentId,
+            String programName,
+            String programLanguage,
+            Integer timeout,
+            MultipartFile source,
+            UserEntity author)
+            throws DataNotFoundException, IOException {
+        var assignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new DataNotFoundException("Naloga s podanim IDjem ne obstaja"));
+
+        assignmentSourceRepository.save(new AssignmentSourceEntity(
+                assignment.getSource() != null ? assignment.getSource().getId() : null,
+                programName,
+                programLanguage,
+                source.getOriginalFilename(),
+                timeout,
+                source.getBytes(),
+                assignment,
+                author
+        ));
+    }
+
+    public DoubleWrapper<String, ByteArrayInputStream> downloadSuorce(Integer assignmentId) throws DataNotFoundException {
+        var assignment = assignmentRepository.findById(assignmentId).orElseThrow(() -> new DataNotFoundException("Ne najdem isakne naloge"));
+        var source = assignment.getSource();
+        if(source == null)
+            throw new DataNotFoundException("Ni datoteke");
+
+        return new DoubleWrapper<>(source.getFileName(), new ByteArrayInputStream(source.getSource()));
     }
 }

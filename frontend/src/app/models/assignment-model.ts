@@ -16,19 +16,24 @@ export interface Assignment {
   visible?: boolean;
   inputExtension?: string;
   outputExtension?: string;
-  testType?: string;
+  testType?: SubmissionCheck;
   notifyOnEmail?: boolean;
   plagiarismWarning?: number;
   plagiarismLevel?: number;
   archived?: boolean;
   mySubmissions?: Submission[];
   boughtSubmissions?: Submission[];
+
+  sourceId?: number;
+  sourceName?: string;
+  sourceLanguage?: string;
+  sourceTimeout?: number;
 }
 
 export enum SubmissionCheck {
-  NONE,
-  MANUAL,
-  AUTOMATIC,
+  NONE = 'NONE',
+  MANUAL = 'MANUAL',
+  AUTOMATIC = 'AUTOMATIC',
 }
 
 export enum AssignmentStatus {
