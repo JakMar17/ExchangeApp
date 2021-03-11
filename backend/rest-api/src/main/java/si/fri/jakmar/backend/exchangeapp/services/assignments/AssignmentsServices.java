@@ -87,28 +87,34 @@ public class AssignmentsServices {
         if (!userAccessServices.userCanEditCourse(user, course))
             throw new AccessForbiddenException("Uporabnik nima dovoljenja za urejanje predmeta");
 
-        var assignment = new AssignmentEntity(
-                dto.getAssignmentId(),
-                dto.getTitle(),
-                dto.getClassroomUrl(),
-                dto.getDescription(),
-                dto.getStartDate(),
-                dto.getEndDate(),
-                dto.getMaxSubmissionsTotal(),
-                dto.getMaxSubmissionsPerStudent(),
-                dto.getCoinsPerSubmission(),
-                dto.getCoinsPrice(),
-                dto.getInputExtension(),
-                dto.getOutputExtension(),
-                dto.getNotifyOnEmail(),
-                dto.getPlagiarismWarning(),
-                dto.getPlagiarismLevel(),
-                dto.getVisible(),
-                dto.getArchived(),
-                dto.getTestType(),
-                course,
-                user
-        );
+
+        var assignment = dto.getAssignmentId() != null
+                ? assignmentRepository.findById(dto.getAssignmentId()).orElseThrow(() -> new DataNotFoundException("Ne najdem naloge")).updateFromDto(dto)
+                : new AssignmentEntity(
+                        dto.getAssignmentId(),
+                        dto.getTitle(),
+                        dto.getClassroomUrl(),
+                        dto.getDescription(),
+                        dto.getStartDate(),
+                        dto.getEndDate(),
+                        dto.getMaxSubmissionsTotal(),
+                        dto.getMaxSubmissionsPerStudent(),
+                        dto.getCoinsPerSubmission(),
+                        dto.getCoinsPrice(),
+                        dto.getInputExtension(),
+                        dto.getOutputExtension(),
+                        dto.getNotifyOnEmail(),
+                        dto.getPlagiarismWarning(),
+                        dto.getPlagiarismLevel(),
+                        dto.getVisible() == null || dto.getVisible(),
+                        dto.getArchived() != null && dto.getArchived(),
+                        dto.getTestType(),
+                        course,
+                        user
+                );
+
+        if(assignment.getId() != null)
+            assignment.updateFromDto(dto);
 
         assignment = assignmentRepository.save(assignment);
         return AssignmentDTO.castFullFromEntity(

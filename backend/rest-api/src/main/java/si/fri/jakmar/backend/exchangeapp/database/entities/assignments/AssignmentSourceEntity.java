@@ -16,8 +16,8 @@ import java.time.ZoneOffset;
 public class AssignmentSourceEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "assignment_source_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Column(name = "program_name")

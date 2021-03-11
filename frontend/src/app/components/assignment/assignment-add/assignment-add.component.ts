@@ -98,7 +98,9 @@ export class AssignmentAddComponent implements OnInit {
           (err: HttpErrorResponse) => (this.errorMessage = err.error.message)
         );
 
-      console.log('assignment', assignment);
+        
+        console.log('this.assignment', this.assignment);
+        console.log('assignment', assignment);
 
       if (assignment.testType === SubmissionCheck.AUTOMATIC) {
         await this.assignmentService

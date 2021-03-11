@@ -7,6 +7,7 @@ import org.hibernate.annotations.Type;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.submissions.SubmissionEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public class AssignmentEntity {
 
     @Id
     @Column(name = "assignment_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "assignment_title")
@@ -107,5 +108,26 @@ public class AssignmentEntity {
         this.submissionCheck = submissionCheck;
         this.course = course;
         this.author = author;
+    }
+
+    public AssignmentEntity updateFromDto(AssignmentDTO dto) {
+        this.title = dto.getTitle();
+        this.classroomUrl = dto.getClassroomUrl();
+        this.description = dto.getDescription();
+        this.startDate = dto.getStartDate();
+        this.endDate = dto.getEndDate();
+        this.maxSubmissionsTotal = dto.getMaxSubmissionsTotal();
+        this.maxSubmissionsPerStudent = dto.getMaxSubmissionsPerStudent();
+        this.coinsPerSubmission = dto.getCoinsPerSubmission();
+        this.coinsPrice = dto.getCoinsPrice();
+        this.inputDataType = dto.getInputExtension();
+        this.outputDataType = dto.getOutputExtension();
+        this.submissionNotify = dto.getNotifyOnEmail();
+        this.plagiarismWarning = dto.getPlagiarismWarning();
+        this.plagiarismLevel = dto.getPlagiarismLevel();
+        this.visible = dto.getVisible() == null || dto.getVisible();
+        this.archived = dto.getArchived() != null && dto.getArchived();
+        this.submissionCheck = dto.getTestType();
+        return this;
     }
 }
