@@ -1,4 +1,4 @@
-package si.fri.jakmar.exchangeapp.backend.testingutility.functions;
+package si.fri.jakmar.exchangeapp.backend.testingutility.exceptions;
 
 public class CreatingEnvirontmentException extends Exception{
 
