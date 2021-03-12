@@ -12,6 +12,7 @@ import si.fri.jakmar.exchangeapp.backend.testingutility.database.mongo.entities.
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.mongo.repositories.SubmissionCorrectnessResultRepository;
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities.AssignmentSourceEntity;
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities.SubmissionEntity;
+import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities.SubmissionStatus;
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.repositories.AssignmentEntityRepository;
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.repositories.SubmissionEntityRepository;
 import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.CreatingEnvironmentException;
@@ -48,6 +49,7 @@ public class CorrectnessTestService {
 
     /**
      * prints from proccess output
+     *
      * @param process
      * @throws IOException
      */
@@ -61,6 +63,7 @@ public class CorrectnessTestService {
 
     /**
      * creates and runs correctness test
+     *
      * @param assignmentId
      * @return
      * @throws DataNotFoundException
@@ -72,7 +75,7 @@ public class CorrectnessTestService {
 
 
         var pairs = CollectionUtils.emptyIfNull(assignment.getSubmissions()).stream()
-                .filter(e -> e.getStatus().getId().equals(1))
+                .filter(e -> e.getStatus() == SubmissionStatus.PENDING_REVIEW)
                 .map(e -> generatePairContainer(assignment.getInputDataType(), assignment.getOutputDataType(), e))
                 .toArray(FilePairContainer[]::new);
 
@@ -103,6 +106,7 @@ public class CorrectnessTestService {
 
     /**
      * runs bash ATT script
+     *
      * @param testId name of test
      * @param source program source
      * @throws IOException error while running script
@@ -127,8 +131,9 @@ public class CorrectnessTestService {
 
     /**
      * checks every tuple of test case input, test case output and expected result
+     *
      * @param basePath test base path
-     * @param tests tests to check
+     * @param tests    tests to check
      * @return list of results of checks
      */
     private List<SubmissionCorrectnessResultEntity> checkResult(String basePath, FilePairContainer[] tests) {
@@ -189,6 +194,7 @@ public class CorrectnessTestService {
 
     /**
      * checks if there was an error while compiling source (if there is, there is file error.txt)
+     *
      * @param outputPath where to look for error file
      * @return not empty Optional if there was compiling error
      */

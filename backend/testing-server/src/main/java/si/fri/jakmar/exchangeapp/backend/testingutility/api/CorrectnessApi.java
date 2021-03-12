@@ -1,24 +1,24 @@
 package si.fri.jakmar.exchangeapp.backend.testingutility.api;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import si.fri.jakmar.exchangeapp.backend.testingutility.api.interfaces.CorrectnessApiInterface;
 import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.CreatingEnvironmentException;
 import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.DataNotFoundException;
+import si.fri.jakmar.exchangeapp.backend.testingutility.resources.SubmissionTestResult;
 import si.fri.jakmar.exchangeapp.backend.testingutility.services.CorrectnessTestService;
 
+import java.util.stream.Stream;
+
+@Data
 @RestController
-@RequestMapping("/correctness/")
-public class CorrectnessApi {
+public class CorrectnessApi implements CorrectnessApiInterface {
 
-    @Autowired
-    private CorrectnessTestService correctnessTestService;
+    private final CorrectnessTestService correctnessTestService;
 
-    @GetMapping("test")
-    public ResponseEntity testCorrectnessOfAssignment(@RequestParam Integer assignmentId) throws CreatingEnvironmentException, DataNotFoundException {
+    public ResponseEntity<Stream<SubmissionTestResult>> testCorrectnessOfAssignment(Integer assignmentId) throws CreatingEnvironmentException, DataNotFoundException {
         var result = correctnessTestService.test(assignmentId);
         return ResponseEntity.ok(result);
     }
