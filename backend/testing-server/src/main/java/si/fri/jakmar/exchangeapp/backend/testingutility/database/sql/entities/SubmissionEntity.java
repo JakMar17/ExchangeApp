@@ -32,7 +32,6 @@ public class SubmissionEntity {
     @JoinColumn(name = "assignment_id")
     private AssignmentEntity assignment;
 
-    @ManyToOne
-    @JoinColumn(name = "submission_status_id")
-    private SubmissionStatusEntity status = new SubmissionStatusEntity(1);
+    @Enumerated(EnumType.STRING)
+    private SubmissionStatus status;
 }

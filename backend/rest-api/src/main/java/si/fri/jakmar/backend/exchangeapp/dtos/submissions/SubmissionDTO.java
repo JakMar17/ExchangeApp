@@ -1,5 +1,6 @@
 package si.fri.jakmar.backend.exchangeapp.dtos.submissions;
 
+import lombok.Data;
 import si.fri.jakmar.backend.exchangeapp.database.entities.submissions.SubmissionEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
@@ -10,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 
+@Data
 public class SubmissionDTO {
     private Integer submissionId;
     private String input;
@@ -56,7 +58,7 @@ public class SubmissionDTO {
                 user != null
                     ? UserDTO.castFromEntityWithoutCourses(user, false)
                     : null,
-                entity.getStatus().getStatus()
+                entity.getStatus().name()
         );
     }
 
@@ -73,73 +75,9 @@ public class SubmissionDTO {
                 user != null
                         ? UserDTO.castFromEntityWithoutCourses(user, false)
                         : null,
-                entity.getStatus().getStatus(),
+                entity.getStatus().name(),
                 Files.readString(input.toPath(), StandardCharsets.UTF_8),
                 Files.readString(output.toPath(), StandardCharsets.UTF_8)
         );
-    }
-
-    public Integer getSubmissionId() {
-        return submissionId;
-    }
-
-    public void setSubmissionId(Integer submissionId) {
-        this.submissionId = submissionId;
-    }
-
-    public String getInput() {
-        return input;
-    }
-
-    public void setInput(String input) {
-        this.input = input;
-    }
-
-    public String getOutput() {
-        return output;
-    }
-
-    public void setOutput(String output) {
-        this.output = output;
-    }
-
-    public LocalDateTime getCreated() {
-        return created;
-    }
-
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
-    }
-
-    public UserDTO getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(UserDTO author) {
-        this.author = author;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getInputFile() {
-        return inputFile;
-    }
-
-    public void setInputFile(String inputFile) {
-        this.inputFile = inputFile;
-    }
-
-    public String getOutputFile() {
-        return outputFile;
-    }
-
-    public void setOutputFile(String outputFile) {
-        this.outputFile = outputFile;
     }
 }
