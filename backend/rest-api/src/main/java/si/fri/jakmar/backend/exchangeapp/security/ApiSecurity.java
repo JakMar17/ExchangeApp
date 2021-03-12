@@ -16,9 +16,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import si.fri.jakmar.backend.exchangeapp.security.filters.AuthenticationFilter;
 import si.fri.jakmar.backend.exchangeapp.security.filters.AuthorizationFilter;
-import si.fri.jakmar.backend.exchangeapp.security.filters.RefreshJwtTokenFilter;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity

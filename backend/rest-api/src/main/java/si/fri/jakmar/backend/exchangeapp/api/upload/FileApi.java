@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import si.fri.jakmar.backend.exchangeapp.constants.JwtConstants;
 import si.fri.jakmar.backend.exchangeapp.containers.DoubleWrapper;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;

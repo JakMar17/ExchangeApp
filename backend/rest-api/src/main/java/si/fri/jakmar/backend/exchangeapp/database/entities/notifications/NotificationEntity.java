@@ -1,7 +1,6 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.notifications;
 
 import org.hibernate.annotations.Type;
-import si.fri.jakmar.backend.exchangeapp.api.notifications.NotificationsApi;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.notifications.NotificationDTO;

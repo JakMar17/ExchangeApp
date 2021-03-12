@@ -1,9 +1,5 @@
 package si.fri.jakmar.backend.exchangeapp.functions;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import si.fri.jakmar.backend.exchangeapp.storage.FileStorageService;
-
 import java.io.*;
 import java.util.List;
 import java.util.zip.ZipEntry;

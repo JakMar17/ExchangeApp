@@ -1,6 +1,5 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.assignments;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;

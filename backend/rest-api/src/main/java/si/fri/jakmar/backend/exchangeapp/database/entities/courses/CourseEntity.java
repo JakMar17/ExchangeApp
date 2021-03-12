@@ -1,6 +1,5 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.courses;
 
-import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Where;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;

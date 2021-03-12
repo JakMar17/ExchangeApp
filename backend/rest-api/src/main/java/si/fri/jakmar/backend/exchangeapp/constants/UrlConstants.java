@@ -1,13 +1,7 @@
 package si.fri.jakmar.backend.exchangeapp.constants;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 
 @Component
 public class UrlConstants {

@@ -1,21 +1,18 @@
 package si.fri.jakmar.backend.exchangeapp.storage;
 
-import org.hibernate.exception.DataException;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
 
-import java.io.*;
-import java.net.MalformedURLException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Stream;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {

@@ -1,7 +1,6 @@
 package si.fri.jakmar.backend.exchangeapp.dtos.courses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.apache.catalina.User;
 import org.apache.commons.collections4.CollectionUtils;
 import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;

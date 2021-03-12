@@ -1,7 +1,5 @@
 package si.fri.jakmar.backend.exchangeapp.database.entities.courses;
 
-import org.hibernate.annotations.Tables;
-
 import javax.persistence.*;
 import java.util.List;
 
