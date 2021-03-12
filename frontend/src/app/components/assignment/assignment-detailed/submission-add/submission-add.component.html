@@ -86,6 +86,11 @@
       >
         <p>{{ errorMessageNewSubmission }}</p>
       </div>
+
+      <p *ngIf="assignment.testType == submissionCheck.AUTOMATIC" class="help">
+        Ob oddaji se bodo testni primeri avtomatsko testirali, zato lahko oddaja
+        traja dlje časa (odvisno od števila oddanih testnih primerov).
+      </p>
     </div>
   </div>
   <button

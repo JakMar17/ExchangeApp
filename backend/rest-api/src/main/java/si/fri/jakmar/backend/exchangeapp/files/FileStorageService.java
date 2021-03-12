@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.storage;
+package si.fri.jakmar.backend.exchangeapp.files;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.web.multipart.MultipartFile;

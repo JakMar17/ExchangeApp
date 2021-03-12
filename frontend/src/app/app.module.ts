@@ -35,6 +35,7 @@ import { SubmissionDetailedModalComponent } from './components/submissions/submi
 import { WhitelistFileModalComponent } from './components/class/class-add/whitelist-file-modal/whitelist-file-modal.component';
 import { PasswordResetComponent } from './components/first-screen/password-reset/password-reset.component';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { SubmissionStatusPipe } from './pipes/submission-status/submission-status.pipe';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
     SubmissionDetailedModalComponent,
     WhitelistFileModalComponent,
     PasswordResetComponent,
+    SubmissionStatusPipe,
   ],
   imports: [
     BrowserModule,

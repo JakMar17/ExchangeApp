@@ -18,7 +18,7 @@ import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundExceptio
 import si.fri.jakmar.backend.exchangeapp.exceptions.submissions.OverMaximumNumberOfSubmissions;
 import si.fri.jakmar.backend.exchangeapp.services.assignments.AssignmentsServices;
 import si.fri.jakmar.backend.exchangeapp.services.submissions.SubmissionService;
-import si.fri.jakmar.backend.exchangeapp.storage.FileStorageService;
+import si.fri.jakmar.backend.exchangeapp.files.FileStorageService;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -60,7 +60,7 @@ public class FileApi {
 
     @GetMapping("/download-source")
     public ResponseEntity<Object> downloadSource(@RequestParam Integer assignmentId) throws DataNotFoundException {
-        DoubleWrapper<String, ByteArrayInputStream> wrapper = assignmentsServices.downloadSuorce(assignmentId);
+        DoubleWrapper<String, ByteArrayInputStream> wrapper = assignmentsServices.downloadSource(assignmentId);
         InputStreamResource resource = new InputStreamResource(wrapper.second);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", wrapper.first));

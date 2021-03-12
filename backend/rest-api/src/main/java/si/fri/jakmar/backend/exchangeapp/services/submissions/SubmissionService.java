@@ -1,12 +1,15 @@
 package si.fri.jakmar.backend.exchangeapp.services.submissions;
 
+import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import si.fri.jakmar.backend.exchangeapp.client.testing_utility.TestingUtilityRestClient;
 import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.purchases.PurchaseEntity;
 import si.fri.jakmar.backend.exchangeapp.database.entities.submissions.SubmissionEntity;
+import si.fri.jakmar.backend.exchangeapp.database.entities.submissions.SubmissionStatus;
 import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.repositories.SubmissionRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
@@ -22,7 +25,7 @@ import si.fri.jakmar.backend.exchangeapp.services.assignments.AssignmentsService
 import si.fri.jakmar.backend.exchangeapp.services.users.PurchaseServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserAccessServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserServices;
-import si.fri.jakmar.backend.exchangeapp.storage.FileStorageService;
+import si.fri.jakmar.backend.exchangeapp.files.FileStorageService;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,23 +33,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Data
 @Service
 public class SubmissionService {
 
-    @Autowired
-    private SubmissionRepository submissionRepository;
-    @Autowired
-    private UserServices userServices;
-    @Autowired
-    private AssignmentsServices assignmentsServices;
-    @Autowired
-    private UserAccessServices userAccessServices;
-    @Autowired
-    private FileStorageService storageService;
-    @Autowired
-    private PurchaseServices purchaseServices;
-    @Autowired
-    private FileStorageService fileStorageService;
+    private final SubmissionRepository submissionRepository;
+    private final UserServices userServices;
+    private final AssignmentsServices assignmentsServices;
+    private final UserAccessServices userAccessServices;
+    private final FileStorageService storageService;
+    private final PurchaseServices purchaseServices;
+    private final FileStorageService fileStorageService;
+    private final TestingUtilityRestClient testingUtilityRestClient;
 
     /**
      * creates submission pairs from input/output and saves them to database/filesystem
@@ -91,6 +89,9 @@ public class SubmissionService {
             );
 
         assignment.setSubmissions(submissions);
+
+        testingUtilityRestClient.runCorrectnessTestForAssignment(assignment);
+
         return AssignmentDTO.castFromEntityWithSubmissions(
                 assignment,
                 assignment.getSubmissions().stream()
@@ -177,6 +178,7 @@ public class SubmissionService {
         var submissions = CollectionUtils.emptyIfNull(submissionRepository.getSubmissionsForAssignmentNotFromUser(assignment, user))
                 .stream()
                 .filter(e -> !boughtSubmissionsOfThisAssignment.contains(e))
+                .filter(e -> e.getStatus() == SubmissionStatus.OK)
                 .collect(Collectors.toList());
         Collections.shuffle(submissions);
 

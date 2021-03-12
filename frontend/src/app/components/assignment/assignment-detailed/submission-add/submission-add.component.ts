@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Assignment } from 'src/app/models/assignment-model';
+import { Assignment, SubmissionCheck } from 'src/app/models/assignment-model';
 import { SubmissionFilePair } from 'src/app/models/submission-model';
 import { AssignmentService } from 'src/app/services/assignment-service/assignment.service';
 import { SubmissionService } from 'src/app/services/submission-service/submission.service';
@@ -114,5 +114,9 @@ export class SubmissionAddComponent implements OnInit {
     this.uploadQueue = [];
     this.checkboxMyWork = false;
     this.submissionButtonLoading = true;
+  }
+
+  public get submissionCheck(): typeof SubmissionCheck {
+    return SubmissionCheck;
   }
 }

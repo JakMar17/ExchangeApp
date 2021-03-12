@@ -3,38 +3,74 @@
   <div class="modal-content container">
     <div class="box">
       <h1 class="title is-2">Pregled oddaje {{ submission.submissionId }}</h1>
-      <!-- <div class="columns">
+      <div class="columns">
         <div class="column is-narrow tags has-addons">
-          <span class="tag">Test</span>
-          <span class="tag is-success">OK</span>
+          <span class="tag">Test pravilnost</span>
+          <span
+            class="tag"
+            [ngClass]="{
+              'is-success': submission.status === submissionStatus.OK,
+              'is-danger': submission.status === submissionStatus.NOK,
+              'is-primary': submission.status === submissionStatus.TIMEOUT,
+              'is-info': submission.status === submissionStatus.PENDING_REVIEW,
+              'is-warning': submission.status === submissionStatus.COMPILE_ERROR
+            }"
+          >
+            {{ submission.status | submissionStatus }}
+          </span>
         </div>
-        <div class="column is-narrow tags has-addons">
+        <!-- <div class="column is-narrow tags has-addons">
           <span class="tag">Plagiat</span>
           <span class="tag is-warning">opozorilo</span>
         </div>
         <div class="column is-narrow tags has-addons">
           <span class="tag">Status</span>
           <span class="tag is-danger">zavrnjeno</span>
-        </div>
-      </div> -->
+        </div> -->
+      </div>
       <p>Datum oddaje: {{ submission.created | date: "dd.MM.yyyy" }}</p>
     </div>
 
     <div class="box">
-      <div class="columns">
-        <div class="column">
-          <h3 class="title is-4">Vhodna datoteka</h3>
+      <article class="message is-primary">
+        <div
+          (click)="showInputPanel = !showInputPanel"
+          class="message-header is-clickable"
+        >
+          <p>Vhodna datoteka</p>
+        </div>
+        <div *ngIf="showInputPanel" class="message-body">
           <pre style="margin: 0; padding: 0">
             <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="submission.inputFile"></code>
           </pre>
         </div>
-        <div class="column">
-          <h3 class="title is-4">Izhodna datoteka</h3>
+      </article>
+      <article class="message is-primary">
+        <div
+          class="message-header is-clickable"
+          (click)="showOutputPanel = !showOutputPanel"
+        >
+          <p>Izhodna datoteka</p>
+        </div>
+        <div *ngIf="showOutputPanel" class="message-body">
           <pre style="margin: 0; padding: 0">
             <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="submission.outputFile"></code>
           </pre>
         </div>
-      </div>
+      </article>
+      <article *ngIf="showError" class="message is-warning">
+        <div
+          (click)="showErrorPanel = !showErrorPanel"
+          class="message-header is-clickable"
+        >
+          <p>Pričakovan rezultat izvedbe programa z vhodnimi parametri</p>
+        </div>
+        <div *ngIf="showErrorPanel" class="message-body">
+          <pre style="margin: 0; padding: 0">
+            <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="submission.inputFile"></code>
+          </pre>
+        </div>
+      </article>
     </div>
 
     <!-- <div class="box">

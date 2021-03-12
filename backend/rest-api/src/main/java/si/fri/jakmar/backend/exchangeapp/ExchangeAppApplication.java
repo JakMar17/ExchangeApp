@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
-import si.fri.jakmar.backend.exchangeapp.storage.FileStorageService;
+import si.fri.jakmar.backend.exchangeapp.files.FileStorageService;
 
 import javax.annotation.Resource;
 

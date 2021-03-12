@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.configuration.beans;
+package si.fri.jakmar.backend.exchangeapp.settings;
 
 
 import org.springframework.context.annotation.Bean;

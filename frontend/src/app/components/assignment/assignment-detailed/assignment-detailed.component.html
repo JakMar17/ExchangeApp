@@ -102,10 +102,22 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of assignment.mySubmissions">
+              <tr
+                *ngFor="let item of assignment.mySubmissions"
+                [ngClass]="{
+                  'has-background-success-light':
+                    item.status === submissionStatus.OK,
+                  'has-background-danger-light':
+                    item.status === submissionStatus.NOK,
+                  'has-background-warning-light':
+                    item.status === submissionStatus.COMPILE_ERROR,
+                  'has-background-primary-light':
+                    item.status === submissionStatus.TIMEOUT
+                }"
+              >
                 <td>{{ item.input }}</td>
                 <td>{{ item.output }}</td>
-                <td>{{ item.status }}</td>
+                <td>{{ item.status | submissionStatus }}</td>
                 <td class="is-narrow">
                   <div class="columns">
                     <div class="column is-narrow">
@@ -169,7 +181,6 @@
               <tr>
                 <th>Vhodna datoteka</th>
                 <th>Izhodna datoteka</th>
-                <th>Status</th>
                 <th></th>
               </tr>
             </thead>
@@ -177,7 +188,6 @@
               <tr *ngFor="let item of assignment.boughtSubmissions">
                 <td>{{ item.input }}</td>
                 <td>{{ item.output }}</td>
-                <td>{{ item.status }}</td>
                 <td class="is-narrow">
                   <div class="columns">
                     <div class="column is-narrow">

@@ -284,7 +284,7 @@ public class AssignmentsServices {
         ));
     }
 
-    public DoubleWrapper<String, ByteArrayInputStream> downloadSuorce(Integer assignmentId) throws DataNotFoundException {
+    public DoubleWrapper<String, ByteArrayInputStream> downloadSource(Integer assignmentId) throws DataNotFoundException {
         var assignment = assignmentRepository.findById(assignmentId).orElseThrow(() -> new DataNotFoundException("Ne najdem isakne naloge"));
         var source = assignment.getSource();
         if(source == null)
