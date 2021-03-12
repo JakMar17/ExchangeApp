@@ -1,6 +1,7 @@
 package si.fri.jakmar.exchangeapp.backend.testingutility.api.interfaces;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,13 +19,14 @@ public interface CorrectnessApiInterface {
     @GetMapping("test")
     @Operation(summary = "Executes correctness test for not yet tested submissions of given assignment",
             description = "Takes assignment id and finds its submissions with status PENDING_REVIEW. " +
-                          "If any submissions are found it runs test checking if files are OK")
+                    "If any submissions are found it runs test checking if files are OK")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "Tests were successfully started and executed",
                     content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = SubmissionTestResult.class))
+                            @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = SubmissionTestResult.class)))
                     }
             ),
             @ApiResponse(
