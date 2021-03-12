@@ -14,7 +14,7 @@ import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities.As
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities.SubmissionEntity;
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.repositories.AssignmentEntityRepository;
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.repositories.SubmissionEntityRepository;
-import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.CreatingEnvirontmentException;
+import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.CreatingEnvironmentException;
 import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.DataNotFoundException;
 import si.fri.jakmar.exchangeapp.backend.testingutility.functions.FileFunctions;
 import si.fri.jakmar.exchangeapp.backend.testingutility.functions.Randomizer;
@@ -46,6 +46,11 @@ public class CorrectnessTestService {
     @Value("${environment.base.path}")
     private String testsBasePath;
 
+    /**
+     * prints from proccess output
+     * @param process
+     * @throws IOException
+     */
     private static void printResults(Process process) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line = "";
@@ -54,7 +59,14 @@ public class CorrectnessTestService {
         }
     }
 
-    public Stream<SubmissionTestResult> test(Integer assignmentId) throws DataNotFoundException, CreatingEnvirontmentException {
+    /**
+     * creates and runs correctness test
+     * @param assignmentId
+     * @return
+     * @throws DataNotFoundException
+     * @throws CreatingEnvironmentException
+     */
+    public Stream<SubmissionTestResult> test(Integer assignmentId) throws DataNotFoundException, CreatingEnvironmentException {
         var assignment = assignmentEntityRepository.findById(assignmentId)
                 .orElseThrow(() -> new DataNotFoundException("Ne najdem naloge"));
 
@@ -89,6 +101,12 @@ public class CorrectnessTestService {
         return new FilePairContainer(fileKey, new FileContainer(inputExtension, inputFile), new FileContainer(outputExtension, outputFile), submission);
     }
 
+    /**
+     * runs bash ATT script
+     * @param testId name of test
+     * @param source program source
+     * @throws IOException error while running script
+     */
     private void runTest(String testId, AssignmentSourceEntity source) throws IOException {
         System.out.println("Začenjam");
         String command = String.format(
@@ -107,6 +125,12 @@ public class CorrectnessTestService {
         printResults(p);
     }
 
+    /**
+     * checks every tuple of test case input, test case output and expected result
+     * @param basePath test base path
+     * @param tests tests to check
+     * @return list of results of checks
+     */
     private List<SubmissionCorrectnessResultEntity> checkResult(String basePath, FilePairContainer[] tests) {
         String outputPath = basePath + Constants.TEST_OUTPUT_SUB_PATH;
         String expectedPath = basePath + Constants.EXPECTED_OUTPUT_SUB_PATH;
@@ -163,6 +187,11 @@ public class CorrectnessTestService {
         return results;
     }
 
+    /**
+     * checks if there was an error while compiling source (if there is, there is file error.txt)
+     * @param outputPath where to look for error file
+     * @return not empty Optional if there was compiling error
+     */
     private Optional<File> errorWhileCompiling(String outputPath) {
         File error = new File(outputPath + "error.txt");
         if (error.exists())

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.exchangeapp.backend.testingutility.containers.FilePairContainer;
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities.AssignmentSourceEntity;
-import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.CreatingEnvirontmentException;
+import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.CreatingEnvironmentException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 @Component
 public class TestEnvironment {
@@ -28,22 +27,29 @@ public class TestEnvironment {
     @Value("${att.file.path}")
     private String attPath;
 
-    public void create(String testId, FilePairContainer[] inputsOutputs, AssignmentSourceEntity source) throws CreatingEnvirontmentException {
+    /**
+     * creates environment for testing correctness (folder structures and copy files)
+     * @param testId name of root folder for test
+     * @param inputsOutputs array of tests to be run
+     * @param source source program
+     * @throws CreatingEnvironmentException error while creating environment
+     */
+    public void create(String testId, FilePairContainer[] inputsOutputs, AssignmentSourceEntity source) throws CreatingEnvironmentException {
         if (!createFolder(basePath, testId))
-            throw new CreatingEnvirontmentException("Cannot create base directory");
+            throw new CreatingEnvironmentException("Cannot create base directory");
 
         String baseTestEnvironmentPath = basePath + testId + DELIMITER;
 
         if (!createFolder(baseTestEnvironmentPath, TEST_CASES_FOLDER_PATH))
-            throw new CreatingEnvirontmentException("Cannot create testCases directory");
+            throw new CreatingEnvironmentException("Cannot create testCases directory");
         if (!createFolder(baseTestEnvironmentPath, INPUT_FOLDER_PATH))
-            throw new CreatingEnvirontmentException("Cannot create input directory");
+            throw new CreatingEnvironmentException("Cannot create input directory");
 
         String testCasesPath = baseTestEnvironmentPath + TEST_CASES_FOLDER_PATH + DELIMITER;
         String inputPath = baseTestEnvironmentPath + INPUT_FOLDER_PATH + DELIMITER;
 
         if (!copySourceFromDatabase(source, baseTestEnvironmentPath))
-            throw new CreatingEnvirontmentException("Error copying source");
+            throw new CreatingEnvironmentException("Error copying source");
 
         for (int i = 0; i < inputsOutputs.length; i++) {
             var pair = inputsOutputs[i];
@@ -51,27 +57,45 @@ public class TestEnvironment {
         }
     }
 
+    /**
+     * return true if it can successfully create folder on basePath + relativePath
+     * @param basePath
+     * @param relativePath
+     * @return true if folder is created
+     */
     private boolean createFolder(String basePath, String relativePath) {
         File folder = new File(basePath + relativePath);
         return folder.mkdir();
     }
 
-    private boolean copyInputOutputPair(FilePairContainer inputOutput, String inputPath, String outputPath, int fileIndex) throws CreatingEnvirontmentException {
+    /**
+     * copies input and output files to test environment
+     * @param inputOutput file container with input/output files
+     * @param inputPath path for input to be copied
+     * @param outputPath path for output to be copied
+     * @param fileIndex
+     * @return true if files are copied successfully
+     * @throws CreatingEnvironmentException error while copying files
+     */
+    private boolean copyInputOutputPair(FilePairContainer inputOutput, String inputPath, String outputPath, int fileIndex) throws CreatingEnvironmentException {
         File i = inputOutput.getInput().getFile();
         File o = inputOutput.getOutput().getFile();
 
         if (!copyFile(i, inputPath, String.format("test%d%s", fileIndex, inputOutput.getInput().getFileExtension())))
-            throw new CreatingEnvirontmentException("Error copying input file: " + inputOutput.getFilename());
+            throw new CreatingEnvironmentException("Error copying input file: " + inputOutput.getFilename());
         if (!copyFile(o, outputPath, String.format("test%d%s", fileIndex, inputOutput.getOutput().getFileExtension())))
-            throw new CreatingEnvirontmentException("Error copying output file: " + inputOutput.getFilename());
+            throw new CreatingEnvironmentException("Error copying output file: " + inputOutput.getFilename());
 
         return true;
     }
 
-    private boolean copyFile(File file, String path) {
-        return copyFile(file, path, file.getName());
-    }
-
+    /**
+     * copies file file to path path with given filename filename
+     * @param file to be copied
+     * @param path where to copy file
+     * @param filename what should filename be
+     * @return true if copying was successful
+     */
     private boolean copyFile(File file, String path, String filename) {
         try {
             Files.copy(file.toPath(), Path.of(path + filename));
@@ -81,6 +105,12 @@ public class TestEnvironment {
         return true;
     }
 
+    /**
+     * copies source code from database to path
+     * @param source database entity
+     * @param path where to copy file
+     * @return true if coping was successful
+     */
     private boolean copySourceFromDatabase(AssignmentSourceEntity source, String path) {
         File targetFile = new File(path + DELIMITER + source.getFileName());
         try {
@@ -94,6 +124,11 @@ public class TestEnvironment {
         return true;
     }
 
+    /**
+     * cleans environment (deletes root folder of test and its content)
+     * @param testId name of root folder to be removed
+     * @return true if delete was successful
+     */
     public boolean clean(String testId) {
         try {
             FileUtils.deleteDirectory(new File(basePath + testId));

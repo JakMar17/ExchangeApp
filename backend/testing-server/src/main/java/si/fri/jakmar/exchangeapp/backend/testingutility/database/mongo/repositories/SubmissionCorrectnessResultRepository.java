@@ -8,6 +8,4 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public interface SubmissionCorrectnessResultRepository extends MongoRepository<SubmissionCorrectnessResultEntity, Integer> {
-    Stream<SubmissionCorrectnessResultEntity> findByAssignmentId(Integer assignmentId);
-    List<SubmissionCorrectnessResultEntity> findBySubmissionId(Integer submissionId);
 }

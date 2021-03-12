@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.CreatingEnvirontmentException;
+import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.CreatingEnvironmentException;
 import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.DataNotFoundException;
 import si.fri.jakmar.exchangeapp.backend.testingutility.services.CorrectnessTestService;
 
@@ -18,7 +18,7 @@ public class CorrectnessApi {
     private CorrectnessTestService correctnessTestService;
 
     @GetMapping("test")
-    public ResponseEntity testCorrectnessOfAssignment(@RequestParam Integer assignmentId) throws CreatingEnvirontmentException, DataNotFoundException {
+    public ResponseEntity testCorrectnessOfAssignment(@RequestParam Integer assignmentId) throws CreatingEnvironmentException, DataNotFoundException {
         var result = correctnessTestService.test(assignmentId);
         return ResponseEntity.ok(result);
     }
