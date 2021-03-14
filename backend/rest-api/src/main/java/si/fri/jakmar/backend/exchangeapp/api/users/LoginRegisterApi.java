@@ -1,12 +1,14 @@
 package si.fri.jakmar.backend.exchangeapp.api.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.RegisterUserDTO;
+import si.fri.jakmar.backend.exchangeapp.exceptions.BadRequestException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.MailException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.RequestInvalidException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
@@ -60,9 +62,15 @@ public class LoginRegisterApi {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/update-password")
-    public ResponseEntity<Object> updatePassword(@RequestHeader String email, @RequestHeader String resetId, @RequestHeader String newPassword) throws RequestInvalidException, DataNotFoundException {
-        registerServices.updatePasswordForUser(email, resetId, newPassword);
+    @PostMapping("/reset-password")
+    public ResponseEntity<Object> resetPassword(@RequestHeader String email, @RequestHeader String resetId, @RequestHeader String newPassword) throws RequestInvalidException, DataNotFoundException {
+        registerServices.resetPasswordForUser(email, resetId, newPassword);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/update-password")
+    public ResponseEntity<Object> updatedPassword(@AuthenticationPrincipal UserEntity user, @RequestParam String oldPassword, @RequestParam String newPassword) throws BadRequestException {
+        registerServices.updatePasswordForUser(user, oldPassword, newPassword);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

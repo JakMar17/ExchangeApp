@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionDTO;
 import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;

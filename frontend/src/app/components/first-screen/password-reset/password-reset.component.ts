@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { LoginRegisterApiService } from 'src/app/api/login-register-api/login-register-api.service';
+import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
 import { LoginPanelEnum } from '../models/login-panel-enum';
 
 @Component({
@@ -40,7 +41,7 @@ export class PasswordResetComponent implements OnInit {
         this.processing = false;
       },
       (error: HttpErrorResponse) => {
-        this.error = error.error.message;
+        this.error = (error.error as ExceptionWrapper).body;
         this.processing = false;
       }
     );

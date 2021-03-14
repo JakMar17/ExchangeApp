@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import si.fri.jakmar.backend.exchangeapp.constants.JwtConstants;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.LoginUserDTO;
 
 import javax.servlet.FilterChain;

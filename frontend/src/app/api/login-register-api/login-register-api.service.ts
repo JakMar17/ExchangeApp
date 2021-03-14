@@ -44,4 +44,16 @@ export class LoginRegisterApiService {
     const headers = { email };
     return this.http.get<any>(this.baseUrl + 'user/reset', { headers });
   }
+
+  public updatePassword(
+    Authorization: string,
+    formdata: FormData
+  ): Observable<any> {
+    const headers = { Authorization };
+    return this.http.post<any>(
+      this.baseUrl + 'user/update-password',
+      formdata,
+      { headers }
+    );
+  }
 }

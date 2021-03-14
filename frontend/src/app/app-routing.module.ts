@@ -51,7 +51,7 @@ const routes: Routes = [
     canActivate: [UserServiceService]
   },
   {
-    path: 'user/:userId/profile',
+    path: 'user/profile',
     component: UserProfileComponent,
     canActivate: [UserServiceService]
   },

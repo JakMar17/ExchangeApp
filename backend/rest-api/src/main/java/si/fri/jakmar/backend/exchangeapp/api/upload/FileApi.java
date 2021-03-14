@@ -9,7 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import si.fri.jakmar.backend.exchangeapp.containers.DoubleWrapper;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
@@ -51,11 +51,11 @@ public class FileApi {
             @RequestParam Integer assignmentId,
             @RequestParam String programName,
             @RequestParam String programLanguage,
-            @RequestParam Integer timeout,
-            @RequestParam MultipartFile source)
+            @RequestParam Double timeout,
+            @RequestParam(required = false) MultipartFile source)
     throws IOException, DataNotFoundException {
         assignmentsServices.saveSource(assignmentId, programName, programLanguage, timeout, source, user);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(true);
     }
 
     @GetMapping("/download-source")

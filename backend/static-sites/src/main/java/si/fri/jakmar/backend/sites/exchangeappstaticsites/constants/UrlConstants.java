@@ -11,7 +11,7 @@ public class UrlConstants {
 
     public UrlConstants(Environment environment) {
         EMAIL_CONFIRMATION_BASE_URL = environment.getProperty("restapi.base.url") + "user/confirm-registration";
-        PASSWORD_RESET_BASE_URL = environment.getProperty("restapi.base.url") + "user/update-password";
+        PASSWORD_RESET_BASE_URL = environment.getProperty("restapi.base.url") + "user/reset-password";
         FRONTEND_BASE_URL = environment.getProperty("frontend.base.url");
     }
 }

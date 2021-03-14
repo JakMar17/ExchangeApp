@@ -10,6 +10,7 @@ import { UserServiceService } from 'src/app/services/user-service/user-service.s
 export class UserProfileComponent implements OnInit {
 
   public user: User | null;
+  public showPasswordChangeModal: boolean = false;
 
   constructor(private userServiece: UserServiceService) {
     this.user = userServiece.userLoggedIn;
@@ -18,4 +19,8 @@ export class UserProfileComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  public onModalClosed($event: any): void {
+    console.log($event);
+    this.showPasswordChangeModal = false;
+  }
 }

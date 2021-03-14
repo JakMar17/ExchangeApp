@@ -1,14 +1,17 @@
 package si.fri.jakmar.backend.exchangeapp.services.users;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserPasswordResetEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserRegistrationStatus;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserType;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.user.UserPasswordResetRepository;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.user.UserRepository;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserPasswordResetEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserRegistrationStatus;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserType;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.user.UserPasswordResetRepository;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.user.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.RegisterUserDTO;
+import si.fri.jakmar.backend.exchangeapp.exceptions.BadRequestException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.MailException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.RequestInvalidException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
@@ -20,14 +23,13 @@ import java.io.IOException;
 import java.util.stream.StreamSupport;
 
 @Component
+@RequiredArgsConstructor
 public class RegisterServices {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserPasswordResetRepository userPasswordResetRepository;
-    @Autowired
-    private RequestEmailCreator requestEmailCreator;
+    private final UserRepository userRepository;
+    private final UserPasswordResetRepository userPasswordResetRepository;
+    private final RequestEmailCreator requestEmailCreator;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * takes register data, checks them and registers user
@@ -75,17 +77,21 @@ public class RegisterServices {
         userPasswordResetRepository.save(resetRequest);
     }
 
-    public void updatePasswordForUser(String email, String resetId, String newPassword) throws DataNotFoundException, RequestInvalidException {
-        var users = userRepository.findUsersByEmail(email);
-        if(users.isEmpty())
-            throw new DataNotFoundException("Ne najdem uporabnika");
+    public void updatePasswordForUser(UserEntity user, String oldPassword, String newPassword) throws BadRequestException {
+        if(!bCryptPasswordEncoder.matches(oldPassword, user.getPassword()))
+            throw new BadRequestException("Geslo ni pravilno");
 
+        user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    public void resetPasswordForUser(String email, String resetId, String newPassword) throws DataNotFoundException, RequestInvalidException {
+        var user = userRepository.findUsersByEmail(email).orElseThrow(() -> new DataNotFoundException("Ne najdem uporabnika"));
         var resetRequest = userPasswordResetRepository.getByResetKey(resetId).orElseThrow(() -> new RequestInvalidException("Zahteva za spremebo gela ne obstaja"));
-        
+
         if(!resetRequest.isActive() || !email.equals(resetRequest.getUser().getUsername()))
             throw new RequestInvalidException("Napaka pri obdelavi zahteve");
 
-        var user = users.get();
         user.setPassword(newPassword);
         userRepository.save(user);
         resetRequest.setUsed(true);

@@ -62,31 +62,26 @@
           </div>
         </div>
 
-        <div class="columns">
-          <div class="column is-narrow">
-            <button class="button is-outlined is-warning has-icons-left">
-              <span class="is-small icon">
-                <i class="ri-lock-line"></i>
-              </span>
-              <span>
-                Spremeni geslo
-              </span>
-            </button>
-          </div>
-          <div class="column is-narrow">
-            <button class="button is-outlined is-danger has-icons-left">
-              <span class="is-small icon is-left">
-                <i class="ri-database-2-line"></i>
-              </span>
-              <span class="is-text">
-              Zahtevaj spremembo podatkov
-              </span>
-            </button>
-          </div>
+        <div class="buttons">
+          <button
+            (click)="showPasswordChangeModal = true"
+            class="button is-outlined is-warning has-icons-left"
+          >
+            <span class="icon">
+              <i class="ri-lock-line"></i>
+            </span>
+            <span> Spremeni geslo </span>
+          </button>
+          <!-- <button class="button is-outlined is-danger has-icons-left">
+            <span class="is-small icon is-left">
+              <i class="ri-database-2-line"></i>
+            </span>
+            <span class="is-text"> Zahtevaj spremembo podatkov </span>
+          </button> -->
         </div>
       </div>
 
-      <div class="box">
+      <!--       <div class="box">
         <h3 class="title is-3">
           Moji predmeti
         </h3>
@@ -102,8 +97,7 @@
         <h3 class="title is-3">
           Moje oddaje
         </h3>
-      </div>
-
+      </div> -->
     </div>
   </div>
   <footer class="footer" style="height: 5vh">
@@ -112,3 +106,9 @@
     </div>
   </footer>
 </div>
+
+<!-- change password modal -->
+<app-user-change-password
+  *ngIf="showPasswordChangeModal"
+  (onClose)="onModalClosed($event)"
+></app-user-change-password>

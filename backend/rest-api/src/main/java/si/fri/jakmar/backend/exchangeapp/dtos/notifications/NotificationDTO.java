@@ -1,6 +1,6 @@
 package si.fri.jakmar.backend.exchangeapp.dtos.notifications;
 
-import si.fri.jakmar.backend.exchangeapp.database.entities.notifications.NotificationEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.notifications.NotificationEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
 
 import java.time.LocalDateTime;

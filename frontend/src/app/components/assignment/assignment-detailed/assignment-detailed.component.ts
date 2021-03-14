@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Assignment } from 'src/app/models/assignment-model';
 import { Course } from 'src/app/models/class-model';
+import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
 import { Submission, SubmissionStatus } from 'src/app/models/submission-model';
 import { AssignmentService } from 'src/app/services/assignment-service/assignment.service';
 import { CoursesService } from 'src/app/services/courses-service/courses.service';
@@ -149,7 +150,7 @@ export class AssignmentDetailedComponent implements OnInit, OnDestroy {
           });
         },
         (error: HttpErrorResponse) => {
-          this.buyingErrorMesage = error.error.message;
+          this.buyingErrorMesage = (error.error as ExceptionWrapper).body;
         }
       );
   }
@@ -178,7 +179,7 @@ export class AssignmentDetailedComponent implements OnInit, OnDestroy {
   }
 
   public get submissionStatus(): typeof SubmissionStatus {
-    return SubmissionStatus;  
+    return SubmissionStatus;
   }
 
   ngOnDestroy(): void {

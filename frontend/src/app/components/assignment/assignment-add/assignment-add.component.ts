@@ -7,6 +7,7 @@ import {
   AssignmentStatus,
   SubmissionCheck,
 } from 'src/app/models/assignment-model';
+import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
 import { Submission } from 'src/app/models/submission-model';
 import { AssignmentService } from 'src/app/services/assignment-service/assignment.service';
 import { SubmissionService } from 'src/app/services/submission-service/submission.service';
@@ -91,19 +92,21 @@ export class AssignmentAddComponent implements OnInit {
     this.errorMessage = this.checkInputs();
 
     if (this.errorMessage == null) {
-      const assignment: Assignment = await this.assignmentService
+      const assignment: Assignment | null = await this.assignmentService
         .saveAssignment(this.assignment, this.courseId)
         .toPromise()
-        .catch(
-          (err: HttpErrorResponse) => (this.errorMessage = err.error.message)
-        );
+        .catch((err: HttpErrorResponse) => {
+          this.errorMessage = (err.error as ExceptionWrapper).body;
+          return null;
+        });
 
-        
-        console.log('this.assignment', this.assignment);
-        console.log('assignment', assignment);
+      console.log('this.assignment', this.assignment);
+      console.log('assignment', assignment);
+
+      if (assignment == null) return;
 
       if (assignment.testType === SubmissionCheck.AUTOMATIC) {
-        await this.assignmentService
+        const sourc = await this.assignmentService
           .saveSourceCodeForAssignment(
             assignment,
             this.assignment.sourceName,
@@ -112,9 +115,14 @@ export class AssignmentAddComponent implements OnInit {
             this.sourceFile
           )
           .toPromise()
-          .catch(
-            (err: HttpErrorResponse) => (this.errorMessage = err.error.message)
-          );
+          .catch((err: HttpErrorResponse) => {
+            this.errorMessage = (err.error as ExceptionWrapper).body;
+            return null;
+          });
+
+        console.log(sourc);
+
+        if (sourc == null) return;
       }
 
       this.alertAndExit('Naloga je bila shranjena');
@@ -129,14 +137,14 @@ export class AssignmentAddComponent implements OnInit {
     this.assignment.archived = true;
     this.assignmentService.archiveAssignment(this.assignment).subscribe(
       () => this.alertAndExit('Naloga je bila arhivirana'),
-      (err: HttpErrorResponse) => (this.errorMessage = err.error.message)
+      (err: HttpErrorResponse) => (this.errorMessage = (err.error as ExceptionWrapper).body)
     );
   }
 
   public deleteAssignment(): void {
     this.assignmentService.deleteAssignment(this.assignment).subscribe(
       () => this.alertAndExit('Naloga je bila izbrisana'),
-      (err: HttpErrorResponse) => (this.errorMessage = err.error.message)
+      (err: HttpErrorResponse) => (this.errorMessage = (err.error as ExceptionWrapper).body)
     );
   }
 

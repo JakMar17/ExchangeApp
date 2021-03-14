@@ -5,12 +5,16 @@
         <i class="ri-menu-line"></i>
       </button>
     </div>
-    <div class="navbar-item title is-4 is-clickable" (click)="onLogoClick()">ExchangeApp</div>
+    <div class="navbar-item title is-4 is-clickable" (click)="onLogoClick()">
+      ExchangeApp
+    </div>
   </div>
   <div class="navbar-end">
     <div class="navbar-item">
-      {{user | userToString}} (
-      <a class="has-text-danger" (click)="onLogOffButtonClick()">odjavi</a>)
+      <a class="has-text-info" (click)="goToProfile()">{{
+        user | userToString
+      }} &nbsp; </a>
+      ( <a class="has-text-danger" (click)="onLogOffButtonClick()">odjavi</a>)
     </div>
     <div class="navbar-item">
       <a> <i class="ri-user-line"></i></a>

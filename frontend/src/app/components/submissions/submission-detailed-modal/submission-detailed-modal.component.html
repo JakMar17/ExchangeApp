@@ -58,19 +58,22 @@
           </pre>
         </div>
       </article>
-      <article *ngIf="showError" class="message is-warning">
-        <div
-          (click)="showErrorPanel = !showErrorPanel"
-          class="message-header is-clickable"
-        >
-          <p>Pričakovan rezultat izvedbe programa z vhodnimi parametri</p>
-        </div>
-        <div *ngIf="showErrorPanel" class="message-body">
-          <pre style="margin: 0; padding: 0">
-            <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="submission.inputFile"></code>
-          </pre>
-        </div>
-      </article>
+
+      <div *ngIf="showError">
+        <article class="message is-warning">
+          <div
+            (click)="showErrorPanel = !showErrorPanel"
+            class="message-header is-clickable"
+          >
+            <p>Referenčni izhod</p>
+          </div>
+          <div *ngIf="showErrorPanel" class="message-body">
+            <pre style="margin: 0; padding: 0">
+              <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="submission.status === submissionStatus.NOK ? submission.expectedOutput : submission.diffOrErrorMessage"></code>
+            </pre>
+          </div>
+        </article>
+      </div>
     </div>
 
     <!-- <div class="box">

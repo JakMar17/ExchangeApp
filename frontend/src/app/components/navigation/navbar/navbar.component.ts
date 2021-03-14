@@ -47,4 +47,8 @@ export class NavbarComponent implements OnInit {
   public onLogoClick(): void {
     this.router.navigate(['/dashboard']);
   }
+
+  public goToProfile(): void {
+    this.router.navigate(["/user/profile"]);
+  }
 }

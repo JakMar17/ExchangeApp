@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Assignment, SubmissionCheck } from 'src/app/models/assignment-model';
+import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
 import { SubmissionFilePair } from 'src/app/models/submission-model';
 import { AssignmentService } from 'src/app/services/assignment-service/assignment.service';
 import { SubmissionService } from 'src/app/services/submission-service/submission.service';
@@ -82,7 +83,7 @@ export class SubmissionAddComponent implements OnInit {
           console.error(error);
 
           if (error.status === 406) {
-            alert(error.error.message);
+            alert((error.error as ExceptionWrapper).body);
 
             this.assignmentService
               .getAssignmentWithSubmissions(this.assignment)

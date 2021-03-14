@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CourseApiService } from 'src/app/api/course-api/course-api.service';
 import { Course } from 'src/app/models/class-model';
+import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
 import { User } from 'src/app/models/user-model';
 import { CoursesService } from 'src/app/services/courses-service/courses.service';
 import { UserServiceService } from 'src/app/services/user-service/user-service.service';
@@ -219,7 +220,7 @@ export class ClassAddComponent implements OnInit {
     if (this.errorMessage == null)
       this.courseApi.saveCourse(this.course, this.userService.bearer).subscribe(
         (data) => this.router.navigate(['/course/' + data.courseId]),
-        (err: HttpErrorResponse) => alert('Napaka: ' + err.error.message)
+        (err: HttpErrorResponse) => alert('Napaka: ' + (err.error as ExceptionWrapper).body)
       );
   }
 
@@ -230,7 +231,7 @@ export class ClassAddComponent implements OnInit {
         this.router.navigate(['/dashboard']);
       },
       (err: HttpErrorResponse) => {
-        this.errorMessage = err.error.message;
+        this.errorMessage = (err.error as ExceptionWrapper).body;
       }
     );
   }

@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.notifications.NotificationDTO;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;

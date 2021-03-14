@@ -1,7 +1,7 @@
 package si.fri.jakmar.backend.exchangeapp.dtos.users;
 
 import org.apache.commons.collections4.CollectionUtils;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.courses.CourseDTO;
 
 import java.util.List;

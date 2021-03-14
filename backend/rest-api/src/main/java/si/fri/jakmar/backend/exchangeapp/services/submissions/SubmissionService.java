@@ -1,17 +1,19 @@
 package si.fri.jakmar.backend.exchangeapp.services.submissions;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import si.fri.jakmar.backend.exchangeapp.client.testing_utility.TestingUtilityRestClient;
-import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.purchases.PurchaseEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.submissions.SubmissionEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.submissions.SubmissionStatus;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.SubmissionRepository;
+import si.fri.jakmar.backend.exchangeapp.database.mongo.repositories.SubmissionCorrectnessResultRepository;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.assignments.AssignmentEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.assignments.SubmissionCheck;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.purchases.PurchaseEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionStatus;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.SubmissionRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionDTO;
 import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
@@ -29,15 +31,17 @@ import si.fri.jakmar.backend.exchangeapp.files.FileStorageService;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
 @Service
+@RequiredArgsConstructor
 public class SubmissionService {
 
     private final SubmissionRepository submissionRepository;
+    private final SubmissionCorrectnessResultRepository submissionCorrectnessResultRepository;
     private final UserServices userServices;
     private final AssignmentsServices assignmentsServices;
     private final UserAccessServices userAccessServices;
@@ -208,10 +212,8 @@ public class SubmissionService {
      */
     public SubmissionDTO getDetailedSubmission(String personalNumber, Integer submissionId) throws DataNotFoundException, AccessUnauthorizedException, AccessForbiddenException, FileException {
         var user = userServices.getUserByPersonalNumber(personalNumber);
-        var submissionOptional = submissionRepository.findById(submissionId);
-        if (submissionOptional.isEmpty())
-            throw new DataNotFoundException("Ne najdem oddaje");
-        var submission = submissionOptional.get();
+        var submission = submissionRepository.findById(submissionId).orElseThrow(() -> new DataNotFoundException("Ne najdem oddaje"));
+
         var assignment = submission.getAssignment();
         var course = assignment.getCourse();
 
@@ -220,9 +222,27 @@ public class SubmissionService {
         var input = storageService.getFile("input_" + submission.getFileKey());
         var output = storageService.getFile("output_" + submission.getFileKey());
 
+        String diffOrError = null;
+        String expectedOutput = null;
+        if(assignment.getSubmissionCheck() == SubmissionCheck.AUTOMATIC &&
+                (submission.getStatus() == SubmissionStatus.NOK || submission.getStatus() == SubmissionStatus.COMPILE_ERROR)
+        ) {
+            var results = submissionCorrectnessResultRepository.findBySubmissionIdOrderByCreatedDesc(submissionId);
+
+            if(results.size() > 0) {
+                var result = results.get(0);
+
+                if(result.getExpectedOutput() != null)
+                    expectedOutput = new String(result.getExpectedOutput(), StandardCharsets.UTF_8);
+                if(submission.getStatus() == SubmissionStatus.NOK && result.getDiff() != null)
+                    diffOrError = new String(result.getDiff(), StandardCharsets.UTF_8);
+                else if(submission.getStatus() == SubmissionStatus.COMPILE_ERROR && result.getCompileError() != null)
+                    diffOrError = new String(result.getCompileError(), StandardCharsets.UTF_8);
+            }
+        }
 
         try {
-            return SubmissionDTO.castFromEntityDetailed(submission, input, output);
+            return SubmissionDTO.castFromEntityDetailed(submission, input, output, expectedOutput, diffOrError);
         } catch (IOException e) {
             throw new FileException("napaka");
         }

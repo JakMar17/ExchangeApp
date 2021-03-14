@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LoginRegisterApiService } from 'src/app/api/login-register-api/login-register-api.service';
 import { RegisterRequestModel } from 'src/app/api/login-register-api/models/register-request-model';
+import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
 import { User } from 'src/app/models/user-model';
 import { LoginPanelEnum } from '../models/login-panel-enum';
 
@@ -96,7 +97,7 @@ export class RegisterComponent implements OnInit {
         this.onBackButtonClick();
       },
       (err) => {
-        this.errorMessage = err.error.message;
+        this.errorMessage = (err.error as ExceptionWrapper).body;
         this.registrationInProgress = false;
       }
     );

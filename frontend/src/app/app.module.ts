@@ -36,6 +36,7 @@ import { WhitelistFileModalComponent } from './components/class/class-add/whitel
 import { PasswordResetComponent } from './components/first-screen/password-reset/password-reset.component';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { SubmissionStatusPipe } from './pipes/submission-status/submission-status.pipe';
+import { UserChangePasswordComponent } from './components/user-profile/user-change-password/user-change-password.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { SubmissionStatusPipe } from './pipes/submission-status/submission-statu
     WhitelistFileModalComponent,
     PasswordResetComponent,
     SubmissionStatusPipe,
+    UserChangePasswordComponent,
   ],
   imports: [
     BrowserModule,

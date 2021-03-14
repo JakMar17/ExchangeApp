@@ -3,9 +3,9 @@ package si.fri.jakmar.backend.exchangeapp.dtos.assignments;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.SubmissionCheck;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.assignments.AssignmentEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.assignments.SubmissionCheck;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionDTO;
 
 import java.time.LocalDateTime;
@@ -43,7 +43,7 @@ public class AssignmentDTO {
     private Integer sourceId;
     private String sourceName;
     private String sourceLanguage;
-    private Integer sourceTimeout;
+    private Double sourceTimeout;
 
     private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived) {
         this.assignmentId = assignmentId;
@@ -62,7 +62,7 @@ public class AssignmentDTO {
         this.archived = archived;
     }
 
-    private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived, String inputExtension, String outputExtension, SubmissionCheck testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel, Integer sourceId, String sourceName, String sourceLanguage, Integer sourceTimeout) {
+    private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived, String inputExtension, String outputExtension, SubmissionCheck testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel, Integer sourceId, String sourceName, String sourceLanguage, Double sourceTimeout) {
         this.assignmentId = assignmentId;
         this.title = title;
         this.classroomUrl = classroomUrl;

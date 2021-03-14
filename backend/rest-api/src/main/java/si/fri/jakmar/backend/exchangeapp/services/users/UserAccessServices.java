@@ -3,11 +3,11 @@ package si.fri.jakmar.backend.exchangeapp.services.users;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserType;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.course.CourseRepository;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.user.UserRepository;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.courses.CourseEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserType;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.course.CourseRepository;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.user.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedException;
 

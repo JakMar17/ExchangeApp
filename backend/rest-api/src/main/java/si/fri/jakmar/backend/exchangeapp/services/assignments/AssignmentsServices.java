@@ -5,12 +5,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import si.fri.jakmar.backend.exchangeapp.containers.DoubleWrapper;
-import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.assignments.AssignmentSourceEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.purchases.PurchaseEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.assignmnets.AssignmentRepository;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.assignmnets.AssignmentSourceRepository;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.assignments.AssignmentEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.assignments.AssignmentSourceEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.purchases.PurchaseEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.assignmnets.AssignmentRepository;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.assignmnets.AssignmentSourceRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionDTO;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
@@ -91,36 +91,36 @@ public class AssignmentsServices {
         var assignment = dto.getAssignmentId() != null
                 ? assignmentRepository.findById(dto.getAssignmentId()).orElseThrow(() -> new DataNotFoundException("Ne najdem naloge")).updateFromDto(dto)
                 : new AssignmentEntity(
-                        dto.getAssignmentId(),
-                        dto.getTitle(),
-                        dto.getClassroomUrl(),
-                        dto.getDescription(),
-                        dto.getStartDate(),
-                        dto.getEndDate(),
-                        dto.getMaxSubmissionsTotal(),
-                        dto.getMaxSubmissionsPerStudent(),
-                        dto.getCoinsPerSubmission(),
-                        dto.getCoinsPrice(),
-                        dto.getInputExtension(),
-                        dto.getOutputExtension(),
-                        dto.getNotifyOnEmail(),
-                        dto.getPlagiarismWarning(),
-                        dto.getPlagiarismLevel(),
-                        dto.getVisible() == null || dto.getVisible(),
-                        dto.getArchived() != null && dto.getArchived(),
-                        dto.getTestType(),
-                        course,
-                        user
-                );
+                dto.getAssignmentId(),
+                dto.getTitle(),
+                dto.getClassroomUrl(),
+                dto.getDescription(),
+                dto.getStartDate(),
+                dto.getEndDate(),
+                dto.getMaxSubmissionsTotal(),
+                dto.getMaxSubmissionsPerStudent(),
+                dto.getCoinsPerSubmission(),
+                dto.getCoinsPrice(),
+                dto.getInputExtension(),
+                dto.getOutputExtension(),
+                dto.getNotifyOnEmail(),
+                dto.getPlagiarismWarning(),
+                dto.getPlagiarismLevel(),
+                dto.getVisible() == null || dto.getVisible(),
+                dto.getArchived() != null && dto.getArchived(),
+                dto.getTestType(),
+                course,
+                user
+        );
 
-        if(assignment.getId() != null)
+        if (assignment.getId() != null)
             assignment.updateFromDto(dto);
 
         assignment = assignmentRepository.save(assignment);
         return AssignmentDTO.castFullFromEntity(
                 assignment,
                 (int) CollectionUtils.emptyIfNull(assignment.getSubmissions()).stream()
-                    .filter(e -> e.getAuthor().equals(user)).count()
+                        .filter(e -> e.getAuthor().equals(user)).count()
         );
     }
 
@@ -265,29 +265,38 @@ public class AssignmentsServices {
             Integer assignmentId,
             String programName,
             String programLanguage,
-            Integer timeout,
+            Double timeout,
             MultipartFile source,
             UserEntity author)
             throws DataNotFoundException, IOException {
         var assignment = assignmentRepository.findById(assignmentId)
                 .orElseThrow(() -> new DataNotFoundException("Naloga s podanim IDjem ne obstaja"));
 
-        assignmentSourceRepository.save(new AssignmentSourceEntity(
-                assignment.getSource() != null ? assignment.getSource().getId() : null,
-                programName,
-                programLanguage,
-                source.getOriginalFilename(),
-                timeout,
-                source.getBytes(),
-                assignment,
-                author
-        ));
+        var assignmentSource = assignment.getSource() == null
+                ? new AssignmentSourceEntity(
+                    assignment.getSource() != null ? assignment.getSource().getId() : null,
+                    programName,
+                    programLanguage,
+                    source.getOriginalFilename(),
+                    timeout,
+                    source.getBytes(),
+                    assignment,
+                    author)
+                : assignment.getSource().update(
+                    programName,
+                    programLanguage,
+                    timeout,
+                    source == null ? null : source.getOriginalFilename(),
+                    source == null ? null : source.getBytes(),
+                    author);
+
+        assignmentSourceRepository.save(assignmentSource);
     }
 
     public DoubleWrapper<String, ByteArrayInputStream> downloadSource(Integer assignmentId) throws DataNotFoundException {
         var assignment = assignmentRepository.findById(assignmentId).orElseThrow(() -> new DataNotFoundException("Ne najdem isakne naloge"));
         var source = assignment.getSource();
-        if(source == null)
+        if (source == null)
             throw new DataNotFoundException("Ni datoteke");
 
         return new DoubleWrapper<>(source.getFileName(), new ByteArrayInputStream(source.getSource()));

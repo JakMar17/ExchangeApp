@@ -4,9 +4,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.containers.SuccessErrorContainer;
-import si.fri.jakmar.backend.exchangeapp.database.entities.courses.CourseEntity;
-import si.fri.jakmar.backend.exchangeapp.database.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.database.repositories.user.UserRepository;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.courses.CourseEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.user.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
 

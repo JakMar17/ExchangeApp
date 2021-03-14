@@ -8,6 +8,8 @@ export interface Submission {
   status?: SubmissionStatus;
   inputFile?: string;
   outputFile?: string;
+  diffOrErrorMessage?: string;
+  expectedOutput?: string;
   author?: User;
 }
 

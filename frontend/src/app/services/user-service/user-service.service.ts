@@ -106,6 +106,16 @@ export class UserServiceService implements OnDestroy, CanActivate {
     }
   }
 
+  public resetUsersPassword(
+    oldPassword: string,
+    newPassword: string
+  ): Observable<any> {
+    const formdata = new FormData();
+    formdata.append('oldPassword', oldPassword);
+    formdata.append('newPassword', newPassword);
+    return this.loginRegisterApi.updatePassword(this.bearer, formdata);
+  }
+
   ngOnDestroy(): void {
     this.logUserOff();
   }
