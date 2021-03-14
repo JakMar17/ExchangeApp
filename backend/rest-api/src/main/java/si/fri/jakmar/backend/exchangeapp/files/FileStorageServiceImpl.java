@@ -28,8 +28,9 @@ public class FileStorageServiceImpl implements FileStorageService {
     public void init() {
         try {
             Files.createDirectory(root);
+            System.out.println("Ustvarjen: " + root);
         } catch (IOException e) {
-            System.out.println("Root folder že obstaja");
+            System.out.println("Root folder že obstaja: " + root);
         }
     }
 
@@ -41,8 +42,8 @@ public class FileStorageServiceImpl implements FileStorageService {
             e.printStackTrace();
             throw new FileException(
                     e.getMessage() == null
-                    ? "Napaka pri shranjevanju"
-                    : e.getMessage()
+                            ? "Napaka pri shranjevanju"
+                            : e.getMessage()
             );
         }
     }

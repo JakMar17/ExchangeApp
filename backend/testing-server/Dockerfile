@@ -5,10 +5,15 @@ COPY src /tmp/src/
 WORKDIR /tmp/
 RUN mvn package -Dmaven.test.skip=true
 
-FROM openjdk:15.0.1-oraclelinux7
-ENV RESTAPI_URL=http://localhost:8080/
-ENV FRONTEND_URL=http://localhost:4200/
+FROM alpine:3.12
+RUN apk add bash
+RUN apk add diffutils
+#RUN apk add openjdk11
+RUN apk add openjdk15-jdk --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
+
+ENV JAVA_HOME=/usr/lib/jvm/java-15-openjdk
+ENV PATH="$JAVA_HOME/bin:${PATH}"
 
 EXPOSE 80
-COPY --from=maven /tmp/target/exchange-app-static-sites-0.0.1-SNAPSHOT.jar /data/jarJarBeans.jar
-CMD java -jar /data/jarJarBeans.jar --server.port=80 --frontend.base.url=${FRONTEND_URL} --restapi.base.url=${RESTAPI_URL}
+COPY --from=maven /tmp/target/testingutility-0.0.1-SNAPSHOT.jar /data/jarJarBeans.jar
+CMD java -jar /data/jarJarBeans.jar --server.port=80 --spring.profiles.active=prod

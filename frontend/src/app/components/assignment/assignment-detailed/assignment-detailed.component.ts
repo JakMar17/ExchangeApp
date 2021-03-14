@@ -159,13 +159,12 @@ export class AssignmentDetailedComponent implements OnInit, OnDestroy {
     this.submissionService.downloadMySubmissions(this.assignment);
   }
 
-  public onSubmissionAddModalClosed(assignment: Assignment | null): void {
+  public onSubmissionAddModalClosed(assignment: Assignment = this.assignment): void {
     this.showAddSubmissionBox = false;
-    if (assignment != null) this.assignment = assignment;
     this.assignBooleanValuesToActionButtons();
 
     this.updateWorker = setInterval(() => {
-      console.log('posodabljam');
+      console.log('posodabljam', assignment);
       this.assignmentService
         .getAssignmentWithSubmissions(assignment)
         .toPromise()
