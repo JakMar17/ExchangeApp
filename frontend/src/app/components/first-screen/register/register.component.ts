@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
         this.emailDomain = '@student.uni-lj.si';
         break;
       case LoginPanelEnum.REGISTER_PROF:
-        this.emailDomain = '@fri1.uni-lj.si';
+        this.emailDomain = '@fri.uni-lj.si';
         break;
       default:
         this.setOtherRegistrationType(LoginPanelEnum.REGISTER_PROF);

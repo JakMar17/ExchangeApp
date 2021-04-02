@@ -110,7 +110,7 @@ public class RegisterServices {
         UserType userType = UserType.OTHER;
         if(registerUserDTO.getEmail().contains("@student.uni-lj.si"))
             userType = UserType.STUDENT;
-        else if(registerUserDTO.getEmail().contains("@fri1.uni-lj.si"))
+        else if(registerUserDTO.getEmail().contains("@fri.uni-lj.si"))
             userType = UserType.PROFESSOR;
 
         return new UserEntity(

@@ -1,66 +1,29 @@
 <i class="ri-flask-line column" style="text-align: center; font-size: 50px"></i>
 <p>
-  To bo nek opisek aplikacije. V eni ali dveh povedih bomo povedali kaj
-  aplikacija dela.
+  <strong>ExchangeApp</strong> je informacijski sistem za izmenjavo testnih
+  primerov, ki jih pedagogi in študenti uporabljajo v okviru pedagoškega procesa
+  za testiranje pravilnosti programske kode.
 </p>
-
-<div class="is-fullwidth is-clickable" (click)="adminLogin()">
-  <h6 class="title is-5 has-text-centered">Administrator sistema</h6>
-  <h6 class="subtitle is-6 has-text-centered">Ima vse pravice, lahko ureja in kreira vse predmete. Dodaja obvestila na začetno stran.</h6>
-  <table class="table is-fullwidth has-text-centered">
-    <thead>
-      <tr>
-        <th>Email za prijavo</th>
-        <th>Geslo za prijavo</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>admin</td>
-        <td>admin</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<hr/>
-
-<div class="is-fullwidth is-clickable" (click)="profLogin()">
-  <h6 class="title is-5 has-text-centered">Profesor</h6>
-  <h6 class="subtitle is-6 has-text-centered">Ima pravice za dodajanje predmetov in urejanje predmetov, katerih je skrbnik (jih je ustvaril ali so mu bile dodeljene pravice)</h6>
-  <table class="table is-fullwidth has-text-centered">
-    <thead>
-      <tr>
-        <th>Email za prijavo</th>
-        <th>Geslo za prijavo</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>prof</td>
-        <td>prof</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<hr/>
-
-<div class="is-fullwidth is-clickable" (click)="studentLogin()">
-  <h6 class="title is-5 has-text-centered">Študent</h6>
-  <h6 class="subtitle is-6 has-text-centered">Lahko dostopa do javnih predmetov in predmetov v katere je vpisan. Ne more spreminjati predmetov in jih dodajati, lahko dodaja oddaje k kreiranim naloga in kupuje oddaje.</h6>
-  <table class="table is-fullwidth has-text-centered">
-    <thead>
-      <tr>
-        <th>Email za prijavo</th>
-        <th>Geslo za prijavo</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>student</td>
-        <td>student</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<p>
+  ExchangeApp pedagoiškim delavcem omogoča kreiranje nalog znotraj kreiranih
+  predmetov. Znotraj vsake naloge lahko študenti oddajajo pare datotek
+  <i>vhod-izhod</i>, ki predstavljajo vhodno in izhodno stanje podanega
+  programa. Za vsak oddan testni primer, ki opravi določen test pravilnosti in
+  test podobnosti, študent pridobi določeno število žetonov. Žetone lahko
+  študent uporabi za nakup dodatnih testnih primerov s katerimi dodatno testira
+  pravilnost svojega programa.
+</p>
+<p>
+  Informacijski sistem sestavljajo: spletna aplikacija, REST API strežnik,
+  sistem za preverjanje pravilnosti oddanih testnih primerov in sistem za
+  preverjanje medsebojne podobnosti med oddanimi testnimi primeri.
+</p>
+<hr />
+<p>
+  Sistem je bil implementiran v okviru diplomske naloge Jakob Marušiča z
+  naslovom
+  <strong
+    >Implementacija informacijskega sistema za medsebojno izmenjavo testnih
+    primerov</strong
+  >, ki je nastala pod mentorstvom docenta dr. Luke Fürsta.
+</p>
