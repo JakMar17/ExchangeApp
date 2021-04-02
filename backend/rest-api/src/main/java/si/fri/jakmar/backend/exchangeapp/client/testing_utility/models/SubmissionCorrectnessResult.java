@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.client.testing_utility.containers;
+package si.fri.jakmar.backend.exchangeapp.client.testing_utility.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

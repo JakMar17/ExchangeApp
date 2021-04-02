@@ -2,14 +2,18 @@ package si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "submission")
@@ -34,4 +38,15 @@ public class SubmissionEntity {
 
     @Enumerated(EnumType.STRING)
     private SubmissionStatus status;
+
+    @OneToMany(mappedBy = "submission1")
+    private List<SubmissionSimilarityEntity> similarities;
+
+    @Override
+    public String toString() {
+        return "SubmissionEntity{" +
+                "fileKey='" + fileKey + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

@@ -4,6 +4,7 @@ public enum SubmissionStatus {
     PENDING_REVIEW,
     OK,
     NOK,
+    NOK_PLAGIARISM,
     TIMEOUT,
     COMPILE_ERROR
 }

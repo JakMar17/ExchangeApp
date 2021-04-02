@@ -1,9 +1,9 @@
 package si.fri.jakmar.backend.exchangeapp.services.submissions;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import si.fri.jakmar.backend.exchangeapp.client.testing_utility.TestingUtilityRestClient;
 import si.fri.jakmar.backend.exchangeapp.database.mongo.repositories.SubmissionCorrectnessResultRepository;
@@ -13,9 +13,12 @@ import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.purchases.Purch
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionEntity;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionStatus;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
-import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.SubmissionRepository;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.submissions.SubmissionRepository;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.submissions.SubmissionSimilaritiesRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionSimilarityDto;
+import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionSimilarityNormalizedDto;
 import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedException;
@@ -32,9 +35,11 @@ import si.fri.jakmar.backend.exchangeapp.files.FileStorageService;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +47,7 @@ public class SubmissionService {
 
     private final SubmissionRepository submissionRepository;
     private final SubmissionCorrectnessResultRepository submissionCorrectnessResultRepository;
+    private final SubmissionSimilaritiesRepository submissionSimilaritiesRepository;
     private final UserServices userServices;
     private final AssignmentsServices assignmentsServices;
     private final UserAccessServices userAccessServices;
@@ -92,9 +98,10 @@ public class SubmissionService {
                         )
             );
 
-        assignment.setSubmissions(submissions);
-
         testingUtilityRestClient.runCorrectnessTestForAssignment(assignment);
+        testingUtilityRestClient.runSimilarityTestForAssignment(assignment);
+
+        assignment.setSubmissions(submissionRepository.getSubmissionEntitiesByAssignment(assignment));
 
         return AssignmentDTO.castFromEntityWithSubmissions(
                 assignment,
@@ -284,6 +291,25 @@ public class SubmissionService {
         var assignment = submission.getAssignment();
 
         return ZipperFunction.createZip(List.of(inputFile), assignment.getInputDataType(), List.of(outputFile), assignment.getOutputDataType());
+    }
+
+    @Transactional
+    public SubmissionSimilarityNormalizedDto[] getSubmissionsSimilarity(Integer submissionId) throws DataNotFoundException {
+        var submission = submissionRepository.findById(submissionId).orElseThrow(() -> new DataNotFoundException("Ne najdem oddaje"));
+        var array = SubmissionSimilarityNormalizedDto.createNormalizedArray();
+
+        submissionSimilaritiesRepository.findDistinctBySubmission1OrSubmission2(submission, submission)
+                .filter(e -> e.getAverageInput() != null && e.getAverageOutput() != null)
+                .forEach(e -> {
+                    int i = (int) ((Math.round(e.getAverageInput()*100/5)));
+                    int o = (int) ((Math.round(e.getAverageOutput()*100/5)));
+                    array[i][o].setNoOfSubmissionsInGroup(array[i][o].getNoOfSubmissionsInGroup() + 1);
+                });
+
+        return Arrays.stream(array)
+                .flatMap(Stream::of)
+                .filter(e -> !e.getNoOfSubmissionsInGroup().equals(0))
+                .toArray(SubmissionSimilarityNormalizedDto[]::new);
     }
 
     /**

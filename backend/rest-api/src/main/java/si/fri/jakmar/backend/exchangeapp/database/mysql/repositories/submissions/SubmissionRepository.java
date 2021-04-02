@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.database.mysql.repositories;
+package si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.submissions;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -14,6 +14,8 @@ public interface SubmissionRepository extends CrudRepository<SubmissionEntity, I
 
     @Query("select s from SubmissionEntity s where s.assignment = :assignment and s.author <> :author and s.deleted = false")
     List<SubmissionEntity> getSubmissionsForAssignmentNotFromUser(AssignmentEntity assignment, UserEntity author);
+
+    List<SubmissionEntity> getSubmissionEntitiesByAssignment(AssignmentEntity assignmentEntity);
 
     List<SubmissionEntity> findAll();
 }

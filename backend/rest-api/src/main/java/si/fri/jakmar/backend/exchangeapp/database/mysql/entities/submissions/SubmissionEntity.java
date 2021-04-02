@@ -51,6 +51,9 @@ public class SubmissionEntity {
     @OneToMany(mappedBy = "submissionBought")
     private List<PurchaseEntity> purchases;
 
+//    @OneToMany(mappedBy = "submission1")
+//    private List<SubmissionSimilarityEntity> similarities;
+
     public SubmissionEntity(Integer id, String fileKey, UserEntity author, AssignmentEntity assignment) {
         this.id = id;
         this.fileKey = fileKey;
