@@ -2,6 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
 import { UserServiceService } from 'src/app/services/user-service/user-service.service';
+import { Styles } from 'src/styles';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-change-password',
@@ -40,8 +42,11 @@ export class UserChangePasswordComponent implements OnInit {
       .resetUsersPassword(this.passwordOldInput, this.passwordNewInput)
       .subscribe(
         () => {
-          alert('Geslo je bilo posodobljeno');
-          this.closeModal();
+          Swal.fire({
+            title: 'Geslo je bilo uspešno posodobljeno',
+            icon: 'success',
+            confirmButtonColor: Styles.info,
+          }).then(() => this.closeModal());
         },
         (err: HttpErrorResponse) => {
           console.log('error', err);

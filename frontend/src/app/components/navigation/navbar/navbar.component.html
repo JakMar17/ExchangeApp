@@ -11,13 +11,10 @@
   </div>
   <div class="navbar-end">
     <div class="navbar-item">
-      <a class="has-text-info" (click)="goToProfile()">{{
-        user | userToString
-      }} &nbsp; </a>
+      <a class="has-text-info" (click)="goToProfile()"
+        >{{ user | userToString }} &nbsp;
+      </a>
       ( <a class="has-text-danger" (click)="onLogOffButtonClick()">odjavi</a>)
-    </div>
-    <div class="navbar-item">
-      <a> <i class="ri-user-line"></i></a>
     </div>
   </div>
 </nav>

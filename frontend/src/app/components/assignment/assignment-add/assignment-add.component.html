@@ -491,5 +491,6 @@
 <app-submission-detailed-modal
   *ngIf="submissionModalSubmission != null"
   [submission]="submissionModalSubmission"
+  [assignment]="assignment"
   (onClose)="onSubmissionDetailedModalClosed()"
 ></app-submission-detailed-modal>

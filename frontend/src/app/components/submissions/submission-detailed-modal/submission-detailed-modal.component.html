@@ -3,6 +3,9 @@
   <div class="modal-content container">
     <div class="box">
       <h1 class="title is-2">Pregled oddaje {{ submission.submissionId }}</h1>
+      <p class="subtitle is-5">
+        Datum oddaje: {{ submission.created | date: "dd.MM.yyyy" }}
+      </p>
       <div class="columns">
         <div class="column is-narrow tags has-addons">
           <span class="tag">Test pravilnost</span>
@@ -28,10 +31,8 @@
           <span class="tag is-danger">zavrnjeno</span>
         </div> -->
       </div>
-      <p>Datum oddaje: {{ submission.created | date: "dd.MM.yyyy" }}</p>
-    </div>
 
-    <div class="box">
+      <h2 class="mednaslov">Vhodna in izhodna datoteka</h2>
       <article class="message is-primary">
         <div
           (click)="showInputPanel = !showInputPanel"
@@ -73,6 +74,63 @@
             </pre>
           </div>
         </article>
+      </div>
+
+      <h2 class="mednaslov">Parametri podobnosti</h2>
+      <p>
+        Graf prikazuje podobnost dotičnega testnega primera z drugimi pravilnimi
+        testnimi primeri. Podobnost je zaokrožena na 5%.
+      </p>
+
+      <div class="table-container">
+        <table class="table is-fullwidth is-hoverable">
+          <thead>
+            <tr>
+              <th>Podobnost vhodne datoteke (%)</th>
+              <th>Podobnost izhodne datoteke (%)</th>
+              <th>Skupna podobnost (%)</th>
+              <th>Število testnih primerov</th>
+              -
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of similarities">
+              <td
+                [ngClass]="{
+                  'has-background-warning-light':
+                    item.inputSimilarity >= assignment.plagiarismWarning,
+                  'has-background-danger-light':
+                    item.inputSimilarity >= assignment.plagiarismLevel
+                }"
+              >
+                {{ item.inputSimilarity }}
+              </td>
+              <td
+                [ngClass]="{
+                  'has-background-warning-light':
+                    item.outputSimilarity >= assignment.plagiarismWarning,
+                  'has-background-danger-light':
+                    item.outputSimilarity >= assignment.plagiarismLevel
+                }"
+              >
+                {{ item.outputSimilarity }}
+              </td>
+              <td
+                [ngClass]="{
+                  'has-background-warning-light':
+                    +item.group >= assignment.plagiarismWarning,
+                  'has-background-danger-light':
+                    +item.group >= assignment.plagiarismLevel
+                }"
+              >
+                {{ item.group }}
+              </td>
+              <td>
+                {{ item.noOfSubmissionsInGroup }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 

@@ -3,6 +3,8 @@ import { LoginRegisterApiService } from 'src/app/api/login-register-api/login-re
 import { RegisterRequestModel } from 'src/app/api/login-register-api/models/register-request-model';
 import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
 import { User } from 'src/app/models/user-model';
+import { Styles } from 'src/styles';
+import Swal from 'sweetalert2';
 import { LoginPanelEnum } from '../models/login-panel-enum';
 
 @Component({
@@ -90,9 +92,13 @@ export class RegisterComponent implements OnInit {
     this.registrationInProgress = true;
     this.loginRegisterApi.register(registerModel).subscribe(
       (data) => {
-        alert(
-          'Registracija je bila uspešna, na vnešeni epoštni naslov je bil poslan potrditveni email'
-        );
+        Swal.fire({
+          title: 'Registracija uspešna',
+          text:
+            'Registracija je bila uspešna, na vnešeni epoštni naslov je bil poslan potrditveni email',
+          icon: 'success',
+          confirmButtonColor: Styles.info,
+        });
         this.registrationInProgress = false;
         this.onBackButtonClick();
       },

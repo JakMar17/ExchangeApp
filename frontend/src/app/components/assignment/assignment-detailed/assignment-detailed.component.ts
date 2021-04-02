@@ -9,6 +9,7 @@ import { AssignmentService } from 'src/app/services/assignment-service/assignmen
 import { CoursesService } from 'src/app/services/courses-service/courses.service';
 import { SubmissionService } from 'src/app/services/submission-service/submission.service';
 
+
 @Component({
   selector: 'app-assignment-detailed',
   templateUrl: './assignment-detailed.component.html',
@@ -159,11 +160,15 @@ export class AssignmentDetailedComponent implements OnInit, OnDestroy {
     this.submissionService.downloadMySubmissions(this.assignment);
   }
 
-  public onSubmissionAddModalClosed(assignment: Assignment = this.assignment): void {
+  public onSubmissionAddModalClosed(
+    assignment: Assignment = this.assignment
+  ): void {
     this.showAddSubmissionBox = false;
     this.assignBooleanValuesToActionButtons();
 
     this.updateWorker = setInterval(() => {
+      if (assignment == null || assignment.assignmentId == null) return;
+
       console.log('posodabljam', assignment);
       this.assignmentService
         .getAssignmentWithSubmissions(assignment)

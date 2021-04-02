@@ -11,6 +11,8 @@ import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
 import { Submission } from 'src/app/models/submission-model';
 import { AssignmentService } from 'src/app/services/assignment-service/assignment.service';
 import { SubmissionService } from 'src/app/services/submission-service/submission.service';
+import Swal from 'sweetalert2';
+import { SweetAlertIcon } from 'sweetalert2';
 
 @Component({
   selector: 'app-assignment-add',
@@ -125,7 +127,7 @@ export class AssignmentAddComponent implements OnInit {
         if (sourc == null) return;
       }
 
-      this.alertAndExit('Naloga je bila shranjena');
+      this.alertAndExit('Naloga je bila shranjena', 'success');
     }
   }
 
@@ -136,15 +138,17 @@ export class AssignmentAddComponent implements OnInit {
   public archiveAssignment(): void {
     this.assignment.archived = true;
     this.assignmentService.archiveAssignment(this.assignment).subscribe(
-      () => this.alertAndExit('Naloga je bila arhivirana'),
-      (err: HttpErrorResponse) => (this.errorMessage = (err.error as ExceptionWrapper).body)
+      () => this.alertAndExit('Naloga je bila arhivirana', 'success'),
+      (err: HttpErrorResponse) =>
+        (this.errorMessage = (err.error as ExceptionWrapper).body)
     );
   }
 
   public deleteAssignment(): void {
     this.assignmentService.deleteAssignment(this.assignment).subscribe(
-      () => this.alertAndExit('Naloga je bila izbrisana'),
-      (err: HttpErrorResponse) => (this.errorMessage = (err.error as ExceptionWrapper).body)
+      () => this.alertAndExit('Naloga je bila izbrisana', "warning"),
+      (err: HttpErrorResponse) =>
+        (this.errorMessage = (err.error as ExceptionWrapper).body)
     );
   }
 
@@ -192,9 +196,17 @@ export class AssignmentAddComponent implements OnInit {
     this.router.navigate(['/course/' + this.courseId]);
   }
 
-  private alertAndExit(message: string): void {
-    alert(message);
-    this.navigateBackToCourse();
+  private alertAndExit(
+    message: string,
+    icon: SweetAlertIcon = 'info',
+    confirmButtonText: string = 'Ok'
+  ): void {
+    Swal.fire({
+      confirmButtonColor: '#3E92CC',
+      confirmButtonText: confirmButtonText,
+      icon: icon,
+      title: message,
+    }).then(() => this.navigateBackToCourse());
   }
 
   public onTableRowViewPressed(element: Submission): void {

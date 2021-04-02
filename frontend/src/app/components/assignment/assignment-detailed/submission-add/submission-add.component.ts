@@ -5,6 +5,8 @@ import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
 import { SubmissionFilePair } from 'src/app/models/submission-model';
 import { AssignmentService } from 'src/app/services/assignment-service/assignment.service';
 import { SubmissionService } from 'src/app/services/submission-service/submission.service';
+import { Styles } from 'src/styles';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-submission-add',
@@ -83,7 +85,12 @@ export class SubmissionAddComponent implements OnInit {
           console.error(error);
 
           if (error.status === 406) {
-            alert((error.error as ExceptionWrapper).body);
+            Swal.fire({
+              title:"Napaka",
+              text: (error.error as ExceptionWrapper).body,
+              icon: "error",
+              confirmButtonColor: Styles.info
+            });
 
             this.assignmentService
               .getAssignmentWithSubmissions(this.assignment)

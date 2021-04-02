@@ -1,7 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Submission } from 'src/app/models/submission-model';
+import {
+  Submission,
+  SubmissionSimilarity,
+} from 'src/app/models/submission-model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -46,6 +49,17 @@ export class SubmissionApiService {
     const headers = new HttpHeaders({ Authorization });
     return this.http.get<Submission[]>(
       this.baseUrl + '/all?assignmentId=' + assignmentId,
+      { headers }
+    );
+  }
+
+  public getSubmissionsSimilarity(
+    Authorization: string,
+    submissionId: number
+  ): Observable<SubmissionSimilarity[]> {
+    const headers = { Authorization };
+    return this.http.get<SubmissionSimilarity[]>(
+      this.baseUrl + '/similarity?submissionId=' + submissionId,
       { headers }
     );
   }

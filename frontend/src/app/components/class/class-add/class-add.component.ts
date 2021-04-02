@@ -7,6 +7,8 @@ import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
 import { User } from 'src/app/models/user-model';
 import { CoursesService } from 'src/app/services/courses-service/courses.service';
 import { UserServiceService } from 'src/app/services/user-service/user-service.service';
+import { Styles } from 'src/styles';
+import Swal from 'sweetalert2';
 import { SecurityLevel } from './models/security-level';
 
 @Component({
@@ -220,15 +222,24 @@ export class ClassAddComponent implements OnInit {
     if (this.errorMessage == null)
       this.courseApi.saveCourse(this.course, this.userService.bearer).subscribe(
         (data) => this.router.navigate(['/course/' + data.courseId]),
-        (err: HttpErrorResponse) => alert('Napaka: ' + (err.error as ExceptionWrapper).body)
+        (err: HttpErrorResponse) =>
+          Swal.fire({
+            title: 'Napaka',
+            text: (err.error as ExceptionWrapper).body,
+            icon: 'error',
+            confirmButtonColor: Styles.info,
+          })
       );
   }
 
   public onDeleteButtonPressed(): void {
     this.courseService.deleteCourse(this.course).subscribe(
       (data) => {
-        alert('Predmet je bil izbrisan');
-        this.router.navigate(['/dashboard']);
+        Swal.fire({
+          title: 'Predmet je bil izbrisan',
+          icon: 'success',
+          confirmButtonColor: Styles.info,
+        }).then(() => this.router.navigate(['/dashboard']));
       },
       (err: HttpErrorResponse) => {
         this.errorMessage = (err.error as ExceptionWrapper).body;

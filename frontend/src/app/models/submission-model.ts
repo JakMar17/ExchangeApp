@@ -35,3 +35,14 @@ export enum SubmissionStatus {
   PENDING_REVIEW = 'PENDING_REVIEW',
   COMPILE_ERROR = 'COMPILE_ERROR',
 }
+
+export class SubmissionSimilarity {
+  public inputSimilarity: number;
+  public outputSimilarity: number;
+  public noOfSubmissionsInGroup: number;
+  public group: string;
+
+  public objectToArray(): any {
+    return [this.group, this.inputSimilarity, this.outputSimilarity, this.noOfSubmissionsInGroup];
+  }
+}

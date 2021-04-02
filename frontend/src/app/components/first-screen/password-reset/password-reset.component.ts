@@ -2,6 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { LoginRegisterApiService } from 'src/app/api/login-register-api/login-register-api.service';
 import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
+import { Styles } from 'src/styles';
+import Swal from 'sweetalert2';
 import { LoginPanelEnum } from '../models/login-panel-enum';
 
 @Component({
@@ -34,9 +36,13 @@ export class PasswordResetComponent implements OnInit {
     this.processing = true;
     this.userApi.resetPassword(this.email).subscribe(
       () => {
-        alert(
-          'Navodila za ponastavitev gesla so bila poslana na vnešeni epoštni naslov'
-        );
+        Swal.fire({
+          title: 'Ponastavitev gesla',
+          text:
+            'Navodila za ponastavitev gesla so bila poslana na vnešeni epoštni naslov',
+          icon: 'success',
+          confirmButtonColor: Styles.info,
+        });
         this.onBackButtonClick();
         this.processing = false;
       },

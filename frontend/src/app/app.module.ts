@@ -37,6 +37,9 @@ import { PasswordResetComponent } from './components/first-screen/password-reset
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { SubmissionStatusPipe } from './pipes/submission-status/submission-status.pipe';
 import { UserChangePasswordComponent } from './components/user-profile/user-change-password/user-change-password.component';
+import { GoogleChartsModule } from 'angular-google-charts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 @NgModule({
   declarations: [
@@ -78,6 +81,9 @@ import { UserChangePasswordComponent } from './components/user-profile/user-chan
     FormsModule,
     HighlightModule,
     HttpClientModule,
+    GoogleChartsModule,
+    NgxChartsModule,
+    SweetAlert2Module.forRoot()
   ],
   providers: [
     {

@@ -6,6 +6,7 @@ import { Assignment } from 'src/app/models/assignment-model';
 import {
   Submission,
   SubmissionFilePair,
+  SubmissionSimilarity,
   UploadModel,
 } from 'src/app/models/submission-model';
 import { UserServiceService } from '../user-service/user-service.service';
@@ -69,6 +70,15 @@ export class SubmissionService {
     return this.submissionApi.getAllSubmissionsOfAssignment(
       this.userService.bearer,
       assignment.assignmentId
+    );
+  }
+
+  public getSubmissionsSimilarity(
+    submission: Submission
+  ): Observable<SubmissionSimilarity[]> {
+    return this.submissionApi.getSubmissionsSimilarity(
+      this.userService.bearer,
+      submission.submissionId
     );
   }
 }

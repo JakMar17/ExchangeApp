@@ -10,6 +10,8 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
+import Swal from 'sweetalert2';
+import { Styles } from 'src/styles';
 
 @Injectable({
   providedIn: 'root',
@@ -79,10 +81,6 @@ export class UserServiceService implements OnDestroy, CanActivate {
       .toPromise()
       .catch(() => {
         throw 'Napaka pri posodabljanju ';
-        alert(
-          'Prišlo je do težave z uporabniško sejo, potrebna je ponovna prijava'
-        );
-        this.logUserOff();
       });
 
     this._bearer = response.headers.get(UserServiceService.authorizationHeader);
@@ -98,7 +96,12 @@ export class UserServiceService implements OnDestroy, CanActivate {
       this.router.navigate(['']);
       return false;
     } else if (this.isJwtExpired()) {
-      alert('Seja je potekla, potrebna je ponovna prijava');
+      Swal.fire({
+        title: 'Seja je potekla',
+        text: 'Potrebna je ponovna prijava',
+        icon: 'warning',
+        confirmButtonColor: Styles.info,
+      });
       this.router.navigate(['']);
       return false;
     } else {
