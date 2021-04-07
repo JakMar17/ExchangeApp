@@ -1,8 +1,9 @@
-package si.fri.jakmar.backend.exchangeapp.client.testing_utility.models;
+package si.fri.jakmar.backend.exchangeapp.client.testing_utility.models.correctenss;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionCorrectnessStatus;
 
 @Data
 @NoArgsConstructor

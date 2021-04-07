@@ -1,6 +1,5 @@
-package si.fri.jakmar.backend.exchangeapp.client.testing_utility.models;
+package si.fri.jakmar.exchangeapp.backend.testingutility.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,10 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class SubmissionSimilarityResult {
-    private Integer submissionIDCompared;
-
+public class SubmissionSimilarity {
+    private Integer comparedSubmissionId;
     private Double cosineSimilarity;
     private Double jaccardIndex;
     private Double sorenseDiceCoefficient;

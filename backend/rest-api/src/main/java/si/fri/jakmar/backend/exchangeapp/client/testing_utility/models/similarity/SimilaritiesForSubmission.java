@@ -1,16 +1,14 @@
-package si.fri.jakmar.exchangeapp.backend.testingutility.models;
+package si.fri.jakmar.backend.exchangeapp.client.testing_utility.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities.SubmissionSimilarityEntity;
-
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class SubmissionSimilarityDTO {
-    private Integer submissionIDCompared;
+public class SimilaritiesForSubmission {
+    private Integer comparedWithSubmissionId;
 
     private Double cosineSimilarity;
     private Double jaccardIndex;
