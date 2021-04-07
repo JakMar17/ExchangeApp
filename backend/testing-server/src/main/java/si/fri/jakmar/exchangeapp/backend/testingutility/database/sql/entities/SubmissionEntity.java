@@ -1,7 +1,6 @@
 package si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,7 +36,12 @@ public class SubmissionEntity {
     private AssignmentEntity assignment;
 
     @Enumerated(EnumType.STRING)
-    private SubmissionStatus status;
+    @Column(name = "status_correctness")
+    private SubmissionCorrectnessStatus correctnessStatus = SubmissionCorrectnessStatus.PENDING_REVIEW;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_similarity")
+    private SubmissionSimilarityStatus similarityStatus = SubmissionSimilarityStatus.PENDING_REVIEW;
 
     @OneToMany(mappedBy = "submission1")
     private List<SubmissionSimilarityEntity> similarities;
@@ -46,7 +50,7 @@ public class SubmissionEntity {
     public String toString() {
         return "SubmissionEntity{" +
                 "fileKey='" + fileKey + '\'' +
-                ", status=" + status +
+                ", status=" + correctnessStatus +
                 '}';
     }
 }

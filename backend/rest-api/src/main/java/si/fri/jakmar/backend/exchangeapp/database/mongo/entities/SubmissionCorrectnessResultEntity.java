@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
-import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionStatus;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionCorrectnessStatus;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -24,7 +24,7 @@ public class SubmissionCorrectnessResultEntity {
     private Integer submissionId;
     private LocalDateTime created = LocalDateTime.now(ZoneOffset.UTC);
     @Enumerated(EnumType.STRING)
-    private SubmissionStatus testStatus;
+    private SubmissionCorrectnessStatus testStatus;
     private byte[] input;
     private byte[] output;
     private byte[] expectedOutput;

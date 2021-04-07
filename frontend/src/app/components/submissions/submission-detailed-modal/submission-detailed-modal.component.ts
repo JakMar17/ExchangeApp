@@ -1,9 +1,18 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Assignment } from 'src/app/models/assignment-model';
 import {
   Submission,
+  SubmissionCorrectnessStatus,
   SubmissionSimilarity,
-  SubmissionStatus,
+  SubmissionSimilarityStatus,
 } from 'src/app/models/submission-model';
 import { SubmissionService } from 'src/app/services/submission-service/submission.service';
 
@@ -23,14 +32,17 @@ export class SubmissionDetailedModalComponent implements OnInit, AfterViewInit {
   public showError: boolean = true;
   public similarities: SubmissionSimilarity[] = [];
 
-  constructor(private submissionService: SubmissionService, private ref: ChangeDetectorRef) {}
+  constructor(
+    private submissionService: SubmissionService,
+    private ref: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     console.log(this.submission);
 
     this.showError =
-      this.submission.status === SubmissionStatus.NOK ||
-      this.submission.status === SubmissionStatus.COMPILE_ERROR;
+      this.submission.correctnessStatus === SubmissionCorrectnessStatus.NOK ||
+      this.submission.correctnessStatus === SubmissionCorrectnessStatus.COMPILE_ERROR;
 
     this.getSubmissionSimilarities();
   }
@@ -43,8 +55,12 @@ export class SubmissionDetailedModalComponent implements OnInit, AfterViewInit {
     this.onClose.emit(null);
   }
 
-  public get submissionStatus(): typeof SubmissionStatus {
-    return SubmissionStatus;
+  public get submissionCorrectnessStatus(): typeof SubmissionCorrectnessStatus {
+    return SubmissionCorrectnessStatus;
+  }
+
+  public get submissionSimilarityStatus(): typeof SubmissionSimilarityStatus {
+    return SubmissionSimilarityStatus;
   }
 
   public getSubmissionSimilarities(): void {

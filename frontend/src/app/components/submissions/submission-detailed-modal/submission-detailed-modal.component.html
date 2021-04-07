@@ -8,18 +8,47 @@
       </p>
       <div class="columns">
         <div class="column is-narrow tags has-addons">
-          <span class="tag">Test pravilnost</span>
+          <span class="tag">Test pravilnosti</span>
           <span
             class="tag"
             [ngClass]="{
-              'is-success': submission.status === submissionStatus.OK,
-              'is-danger': submission.status === submissionStatus.NOK,
-              'is-primary': submission.status === submissionStatus.TIMEOUT,
-              'is-info': submission.status === submissionStatus.PENDING_REVIEW,
-              'is-warning': submission.status === submissionStatus.COMPILE_ERROR
+              'is-success':
+                submission.correctnessStatus === submissionCorrectnessStatus.OK,
+              'is-danger':
+                submission.correctnessStatus ===
+                submissionCorrectnessStatus.NOK,
+              'is-primary':
+                submission.correctnessStatus ===
+                submissionCorrectnessStatus.TIMEOUT,
+              'is-info':
+                submission.correctnessStatus ===
+                submissionCorrectnessStatus.PENDING_REVIEW,
+              'is-warning':
+                submission.correctnessStatus ===
+                submissionCorrectnessStatus.COMPILE_ERROR
             }"
           >
-            {{ submission.status | submissionStatus }}
+            {{ submission.correctnessStatus | submissionStatus }}
+          </span>
+        </div>
+        <div class="column is-narrow tags has-addons">
+          <span class="tag">Test podobnosti</span>
+          <span
+            class="tag"
+            [ngClass]="{
+              'is-success':
+                submission.similarityStatus === submissionSimilarityStatus.OK,
+              'is-danger':
+                submission.similarityStatus === submissionSimilarityStatus.NOK,
+              'is-warning':
+                submission.similarityStatus ===
+                submissionSimilarityStatus.WARNING,
+              'is-info':
+                submission.similarityStatus ===
+                submissionSimilarityStatus.PENDING_REVIEW
+            }"
+          >
+            {{ submission.similarityStatus | submissionStatus }}
           </span>
         </div>
         <!-- <div class="column is-narrow tags has-addons">
@@ -70,7 +99,7 @@
           </div>
           <div *ngIf="showErrorPanel" class="message-body">
             <pre style="margin: 0; padding: 0">
-              <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="submission.status === submissionStatus.NOK ? submission.expectedOutput : submission.diffOrErrorMessage"></code>
+              <code [languages]="['java']" style="margin: 0; padding: 0;" [highlight]="submission.correctnessStatus === submissionCorrectnessStatus.NOK ? submission.expectedOutput : submission.diffOrErrorMessage"></code>
             </pre>
           </div>
         </article>

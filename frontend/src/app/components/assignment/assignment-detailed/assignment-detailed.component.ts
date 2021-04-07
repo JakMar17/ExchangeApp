@@ -4,11 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Assignment } from 'src/app/models/assignment-model';
 import { Course } from 'src/app/models/class-model';
 import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
-import { Submission, SubmissionStatus } from 'src/app/models/submission-model';
+import {
+  Submission,
+  SubmissionCorrectnessStatus,
+  SubmissionSimilarityStatus,
+} from 'src/app/models/submission-model';
 import { AssignmentService } from 'src/app/services/assignment-service/assignment.service';
 import { CoursesService } from 'src/app/services/courses-service/courses.service';
 import { SubmissionService } from 'src/app/services/submission-service/submission.service';
-
 
 @Component({
   selector: 'app-assignment-detailed',
@@ -53,6 +56,7 @@ export class AssignmentDetailedComponent implements OnInit, OnDestroy {
         .subscribe(
           (data) => {
             this.assignment = data;
+            console.log(this.assignment);
             this.loading = false;
             this.assignBooleanValuesToActionButtons();
           },
@@ -182,11 +186,30 @@ export class AssignmentDetailedComponent implements OnInit, OnDestroy {
     this.submissionModalSubmission = null;
   }
 
-  public get submissionStatus(): typeof SubmissionStatus {
-    return SubmissionStatus;
+  public get submissionCorrectnessStatus(): typeof SubmissionCorrectnessStatus {
+    return SubmissionCorrectnessStatus;
+  }
+
+  public get submissionSimilarityStatus(): typeof SubmissionSimilarityStatus {
+    return SubmissionSimilarityStatus;
   }
 
   ngOnDestroy(): void {
     if (this.updateWorker != null) clearInterval(this.updateWorker);
+  }
+
+  public getTooltipText(item: Submission): string {
+    switch (item.similarityStatus) {
+      case SubmissionSimilarityStatus.OK:
+        return 'Ok';
+      case SubmissionSimilarityStatus.NOK:
+        return 'En ali več testnih primerov presegajo stopnjo podobnosti, testni primer je označen kot napačen';
+      case SubmissionSimilarityStatus.WARNING:
+        return 'En ali več testnih primerov presegajo opozorilno stopnjo podobnosti';
+      case SubmissionSimilarityStatus.NOT_TESTED:
+        return 'Testni primer ni bil testiran';
+      case SubmissionSimilarityStatus.PENDING_REVIEW:
+        return 'V čakalni vrsti';
+    }
   }
 }

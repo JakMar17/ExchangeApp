@@ -11,8 +11,8 @@ import si.fri.jakmar.exchangeapp.backend.testingutility.database.mongo.entities.
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.mongo.entities.TestStatus;
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.mongo.repositories.SubmissionCorrectnessResultRepository;
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities.AssignmentSourceEntity;
+import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities.SubmissionCorrectnessStatus;
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities.SubmissionEntity;
-import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities.SubmissionStatus;
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.repositories.AssignmentEntityRepository;
 import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.repositories.SubmissionEntityRepository;
 import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.CreatingEnvironmentException;
@@ -73,9 +73,11 @@ public class CorrectnessTestService {
         var assignment = assignmentEntityRepository.findById(assignmentId)
                 .orElseThrow(() -> new DataNotFoundException("Ne najdem naloge"));
 
+        if(assignment.getSource() == null)
+            throw new CreatingEnvironmentException("Program za preverjanje ne obstaja");
 
         var pairs = CollectionUtils.emptyIfNull(assignment.getSubmissions()).stream()
-                .filter(e -> e.getStatus() == SubmissionStatus.PENDING_REVIEW)
+                .filter(e -> e.getCorrectnessStatus() == SubmissionCorrectnessStatus.PENDING_REVIEW)
                 .map(e -> generatePairContainer(assignment.getInputDataType(), assignment.getOutputDataType(), e))
                 .toArray(FilePairContainer[]::new);
 
@@ -93,7 +95,7 @@ public class CorrectnessTestService {
 
         //testEnvironment.clean(testId);
         return results.stream()
-                .peek(e -> submissionEntityRepository.updateWithTestResult(e.getSubmissionId(), e.getTestStatus()))
+                //.peek(e -> submissionEntityRepository.updateWithTestResult(e.getSubmissionId(), e.getTestStatus()))
                 .map(e -> new SubmissionTestResult(e.getSubmissionId(), e.getTestStatus()));
     }
 

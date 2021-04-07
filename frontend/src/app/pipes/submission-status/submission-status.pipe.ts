@@ -1,23 +1,36 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { SubmissionCheck } from 'src/app/models/assignment-model';
-import { SubmissionStatus } from 'src/app/models/submission-model';
+import {
+  SubmissionCorrectnessStatus,
+  SubmissionSimilarityStatus,
+} from 'src/app/models/submission-model';
 
 @Pipe({
   name: 'submissionStatus',
 })
 export class SubmissionStatusPipe implements PipeTransform {
-  transform(submissionStatus: SubmissionStatus): string {
+  transform(
+    submissionStatus: SubmissionCorrectnessStatus | SubmissionSimilarityStatus
+  ): string {
     switch (submissionStatus) {
-      case SubmissionStatus.OK:
+      case SubmissionCorrectnessStatus.OK:
+      case SubmissionSimilarityStatus.OK:
         return 'Pravilen';
-      case SubmissionStatus.NOK:
+      case SubmissionCorrectnessStatus.NOK:
+      case SubmissionSimilarityStatus.NOK:
         return 'Napačen';
-      case SubmissionStatus.COMPILE_ERROR:
+      case SubmissionCorrectnessStatus.COMPILE_ERROR:
         return 'Napaka pri prevajanju izvorne kode';
-      case SubmissionStatus.TIMEOUT:
+      case SubmissionCorrectnessStatus.TIMEOUT:
         return 'Prekoračitev časovne omejitve';
-      case SubmissionStatus.PENDING_REVIEW:
+      case SubmissionCorrectnessStatus.PENDING_REVIEW:
+      case SubmissionSimilarityStatus.PENDING_REVIEW:
         return 'V čakalni vrsti';
+
+      case SubmissionSimilarityStatus.NOT_TESTED:
+        return 'OK (brez testa)';
+      case SubmissionSimilarityStatus.WARNING:
+        return 'Opozorilo';
     }
   }
 }

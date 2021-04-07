@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.client.testing_utility.models;
+package si.fri.jakmar.backend.exchangeapp.client.testing_utility.models.similarity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

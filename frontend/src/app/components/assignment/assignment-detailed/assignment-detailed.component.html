@@ -97,27 +97,129 @@
               <tr>
                 <th>Vhodna datoteka</th>
                 <th>Izhodna datoteka</th>
-                <th>Status</th>
+                <th>Test pravilnosti</th>
+                <th>Test podobnosti</th>
+                <th
+                  class="has-tooltip-arrow has-tooltip-left"
+                  data-tooltip="Če status ni OK, za oddajo ne pridobite žetonov"
+                >
+                  Status oddaje
+                </th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr
-                *ngFor="let item of assignment.mySubmissions"
-                [ngClass]="{
-                  'has-background-success-light':
-                    item.status === submissionStatus.OK,
-                  'has-background-danger-light':
-                    item.status === submissionStatus.NOK,
-                  'has-background-warning-light':
-                    item.status === submissionStatus.COMPILE_ERROR,
-                  'has-background-primary-light':
-                    item.status === submissionStatus.TIMEOUT
-                }"
-              >
+              <tr *ngFor="let item of assignment.mySubmissions">
                 <td>{{ item.input }}</td>
                 <td>{{ item.output }}</td>
-                <td>{{ item.status | submissionStatus }}</td>
+                <td class="has-text-centered">
+                  <span
+                    [attr.data-tooltip]="
+                      item.correctnessStatus | submissionStatus
+                    "
+                    class="icon has-tooltip-arrow has-tooltip-left"
+                    [ngClass]="{
+                      'has-text-success':
+                        item.correctnessStatus ===
+                        submissionCorrectnessStatus.OK,
+                      'has-text-danger':
+                        item.correctnessStatus ===
+                        submissionCorrectnessStatus.NOK,
+                      'has-text-warning':
+                        item.correctnessStatus ===
+                          submissionCorrectnessStatus.COMPILE_ERROR ||
+                        item.correctnessStatus ===
+                          submissionCorrectnessStatus.TIMEOUT
+                    }"
+                  >
+                    <i
+                      *ngIf="
+                        item.correctnessStatus ===
+                        submissionCorrectnessStatus.OK
+                      "
+                      class="ri-check-line"
+                    ></i>
+                    <i
+                      *ngIf="
+                        item.correctnessStatus ===
+                        submissionCorrectnessStatus.NOK
+                      "
+                      class="ri-close-line"
+                    ></i>
+                    <i
+                      *ngIf="
+                        item.correctnessStatus ===
+                          submissionCorrectnessStatus.COMPILE_ERROR ||
+                        item.correctnessStatus ===
+                          submissionCorrectnessStatus.TIMEOUT
+                      "
+                      class="ri-error-warning-line"
+                    ></i>
+                  </span>
+                </td>
+                <td class="has-text-centered">
+                  <span
+                    [attr.data-tooltip]="getTooltipText(item)"
+                    class="icon has-text-info has-tooltip-arrow has-tooltip-left"
+                    [ngClass]="{
+                      'has-text-success':
+                        item.similarityStatus === submissionSimilarityStatus.OK,
+                      'has-text-danger':
+                        item.similarityStatus ===
+                        submissionSimilarityStatus.NOK,
+                      'has-text-warning':
+                        item.similarityStatus ===
+                        submissionSimilarityStatus.WARNING
+                    }"
+                  >
+                    <i
+                      *ngIf="
+                        item.similarityStatus === submissionSimilarityStatus.OK
+                      "
+                      class="ri-check-line"
+                    ></i>
+                    <i
+                      *ngIf="
+                        item.similarityStatus === submissionSimilarityStatus.NOK
+                      "
+                      class="ri-close-line"
+                    ></i>
+                    <i
+                      *ngIf="
+                        item.similarityStatus ===
+                        submissionSimilarityStatus.WARNING
+                      "
+                      class="ri-error-warning-line"
+                    ></i>
+                    <i
+                      *ngIf="
+                        item.similarityStatus ===
+                          submissionSimilarityStatus.NOT_TESTED ||
+                        item.similarityStatus ===
+                          submissionSimilarityStatus.PENDING_REVIEW
+                      "
+                      class="ri-question-mark"
+                    ></i>
+                  </span>
+                </td>
+                <td>
+                  <div
+                    *ngIf="
+                      item.similarityStatus === submissionSimilarityStatus.OK &&
+                      item.correctnessStatus === submissionCorrectnessStatus.OK
+                    "
+                  >
+                    Ok
+                  </div>
+                  <div
+                    *ngIf="
+                      item.similarityStatus !== submissionSimilarityStatus.OK ||
+                      item.correctnessStatus !== submissionCorrectnessStatus.OK
+                    "
+                  >
+                    Ni ok
+                  </div>
+                </td>
                 <td class="is-narrow">
                   <div class="columns">
                     <div class="column is-narrow">

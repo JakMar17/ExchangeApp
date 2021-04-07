@@ -6,35 +6,38 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import si.fri.jakmar.backend.exchangeapp.client.testing_utility.TestingUtilityRestClient;
+import si.fri.jakmar.backend.exchangeapp.client.testing_utility.models.request.TestRequest;
 import si.fri.jakmar.backend.exchangeapp.database.mongo.repositories.SubmissionCorrectnessResultRepository;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.assignments.AssignmentEntity;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.assignments.SubmissionCheck;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.purchases.PurchaseEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionCorrectnessStatus;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionEntity;
-import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionStatus;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionSimilarityEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionSimilarityStatus;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.submissions.SubmissionRepository;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.submissions.SubmissionSimilaritiesRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.assignments.AssignmentDTO;
 import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionDTO;
-import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionSimilarityDto;
 import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionSimilarityNormalizedDto;
 import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.submissions.OverMaximumNumberOfSubmissions;
+import si.fri.jakmar.backend.exchangeapp.files.FileStorageService;
 import si.fri.jakmar.backend.exchangeapp.functions.RandomizerService;
 import si.fri.jakmar.backend.exchangeapp.functions.ZipperFunction;
 import si.fri.jakmar.backend.exchangeapp.services.assignments.AssignmentsServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.PurchaseServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserAccessServices;
 import si.fri.jakmar.backend.exchangeapp.services.users.UserServices;
-import si.fri.jakmar.backend.exchangeapp.files.FileStorageService;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -85,23 +88,87 @@ public class SubmissionService {
         else
             noOfSubmissionsToAdd = maxSubmissionsUserCanAdd;
 
-        var submissions = assignment.getSubmissions();
+        List<SubmissionEntity> oldSubmissions = assignment.getSubmissions();
+        List<SubmissionEntity> newSubmissions = new ArrayList<>();
+
         for (int i = 0; i < noOfSubmissionsToAdd; i++) {
             var pair = inputOutputPairs.get(i);
-            submissions.add(saveSubmission(assignment, user, pair.getInput(), pair.getOutput()));
+            newSubmissions.add(saveSubmission(assignment, user, pair.getInput(), pair.getOutput()));
         }
 
-        if(noOfSubmissionsToAdd < inputOutputPairs.size())
+        if (assignment.getSubmissionCheck() == SubmissionCheck.AUTOMATIC) {
+            var results = testingUtilityRestClient.runCorrectnessTestForAssignment(
+                    new TestRequest(assignmentId, null)
+            );
+            for (var result : results) {
+                boolean doOld = true;
+
+                for (var newSubmission : newSubmissions) {
+                    if (result.getSubmissionId().equals(newSubmission.getId())) {
+                        newSubmission.setCorrectnessStatus(result.getStatus());
+                        doOld = false;
+                    }
+                }
+
+                if (doOld) {
+                    for (var oldSubmission : oldSubmissions) {
+                        if (result.getSubmissionId().equals(oldSubmission.getId())) {
+                            oldSubmission.setCorrectnessStatus(result.getStatus());
+                        }
+                    }
+                }
+            }
+        } else if (assignment.getSubmissionCheck() == SubmissionCheck.NONE) {
+            newSubmissions.forEach(e -> e.setCorrectnessStatus(SubmissionCorrectnessStatus.OK));
+        }
+
+        if (assignment.getPlagiarismWarning() != null || assignment.getPlagiarismLevel() != null) {
+            newSubmissions.forEach(e -> e.setSimilarityStatus(SubmissionSimilarityStatus.NOT_TESTED));
+            var results = testingUtilityRestClient.runSimilarityTestForAssignment(
+                    new TestRequest(assignment.getId(), newSubmissions.stream()
+                            .filter(e -> e.getCorrectnessStatus() == SubmissionCorrectnessStatus.OK)
+                            .map(SubmissionEntity::getId).toArray(Integer[]::new)
+                    )
+            );
+
+            List<SubmissionSimilarityEntity> similarities = new ArrayList<>();
+            for (var result : results) {
+                for (var newSubmission : newSubmissions) {
+                    if (result.getSubmissionId().equals(newSubmission.getId())) {
+                        newSubmission.setSimilarityStatus(result.getSimilarityStatus());
+
+                        for (var submissionCompared : result.getSimilarityResults()) {
+                            var submission2 = submissionRepository.findById(submissionCompared.getComparedWithSubmissionId());
+                            submission2.ifPresent(submissionEntity ->
+                                    similarities.add(SubmissionSimilarityEntity.castFromTestingUtilityDto(submissionCompared, newSubmission, submissionEntity))
+                            );
+                        }
+                    }
+                }
+            }
+
+            submissionSimilaritiesRepository.saveAll(similarities.stream()
+                    .map(SubmissionSimilarityEntity::cleanNaN)
+                    .collect(Collectors.toList()));
+        } else {
+            newSubmissions.forEach(e -> e.setSimilarityStatus(SubmissionSimilarityStatus.OK));
+        }
+
+        List<SubmissionEntity> allSubmissions = new ArrayList<>();
+        allSubmissions.addAll(oldSubmissions);
+        allSubmissions.addAll(newSubmissions);
+
+        assignment.setSubmissions(allSubmissions);
+        submissionRepository.saveAll(allSubmissions);
+
+
+        if (noOfSubmissionsToAdd < inputOutputPairs.size())
             throw new OverMaximumNumberOfSubmissions(
                     String.format("Število oddanih testnih primerov (%d), presega maksimalno dovoljeno število testnih primerov (%d). Razlika (%d) ni bila shranjena.",
                             inputOutputPairs.size(), noOfSubmissionsToAdd, inputOutputPairs.size() - noOfSubmissionsToAdd
-                        )
+                    )
             );
 
-        testingUtilityRestClient.runCorrectnessTestForAssignment(assignment);
-        testingUtilityRestClient.runSimilarityTestForAssignment(assignment);
-
-        assignment.setSubmissions(submissionRepository.getSubmissionEntitiesByAssignment(assignment));
 
         return AssignmentDTO.castFromEntityWithSubmissions(
                 assignment,
@@ -189,7 +256,7 @@ public class SubmissionService {
         var submissions = CollectionUtils.emptyIfNull(submissionRepository.getSubmissionsForAssignmentNotFromUser(assignment, user))
                 .stream()
                 .filter(e -> !boughtSubmissionsOfThisAssignment.contains(e))
-                .filter(e -> e.getStatus() == SubmissionStatus.OK)
+                .filter(e -> e.getCorrectnessStatus() == SubmissionCorrectnessStatus.OK)
                 .collect(Collectors.toList());
         Collections.shuffle(submissions);
 
@@ -231,19 +298,19 @@ public class SubmissionService {
 
         String diffOrError = null;
         String expectedOutput = null;
-        if(assignment.getSubmissionCheck() == SubmissionCheck.AUTOMATIC &&
-                (submission.getStatus() == SubmissionStatus.NOK || submission.getStatus() == SubmissionStatus.COMPILE_ERROR)
+        if (assignment.getSubmissionCheck() == SubmissionCheck.AUTOMATIC &&
+                (submission.getCorrectnessStatus() == SubmissionCorrectnessStatus.NOK || submission.getCorrectnessStatus() == SubmissionCorrectnessStatus.COMPILE_ERROR)
         ) {
             var results = submissionCorrectnessResultRepository.findBySubmissionIdOrderByCreatedDesc(submissionId);
 
-            if(results.size() > 0) {
+            if (results.size() > 0) {
                 var result = results.get(0);
 
-                if(result.getExpectedOutput() != null)
+                if (result.getExpectedOutput() != null)
                     expectedOutput = new String(result.getExpectedOutput(), StandardCharsets.UTF_8);
-                if(submission.getStatus() == SubmissionStatus.NOK && result.getDiff() != null)
+                if (submission.getCorrectnessStatus() == SubmissionCorrectnessStatus.NOK && result.getDiff() != null)
                     diffOrError = new String(result.getDiff(), StandardCharsets.UTF_8);
-                else if(submission.getStatus() == SubmissionStatus.COMPILE_ERROR && result.getCompileError() != null)
+                else if (submission.getCorrectnessStatus() == SubmissionCorrectnessStatus.COMPILE_ERROR && result.getCompileError() != null)
                     diffOrError = new String(result.getCompileError(), StandardCharsets.UTF_8);
             }
         }
@@ -301,8 +368,8 @@ public class SubmissionService {
         submissionSimilaritiesRepository.findDistinctBySubmission1OrSubmission2(submission, submission)
                 .filter(e -> e.getAverageInput() != null && e.getAverageOutput() != null)
                 .forEach(e -> {
-                    int i = (int) ((Math.round(e.getAverageInput()*100/5)));
-                    int o = (int) ((Math.round(e.getAverageOutput()*100/5)));
+                    int i = (int) ((Math.round(e.getAverageInput() * 100 / 5)));
+                    int o = (int) ((Math.round(e.getAverageOutput() * 100 / 5)));
                     array[i][o].setNoOfSubmissionsInGroup(array[i][o].getNoOfSubmissionsInGroup() + 1);
                 });
 

@@ -84,22 +84,22 @@ export class SubmissionAddComponent implements OnInit {
         (error: HttpErrorResponse) => {
           console.error(error);
 
-          if (error.status === 406) {
-            Swal.fire({
-              title:"Napaka",
-              text: (error.error as ExceptionWrapper).body,
-              icon: "error",
-              confirmButtonColor: Styles.info
-            });
+          //if (error.status === 406) {
+          Swal.fire({
+            title: 'Napaka',
+            text: (error.error as ExceptionWrapper).body,
+            icon: 'error',
+            confirmButtonColor: Styles.info,
+          }).then(() => this.closeModal(this.assignment));
 
-            this.assignmentService
-              .getAssignmentWithSubmissions(this.assignment)
-              .subscribe((data) => {
-                this.assignment = data;
-                this.closeModal(this.assignment);
-                this.resetValues();
-              });
-          }
+          this.assignmentService
+            .getAssignmentWithSubmissions(this.assignment)
+            .subscribe((data) => {
+              this.assignment = data;
+              this.closeModal(this.assignment);
+              this.resetValues();
+            });
+          //}
         }
       );
   }

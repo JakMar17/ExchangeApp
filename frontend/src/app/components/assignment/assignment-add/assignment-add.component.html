@@ -408,7 +408,7 @@
               <tr *ngFor="let item of submissions">
                 <td>{{ item.author | userToString }}</td>
                 <td>{{ item.author?.personalNumber }}</td>
-                <td>{{ item.status }}</td>
+                <td>{{ item.correctnessStatus }}</td>
                 <td class="is-narrow">
                   <a
                     (click)="onTableRowViewPressed(item)"

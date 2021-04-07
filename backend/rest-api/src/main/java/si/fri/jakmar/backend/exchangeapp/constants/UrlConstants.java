@@ -13,7 +13,7 @@ public class UrlConstants {
     public UrlConstants(Environment environment) {
         REGISTRATION_CONFIRMATION_EMAIL_URL = environment.getProperty("email-server.base.url") + "registration-confirmation?email={{email}}&registrationConfirmationId={{id}}";
         PASSWORD_RESET_EMAIL_URL = environment.getProperty("email-server.base.url") + "password-reset?email={{email}}&resetId={{id}}";
-        TEST_CORRECTNESS_URL = environment.getProperty("testing-server.base.url") + "correctness/test?assignmentId={assignmentId}";
-        TEST_SIMILARITY_ASSIGNMENT_URL = environment.getProperty("testing-server.base.url") + "similarity/test?assignmentId={assignmentId}";
+        TEST_CORRECTNESS_URL = environment.getProperty("testing-server.base.url") + "correctness/test";
+        TEST_SIMILARITY_ASSIGNMENT_URL = environment.getProperty("testing-server.base.url") + "similarity/test";
     }
 }

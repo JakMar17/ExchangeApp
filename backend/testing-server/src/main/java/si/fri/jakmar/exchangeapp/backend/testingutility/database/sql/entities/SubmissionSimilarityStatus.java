@@ -1,4 +1,4 @@
-package si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions;
+package si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities;
 
 public enum SubmissionSimilarityStatus {
     PENDING_REVIEW,

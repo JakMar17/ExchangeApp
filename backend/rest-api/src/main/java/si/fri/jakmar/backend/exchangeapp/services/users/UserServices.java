@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.containers.SuccessErrorContainer;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.courses.CourseEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionCorrectnessStatus;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionSimilarityStatus;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.user.UserRepository;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
@@ -21,13 +23,14 @@ public class UserServices {
 
     /**
      * gets user from database by personal number or throws exception DataNotFound
+     *
      * @param personalNumber users personal number
      * @return UserEntity
      * @throws DataNotFoundException user with given personal number doesnt exists
      */
     public UserEntity getUserByPersonalNumber(String personalNumber) throws DataNotFoundException {
         var users = userRepository.findUsersByPersonalNumber(personalNumber);
-        if(users == null || users.size() == 0)
+        if (users == null || users.size() == 0)
             throw new DataNotFoundException("Uporabnik s podano številko ne obstaja");
         else
             return users.get(0);
@@ -35,13 +38,14 @@ public class UserServices {
 
     /**
      * gets user from database by email or throws exception DataNotFound
+     *
      * @param email users email
      * @return UserEntity
      * @throws DataNotFoundException user with given email doesnt exists
      */
     public UserEntity getUserByEmail(String email) throws DataNotFoundException {
         var users = userRepository.findUsersByEmail(email);
-        if(users.isEmpty())
+        if (users.isEmpty())
             throw new DataNotFoundException("Uporabnik s podanim epoštnim naslovom ne obstaja");
         else
             return users.get();
@@ -49,15 +53,16 @@ public class UserServices {
 
     /**
      * gets user from database by personal number or (if personal number is not given) by email or throws exception DataNotFound
+     *
      * @param personalNumber users personal number
-     * @param email users email
+     * @param email          users email
      * @return UserEntity
      * @throws DataNotFoundException user with given personal number/email doesnt exists
      */
     public UserEntity getUserByEmailOrPersonalNumber(String personalNumber, String email) throws DataNotFoundException {
         UserEntity u = null;
-        if(personalNumber != null)
-            u =  getUserByPersonalNumber(personalNumber);
+        if (personalNumber != null)
+            u = getUserByPersonalNumber(personalNumber);
         else
             u = getUserByEmail(email);
 
@@ -66,6 +71,7 @@ public class UserServices {
 
     /**
      * calculates user's coins in course (sum of submissions + initial coins in course - sum of user's purchases)
+     *
      * @param user
      * @param course
      * @return no of coins
@@ -74,7 +80,9 @@ public class UserServices {
         int coins = course.getInitialCoins();
 
         var usersSubmissionsInCourse = CollectionUtils.emptyIfNull(user.getSubmissions()).stream()
-                .filter(e -> e.getAssignment().getCourse().equals(course));
+                .filter(e -> e.getAssignment().getCourse().equals(course))
+                .filter(e -> e.getCorrectnessStatus() == SubmissionCorrectnessStatus.OK)
+                .filter(e -> e.getSimilarityStatus() == SubmissionSimilarityStatus.OK || e.getSimilarityStatus() == SubmissionSimilarityStatus.WARNING);
 
         var usersPurchaseInCourse = CollectionUtils.emptyIfNull(user.getPurchases()).stream()
                 .filter(e -> e.getSubmissionBought().getAssignment().getCourse().equals(course));
@@ -89,9 +97,9 @@ public class UserServices {
         List<UserEntity> users = new ArrayList<>();
         List<DataNotFoundException> exceptions = new ArrayList<>();
 
-        for(var userDto: userDTOS) {
+        for (var userDto : userDTOS) {
             var user = userRepository.findUsersByEmailOrPersonalNumber(userDto.getEmail(), userDto.getPersonalNumber());
-            if(user.isEmpty())
+            if (user.isEmpty())
                 exceptions.add(new DataNotFoundException(String.format("Uporabnik ne obstaja: %s, %s", userDto.getEmail(), userDto.getPersonalNumber())));
             else
                 users.add(user.get());

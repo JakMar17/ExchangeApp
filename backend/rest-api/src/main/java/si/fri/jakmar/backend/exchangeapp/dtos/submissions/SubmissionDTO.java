@@ -1,7 +1,9 @@
 package si.fri.jakmar.backend.exchangeapp.dtos.submissions;
 
 import lombok.Data;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionCorrectnessStatus;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionEntity;
+import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.submissions.SubmissionSimilarityStatus;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
 
@@ -18,7 +20,8 @@ public class SubmissionDTO {
     private String output;
     private LocalDateTime created;
     private UserDTO author;
-    private String status;
+    private SubmissionCorrectnessStatus correctnessStatus;
+    private SubmissionSimilarityStatus similarityStatus;
     private String inputFile;
     private String outputFile;
     private String diffOrErrorMessage;
@@ -27,22 +30,24 @@ public class SubmissionDTO {
     public SubmissionDTO() {
     }
 
-    private SubmissionDTO(Integer submissionId, String input, String output, LocalDateTime created, UserDTO author, String status) {
+    private SubmissionDTO(Integer submissionId, String input, String output, LocalDateTime created, UserDTO author, SubmissionCorrectnessStatus correctnessStatus, SubmissionSimilarityStatus similarityStatus) {
         this.submissionId = submissionId;
         this.input = input;
         this.output = output;
         this.created = created;
         this.author = author;
-        this.status = status;
+        this.correctnessStatus = correctnessStatus;
+        this.similarityStatus = similarityStatus;
     }
 
-    private SubmissionDTO(Integer submissionId, String input, String output, LocalDateTime created, UserDTO author, String status, String inputFile, String outputFile, String expectedOutput, String diffOrErrorMessage) {
+    private SubmissionDTO(Integer submissionId, String input, String output, LocalDateTime created, UserDTO author, SubmissionCorrectnessStatus correctnessStatus, SubmissionSimilarityStatus similarityStatus, String inputFile, String outputFile, String expectedOutput, String diffOrErrorMessage) {
         this.submissionId = submissionId;
         this.input = input;
         this.output = output;
         this.created = created;
         this.author = author;
-        this.status = status;
+        this.correctnessStatus = correctnessStatus;
+        this.similarityStatus = similarityStatus;
         this.inputFile = inputFile;
         this.outputFile = outputFile;
         this.expectedOutput = expectedOutput;
@@ -62,7 +67,8 @@ public class SubmissionDTO {
                 user != null
                     ? UserDTO.castFromEntityWithoutCourses(user, false)
                     : null,
-                entity.getStatus().name()
+                entity.getCorrectnessStatus(),
+                entity.getSimilarityStatus()
         );
     }
 
@@ -79,7 +85,8 @@ public class SubmissionDTO {
                 user != null
                         ? UserDTO.castFromEntityWithoutCourses(user, false)
                         : null,
-                entity.getStatus().name(),
+                entity.getCorrectnessStatus(),
+                entity.getSimilarityStatus(),
                 Files.readString(input.toPath(), StandardCharsets.UTF_8),
                 Files.readString(output.toPath(), StandardCharsets.UTF_8),
                 expectedOutput,

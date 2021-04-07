@@ -5,7 +5,8 @@ export interface Submission {
   input?: string;
   output?: string;
   created?: Date;
-  status?: SubmissionStatus;
+  correctnessStatus?: SubmissionCorrectnessStatus;
+  similarityStatus?: SubmissionSimilarityStatus;
   inputFile?: string;
   outputFile?: string;
   diffOrErrorMessage?: string;
@@ -28,12 +29,20 @@ export interface UploadModel {
   outputFile: string;
 }
 
-export enum SubmissionStatus {
+export enum SubmissionCorrectnessStatus {
   OK = 'OK',
   NOK = 'NOK',
   TIMEOUT = 'TIMEOUT',
   PENDING_REVIEW = 'PENDING_REVIEW',
   COMPILE_ERROR = 'COMPILE_ERROR',
+}
+
+export enum SubmissionSimilarityStatus {
+  PENDING_REVIEW = 'PENDING_REVIEW',
+  NOT_TESTED = 'NOT_TESTED',
+  OK = 'OK',
+  WARNING = 'WARNING',
+  NOK = 'NOK',
 }
 
 export class SubmissionSimilarity {
@@ -43,6 +52,11 @@ export class SubmissionSimilarity {
   public group: string;
 
   public objectToArray(): any {
-    return [this.group, this.inputSimilarity, this.outputSimilarity, this.noOfSubmissionsInGroup];
+    return [
+      this.group,
+      this.inputSimilarity,
+      this.outputSimilarity,
+      this.noOfSubmissionsInGroup,
+    ];
   }
 }
