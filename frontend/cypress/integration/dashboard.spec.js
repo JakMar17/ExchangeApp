@@ -5,7 +5,7 @@ const chance = new Chance();
 
 describe("Notification-dashboard-tests", () => {
   const email = "admin";
-  const password = "admin";
+  const password = "geslo";
   const notificationTitle = chance.paragraph({ sentences: 1 });
   const notificationBody = chance.paragraph({ sentences: 5 });
 
@@ -53,7 +53,7 @@ describe("Notification-dashboard-tests", () => {
 
 describe("Notification-dashboard-tests", () => {
   const email = "admin";
-  const password = "admin";
+  const password = "geslo";
   const notificationTitle = chance.paragraph({ sentences: 1 });
   const notificationBody = chance.paragraph({ sentences: 5 });
 

@@ -25,3 +25,4 @@ application-prod.properties
 
 volumes/*
 volumes/
+dump/

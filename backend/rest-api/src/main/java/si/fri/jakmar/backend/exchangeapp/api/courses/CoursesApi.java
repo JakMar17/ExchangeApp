@@ -1,6 +1,7 @@
 package si.fri.jakmar.backend.exchangeapp.api.courses;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +36,24 @@ public class CoursesApi {
     }
 
     @GetMapping("course")
-    public ResponseEntity<Object> getCourse(@RequestParam Integer courseId, @AuthenticationPrincipal UserEntity userEntity) throws AccessUnauthorizedException, DataNotFoundException, AccessForbiddenException {
-        return ResponseEntity.ok(coursesServices.getCourseData(courseId, userEntity.getPersonalNumber()));
+    public ResponseEntity<Object> getCourse(@RequestParam Integer courseId, @AuthenticationPrincipal UserEntity userEntity) throws Exception {
+        var successErrorContainer = coursesServices.getCourseData(courseId, userEntity.getPersonalNumber());
+        if (successErrorContainer.getSuccess().isEmpty()) {
+            throw new Exception();
+        } else if (successErrorContainer.getError().isPresent()) {
+            var error = successErrorContainer.getError().get();
 
+            if (error instanceof AccessUnauthorizedException) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(successErrorContainer.getSuccess().get());
+            } else if (error instanceof AccessForbiddenException) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(successErrorContainer.getSuccess().get());
+            } else {
+                throw new Exception();
+            }
+
+        } else {
+            return ResponseEntity.ok(successErrorContainer.getSuccess().get());
+        }
     }
 
     @GetMapping("course/access")

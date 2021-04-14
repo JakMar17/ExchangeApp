@@ -3,6 +3,7 @@ package si.fri.jakmar.backend.exchangeapp.services.courses;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import si.fri.jakmar.backend.exchangeapp.containers.SuccessErrorContainer;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.courses.CourseAccessLevelEntity;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.courses.CourseAccessPassword;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.courses.CourseEntity;
@@ -82,16 +83,20 @@ public class CoursesServices {
      * @throws AccessForbiddenException    user does not have right to access (is either blacklisted or not whitelisted)
      * @throws AccessUnauthorizedException user does not have right to access (is not signed in yet and course has password protection)
      */
-    public CourseDTO getCourseData(Integer courseId, String userPersonalNumber) throws DataNotFoundException, AccessForbiddenException, AccessUnauthorizedException {
+    public SuccessErrorContainer<CourseDTO, Exception> getCourseData(Integer courseId, String userPersonalNumber) throws DataNotFoundException{
         UserEntity user = userServices.getUserByPersonalNumber(userPersonalNumber);
         var course = courseRepository.findById(courseId).orElseThrow(DataNotFoundException::new);
 
-        if (userAccessServices.userHasAccessToCourse(user, course)) {
-            var courseDto = CourseDTO.castFromEntity(course, user, userServices.getUsersCoinsInCourse(user, course));
+        CourseDTO courseDto;
+        try {
+            userAccessServices.userHasAccessToCourse(user, course);
+            courseDto = CourseDTO.castFromEntity(course, user, userServices.getUsersCoinsInCourse(user, course));
             courseDto.setUserCanEditCourse(userAccessServices.userCanEditCourse(user, course));
-            return courseDto;
-        } else
-            return null;
+            return new SuccessErrorContainer<>(courseDto, null);
+        } catch (AccessForbiddenException | AccessUnauthorizedException e) {
+//            e.printStackTrace();
+            return new SuccessErrorContainer<>(CourseDTO.castBasicFromEntity(course), e);
+        }
     }
 
     /**
@@ -129,7 +134,7 @@ public class CoursesServices {
         var course = courseOptional.get();
         if (course.getAccessPassword().getPassword().equals(password)) {
             userAccessServices.signUserInCourse(userServices.getUserByPersonalNumber(userPersonalNumber), course);
-            return this.getCourseData(courseId, userPersonalNumber);
+            return this.getCourseData(courseId, userPersonalNumber).getSuccess().get();
         } else {
             throw new AccessUnauthorizedException("Geslo ni pravilno");
         }

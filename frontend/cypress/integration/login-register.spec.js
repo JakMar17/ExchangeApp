@@ -11,7 +11,7 @@ describe('Login-tests', () => {
 
   it('login-admin-valid', () => {
     const email = 'admin';
-    const password = 'admin';
+    const password = 'geslo';
 
     cy.login(email, password);
     cy.url().should('include', '/dashboard');
@@ -25,7 +25,7 @@ describe('Login-tests', () => {
 
   it('login-professor-valid', () => {
     const email = 'prof';
-    const password = 'prof';
+    const password = 'geslo';
 
     cy.login(email, password);
     cy.url().should('include', '/dashboard');
@@ -37,8 +37,8 @@ describe('Login-tests', () => {
   });
 
   it('login-student-valid', () => {
-    const email = 'student';
-    const password = 'student';
+    const email = 'jakob.marusic';
+    const password = 'geslo';
 
     cy.login(email, password);
     cy.url().should('include', '/dashboard');
@@ -61,14 +61,14 @@ describe('Login-tests', () => {
 describe('Register-tests', () => {
   const name = 'Ime';
   const surname = 'Surname';
-  const email = 'ime.surname';
-  const pass = 'pass123';
+  const email = 'jm8166';
+  const pass = 'geslo';
 
   beforeEach(() => {
     cy.visit('http://localhost:4200');
   });
 
-  it('register-professor', () => {
+  /* it('register-professor', () => {
     cy.get('.has-text-centered > :nth-child(1) > .button')
       .contains('Pedagog')
       .click(); //register pedagog button
@@ -102,7 +102,7 @@ describe('Register-tests', () => {
     cy.get('button').contains('Registracija').click();
 
     cy.contains('Prijava obstoječi uporabniki');
-  });
+  }); */
 
   it('register-professor-invalid', () => {
     cy.get('.has-text-centered > :nth-child(1) > .button')

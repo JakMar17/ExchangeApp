@@ -12,4 +12,6 @@ RUN ng build --prod
 FROM nginx:alpine
 RUN apk add bash
 COPY --from=my-app-build /app/dist/exchange-app /usr/share/nginx/html
+COPY --from=my-app-build /app/nginx.conf /etc/nginx/conf.d/
+RUN rm /etc/nginx/conf.d/default.conf
 EXPOSE 80

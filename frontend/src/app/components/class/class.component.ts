@@ -79,6 +79,7 @@ export class ClassComponent implements OnInit {
   private getCourseData(): void {
     this.activatedRoute.params.subscribe((params: Params) => {
       const courseId = params.classID;
+      console.log(courseId)
       if (courseId != null)
         this.coursesService.getCourse(courseId).subscribe(
           (data) => {
@@ -86,7 +87,7 @@ export class ClassComponent implements OnInit {
             this.assignmentsShow = this.course.assignments;
             this.courseVisibility = CourseVisibilityToUser.VISIBLE;
             if (this.course.notifications == null)
-              this.course.notifications = [];
+            this.course.notifications = [];
           },
           (err: HttpErrorResponse) => {
             console.error(err);
