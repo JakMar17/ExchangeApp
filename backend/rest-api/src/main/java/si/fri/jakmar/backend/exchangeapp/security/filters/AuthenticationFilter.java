@@ -25,7 +25,7 @@ import java.util.Date;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
     private final Integer expirationTime;
     private final String jwtSecret;
     private final Integer refreshTime;

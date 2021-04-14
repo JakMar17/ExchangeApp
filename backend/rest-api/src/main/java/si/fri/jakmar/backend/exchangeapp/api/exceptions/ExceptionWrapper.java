@@ -1,7 +1,7 @@
 package si.fri.jakmar.backend.exchangeapp.api.exceptions;
 
 public class ExceptionWrapper {
-    private String body;
+    private final String body;
 
     public ExceptionWrapper(Exception e) {
         this.body = e.getMessage();

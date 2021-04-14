@@ -1,9 +1,7 @@
 package si.fri.jakmar.exchangeapp.backend.testingutility.models.mappers;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import si.fri.jakmar.exchangeapp.backend.testingutility.database.sql.entities.SubmissionSimilarityEntity;
 //import si.fri.jakmar.exchangeapp.backend.testingutility.models.SubmissionSimilarityDTO;
 
 @Service

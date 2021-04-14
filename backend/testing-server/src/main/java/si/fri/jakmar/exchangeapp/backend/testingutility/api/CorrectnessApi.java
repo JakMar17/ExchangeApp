@@ -2,7 +2,6 @@ package si.fri.jakmar.exchangeapp.backend.testingutility.api;
 
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import si.fri.jakmar.exchangeapp.backend.testingutility.api.interfaces.CorrectnessApiInterface;
 import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.CreatingEnvironmentException;

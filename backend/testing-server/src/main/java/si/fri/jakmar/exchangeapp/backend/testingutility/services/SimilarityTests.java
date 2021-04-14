@@ -14,7 +14,6 @@ import si.fri.jakmar.exchangeapp.backend.testingutility.functions.SimilarityAlgo
 import si.fri.jakmar.exchangeapp.backend.testingutility.models.SubmissionDto;
 import si.fri.jakmar.exchangeapp.backend.testingutility.models.SubmissionSimilarityDto;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;

@@ -1,7 +1,6 @@
 package si.fri.jakmar.backend.exchangeapp.services.users;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;

@@ -7,9 +7,9 @@ import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
 import java.io.File;
 
 public interface FileStorageService {
-    public void init();
-    public void save(MultipartFile multipartFile, String fileName) throws FileException;
-    public void delete(String filename);
-    public File getFile(String filename);
-    public InputStreamResource getInputStreamResourceOfFile(String filename) throws FileException;
+    void init();
+    void save(MultipartFile multipartFile, String fileName) throws FileException;
+    void delete(String filename);
+    File getFile(String filename);
+    InputStreamResource getInputStreamResourceOfFile(String filename) throws FileException;
 }

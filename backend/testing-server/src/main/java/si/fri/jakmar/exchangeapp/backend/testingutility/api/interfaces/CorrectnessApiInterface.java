@@ -1,17 +1,12 @@
 package si.fri.jakmar.exchangeapp.backend.testingutility.api.interfaces;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.CreatingEnvironmentException;
 import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.DataNotFoundException;
 import si.fri.jakmar.exchangeapp.backend.testingutility.models.requests.TestRequestBody;
-import si.fri.jakmar.exchangeapp.backend.testingutility.resources.SubmissionTestResult;
 
 
 @RequestMapping("/correctness/")

@@ -1,13 +1,14 @@
 package si.fri.jakmar.backend.exchangeapp.api.assignment;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionDTO;
-import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionSimilarityDto;
 import si.fri.jakmar.backend.exchangeapp.dtos.submissions.SubmissionSimilarityNormalizedDto;
 import si.fri.jakmar.backend.exchangeapp.exceptions.FileException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;

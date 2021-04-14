@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import si.fri.jakmar.backend.exchangeapp.client.testing_utility.models.correctenss.SubmissionCorrectnessResult;
-import si.fri.jakmar.backend.exchangeapp.client.testing_utility.models.similarity.SubmissionSimilarityResult;
 import si.fri.jakmar.backend.exchangeapp.client.testing_utility.models.request.TestRequest;
+import si.fri.jakmar.backend.exchangeapp.client.testing_utility.models.similarity.SubmissionSimilarityResult;
 import si.fri.jakmar.backend.exchangeapp.constants.UrlConstants;
 
 @Service

@@ -2,18 +2,14 @@ package si.fri.jakmar.exchangeapp.backend.testingutility.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import si.fri.jakmar.exchangeapp.backend.testingutility.api.interfaces.SimilarityApiInterface;
 import si.fri.jakmar.exchangeapp.backend.testingutility.exceptions.DataNotFoundException;
 import si.fri.jakmar.exchangeapp.backend.testingutility.models.SubmissionDto;
-import si.fri.jakmar.exchangeapp.backend.testingutility.models.SubmissionSimilarityDto;
 import si.fri.jakmar.exchangeapp.backend.testingutility.models.mappers.SubmissionSimilarityMapper;
 import si.fri.jakmar.exchangeapp.backend.testingutility.models.requests.TestRequestBody;
 import si.fri.jakmar.exchangeapp.backend.testingutility.services.SimilarityTestService;
 import si.fri.jakmar.exchangeapp.backend.testingutility.services.SimilarityTests;
-
-import java.util.Arrays;
 
 @RestController
 @RequiredArgsConstructor

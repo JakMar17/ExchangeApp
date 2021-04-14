@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 @ControllerAdvice
 public class ExceptionCatcher {
 
-    private Logger logger = Logger.getLogger(ExceptionWrapper.class.getSimpleName());
+    private final Logger logger = Logger.getLogger(ExceptionWrapper.class.getSimpleName());
 
     @ExceptionHandler(value = {DataNotFoundException.class})
     public ResponseEntity<ExceptionWrapper> handleDataNotFoundException(DataNotFoundException exception) {

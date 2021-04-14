@@ -1,6 +1,5 @@
 package si.fri.jakmar.backend.exchangeapp.database.mysql.entities.assignments;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
