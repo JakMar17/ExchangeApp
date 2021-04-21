@@ -36,7 +36,6 @@
             <tr>
               <th>Vhodna datoteka</th>
               <th>Izhodna datoteka</th>
-              <th>Status</th>
               <th></th>
             </tr>
           </thead>
@@ -44,7 +43,6 @@
             <tr *ngFor="let item of uploadQueue">
               <td>{{ item.inputName }}</td>
               <td>{{ item.outputName }}</td>
-              <td>{{ item.status }}</td>
               <td class="is-narrow">
                 <div class="columns">
                   <div class="column is-narrow">

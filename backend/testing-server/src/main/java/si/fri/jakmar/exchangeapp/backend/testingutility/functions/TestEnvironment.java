@@ -1,5 +1,6 @@
 package si.fri.jakmar.exchangeapp.backend.testingutility.functions;
 
+import lombok.extern.java.Log;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Component
+@Log
 public class TestEnvironment {
 
     private static final String TEST_CASES_FOLDER_PATH = "testCases";
@@ -80,6 +82,8 @@ public class TestEnvironment {
     private boolean copyInputOutputPair(FilePairContainer inputOutput, String inputPath, String outputPath, int fileIndex) throws CreatingEnvironmentException {
         File i = inputOutput.getInput().getFile();
         File o = inputOutput.getOutput().getFile();
+
+        log.info(String.format("%s - %s \n", i.exists(), o.exists()));
 
         if (!copyFile(i, inputPath, String.format("test%d%s", fileIndex, inputOutput.getInput().getFileExtension())))
             throw new CreatingEnvironmentException("Error copying input file: " + inputOutput.getFilename());
