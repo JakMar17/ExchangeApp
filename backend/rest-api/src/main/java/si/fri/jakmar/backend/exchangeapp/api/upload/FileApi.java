@@ -46,7 +46,7 @@ public class FileApi {
     }
 
     @PostMapping("/upload-source")
-    public ResponseEntity<Object> uploadSourceCode(
+    public ResponseEntity<Boolean> uploadSourceCode(
             @AuthenticationPrincipal UserEntity user,
             @RequestParam Integer assignmentId,
             @RequestParam String programName,
@@ -59,7 +59,7 @@ public class FileApi {
     }
 
     @GetMapping("/download-source")
-    public ResponseEntity<Object> downloadSource(@RequestParam Integer assignmentId) throws DataNotFoundException {
+    public ResponseEntity<InputStreamResource> downloadSource(@RequestParam Integer assignmentId) throws DataNotFoundException {
         DoubleWrapper<String, ByteArrayInputStream> wrapper = assignmentsServices.downloadSource(assignmentId);
         InputStreamResource resource = new InputStreamResource(wrapper.second);
         HttpHeaders headers = new HttpHeaders();
@@ -74,7 +74,7 @@ public class FileApi {
     }
 
     @GetMapping("/download-submission")
-    public ResponseEntity<Object> downloadSubmission(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer submissionId) throws IOException, DataNotFoundException, AccessForbiddenException {
+    public ResponseEntity<InputStreamResource> downloadSubmission(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer submissionId) throws IOException, DataNotFoundException, AccessForbiddenException {
         InputStreamResource resource = new InputStreamResource(submissionService.getSubmissionFiles(userEntity.getPersonalNumber(), submissionId));
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
@@ -83,7 +83,7 @@ public class FileApi {
     }
 
     @GetMapping("/users-submissions")
-    public ResponseEntity<Object> getUsersSubmissions(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer assignmentId) throws IOException, DataNotFoundException {
+    public ResponseEntity<InputStreamResource> getUsersSubmissions(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer assignmentId) throws IOException, DataNotFoundException {
         InputStreamResource resource = new InputStreamResource(submissionService.getAllUsersSubmissionFiles(userEntity.getPersonalNumber(), assignmentId));
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)

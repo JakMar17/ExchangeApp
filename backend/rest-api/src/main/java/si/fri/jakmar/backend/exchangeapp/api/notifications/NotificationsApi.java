@@ -11,6 +11,7 @@ import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenExcep
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
 import si.fri.jakmar.backend.exchangeapp.services.notifications.NotificationsServices;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
@@ -24,17 +25,17 @@ public class NotificationsApi {
     private NotificationsServices notificationsServices;
 
     @GetMapping("/dashboard")
-    public ResponseEntity<Object> getDashboardNotification() {
+    public ResponseEntity<List<NotificationDTO>> getDashboardNotification() {
         return ResponseEntity.ok(notificationsServices.getDashboardNotifications());
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveNotification(@AuthenticationPrincipal UserEntity userEntity, @RequestHeader(name = "Course-Id", required = false) Integer courseId, @RequestBody NotificationDTO notification) throws AccessForbiddenException, DataNotFoundException {
+    public ResponseEntity<NotificationDTO> saveNotification(@AuthenticationPrincipal UserEntity userEntity, @RequestHeader(name = "Course-Id", required = false) Integer courseId, @RequestBody NotificationDTO notification) throws AccessForbiddenException, DataNotFoundException {
         return ResponseEntity.ok(notificationsServices.saveNotification(notification, courseId, userEntity.getPersonalNumber()));
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> deleteNotification(@AuthenticationPrincipal UserEntity userEntity, @RequestHeader(name = "Course-Id", required = false) Integer courseId, @RequestParam Integer notificationId) throws AccessForbiddenException, DataNotFoundException {
+    public ResponseEntity<?> deleteNotification(@AuthenticationPrincipal UserEntity userEntity, @RequestHeader(name = "Course-Id", required = false) Integer courseId, @RequestParam Integer notificationId) throws AccessForbiddenException, DataNotFoundException {
         notificationsServices.deleteNotification(notificationId, courseId, userEntity.getPersonalNumber());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

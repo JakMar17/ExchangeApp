@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.dtos.users.RegisterUserDTO;
+import si.fri.jakmar.backend.exchangeapp.dtos.users.UserDTO;
 import si.fri.jakmar.backend.exchangeapp.exceptions.BadRequestException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.MailException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.RequestInvalidException;
@@ -38,38 +39,38 @@ public class LoginRegisterApi {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/register")
-    public ResponseEntity<Object> registerNewUser(@RequestBody RegisterUserDTO user, @RequestParam(required = false, defaultValue = "true") Boolean sendEmail) throws Exception {
+    public ResponseEntity<Boolean> registerNewUser(@RequestBody RegisterUserDTO user, @RequestParam(required = false, defaultValue = "true") Boolean sendEmail) throws Exception {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         boolean ok = registerServices.registerNewUser(user, sendEmail);
         return ResponseEntity.ok(ok);
     }
 
     @GetMapping
-    public ResponseEntity<Object> loginUser(@AuthenticationPrincipal UserEntity userEntity) throws AccessForbiddenException, UserDoesNotExistsException, DataInvalidException {
+    public ResponseEntity<UserDTO> loginUser(@AuthenticationPrincipal UserEntity userEntity) throws AccessForbiddenException, UserDoesNotExistsException, DataInvalidException {
         var data = loginServices.loginUser(userEntity.getUsername());
         return ResponseEntity.ok(data);
     }
 
     @PostMapping("/confirm-registration")
-    public ResponseEntity<Object> confirmRegistration(@RequestParam String confirmationId) throws DataNotFoundException {
+    public ResponseEntity<?> confirmRegistration(@RequestParam String confirmationId) throws DataNotFoundException {
         registerServices.confirmEmail(confirmationId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/reset")
-    public ResponseEntity<Object> resetPasswordRequest(@RequestHeader String email) throws DataNotFoundException, IOException, MailException {
+    public ResponseEntity<?> resetPasswordRequest(@RequestHeader String email) throws DataNotFoundException, IOException, MailException {
         registerServices.createPasswordResetRequest(email);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<Object> resetPassword(@RequestHeader String email, @RequestHeader String resetId, @RequestHeader String newPassword) throws RequestInvalidException, DataNotFoundException {
+    public ResponseEntity<?> resetPassword(@RequestHeader String email, @RequestHeader String resetId, @RequestHeader String newPassword) throws RequestInvalidException, DataNotFoundException {
         registerServices.resetPasswordForUser(email, resetId, newPassword);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/update-password")
-    public ResponseEntity<Object> updatedPassword(@AuthenticationPrincipal UserEntity user, @RequestParam String oldPassword, @RequestParam String newPassword) throws BadRequestException {
+    public ResponseEntity<?> updatedPassword(@AuthenticationPrincipal UserEntity user, @RequestParam String oldPassword, @RequestParam String newPassword) throws BadRequestException {
         registerServices.updatePasswordForUser(user, oldPassword, newPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }

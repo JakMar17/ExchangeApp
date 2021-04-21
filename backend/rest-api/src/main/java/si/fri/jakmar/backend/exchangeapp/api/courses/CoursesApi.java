@@ -7,11 +7,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.entities.users.UserEntity;
 import si.fri.jakmar.backend.exchangeapp.database.mysql.repositories.course.CourseRepository;
+import si.fri.jakmar.backend.exchangeapp.dtos.courses.CourseDTO;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessForbiddenException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedException;
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
 import si.fri.jakmar.backend.exchangeapp.services.courses.CoursesServices;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
@@ -26,17 +28,17 @@ public class CoursesApi {
     private CoursesServices coursesServices;
 
     @GetMapping("all")
-    public ResponseEntity<Object> getCourses() throws DataNotFoundException {
+    public ResponseEntity<List<CourseDTO>> getCourses() throws DataNotFoundException {
         return ResponseEntity.ok(coursesServices.getAllCoursesWithBasicInfo());
     }
 
     @GetMapping("my")
-    public ResponseEntity<Object> getUsersCourses(@AuthenticationPrincipal UserEntity userEntity) throws DataNotFoundException {
+    public ResponseEntity<List<CourseDTO>> getUsersCourses(@AuthenticationPrincipal UserEntity userEntity) throws DataNotFoundException {
         return ResponseEntity.ok(coursesServices.getAllCoursesOfUserWithBasicInfo(userEntity.getPersonalNumber()));
     }
 
     @GetMapping("course")
-    public ResponseEntity<Object> getCourse(@RequestParam Integer courseId, @AuthenticationPrincipal UserEntity userEntity) throws Exception {
+    public ResponseEntity<CourseDTO> getCourse(@RequestParam Integer courseId, @AuthenticationPrincipal UserEntity userEntity) throws Exception {
         var successErrorContainer = coursesServices.getCourseData(courseId, userEntity.getPersonalNumber());
         if (successErrorContainer.getSuccess().isEmpty()) {
             throw new Exception();
@@ -57,7 +59,7 @@ public class CoursesApi {
     }
 
     @GetMapping("course/access")
-    public ResponseEntity<Object> checkPasswordAndGetCourse(@RequestParam Integer courseId, @AuthenticationPrincipal UserEntity userEntity, @RequestHeader(name = "Course-Password") String coursePassword) throws AccessUnauthorizedException, DataNotFoundException, AccessForbiddenException {
+    public ResponseEntity<CourseDTO> checkPasswordAndGetCourse(@RequestParam Integer courseId, @AuthenticationPrincipal UserEntity userEntity, @RequestHeader(name = "Course-Password") String coursePassword) throws AccessUnauthorizedException, DataNotFoundException, AccessForbiddenException {
         return ResponseEntity.ok(coursesServices.checkPasswordAndGetCourse(courseId, userEntity.getPersonalNumber(), coursePassword));
     }
 }

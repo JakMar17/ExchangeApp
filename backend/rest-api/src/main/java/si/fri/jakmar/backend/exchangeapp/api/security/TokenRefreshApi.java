@@ -29,7 +29,7 @@ public class TokenRefreshApi {
 
 
     @GetMapping("/refresh")
-    public ResponseEntity<Object> refreshToken(@RequestHeader(name = "Authorization") String bearer) throws BadRequestException, AccessUnauthorizedException {
+    public ResponseEntity<?> refreshToken(@RequestHeader(name = "Authorization") String bearer) throws BadRequestException, AccessUnauthorizedException {
         if(bearer == null || !bearer.startsWith(JwtConstants.TOKEN_PREFIX))
             throw new BadRequestException("Authorization header is missing or is invalid");
 

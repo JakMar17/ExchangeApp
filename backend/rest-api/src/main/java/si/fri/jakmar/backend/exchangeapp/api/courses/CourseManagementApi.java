@@ -23,7 +23,7 @@ public class CourseManagementApi {
     private CoursesServices coursesServices;
 
     @GetMapping("/detailed")
-    public ResponseEntity<Object> getDetailedCouresData(
+    public ResponseEntity<CourseDTO> getDetailedCouresData(
             @AuthenticationPrincipal UserEntity userEntity,
             @RequestParam Integer courseId
     ) throws AccessForbiddenException, DataNotFoundException {
@@ -31,7 +31,7 @@ public class CourseManagementApi {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveCourse(
+    public ResponseEntity<CourseDTO> saveCourse(
             @AuthenticationPrincipal UserEntity userEntity,
             @RequestBody CourseDTO data
     ) throws AccessForbiddenException, DataNotFoundException {
@@ -40,7 +40,7 @@ public class CourseManagementApi {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> deleteCourse(
+    public ResponseEntity<?> deleteCourse(
             @AuthenticationPrincipal UserEntity userEntity,
             @RequestParam Integer courseId
     ) throws AccessForbiddenException, DataNotFoundException {
@@ -49,7 +49,7 @@ public class CourseManagementApi {
     }
 
     @PutMapping("/archive")
-    public ResponseEntity<Object> archiveCourse(
+    public ResponseEntity<?> archiveCourse(
             @AuthenticationPrincipal UserEntity userEntity,
             @RequestParam Integer courseId
     ) {

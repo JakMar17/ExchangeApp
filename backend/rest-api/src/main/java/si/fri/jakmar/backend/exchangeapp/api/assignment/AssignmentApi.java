@@ -12,6 +12,7 @@ import si.fri.jakmar.backend.exchangeapp.exceptions.general.AccessUnauthorizedEx
 import si.fri.jakmar.backend.exchangeapp.exceptions.general.DataNotFoundException;
 import si.fri.jakmar.backend.exchangeapp.services.assignments.AssignmentsServices;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
@@ -24,39 +25,39 @@ public class AssignmentApi {
     private AssignmentsServices assignmentsServices;
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllAssignmentsOfCourse(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer courseId) throws AccessUnauthorizedException, DataNotFoundException, AccessForbiddenException {
+    public ResponseEntity<List<AssignmentDTO>> getAllAssignmentsOfCourse(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer courseId) throws AccessUnauthorizedException, DataNotFoundException, AccessForbiddenException {
         return ResponseEntity.ok(assignmentsServices.getBasicDataForAssignmentsOfCourse(userEntity.getPersonalNumber(), courseId));
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAssignment(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer assignmentId) throws AccessUnauthorizedException, DataNotFoundException, AccessForbiddenException {
+    public ResponseEntity<AssignmentDTO> getAssignment(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer assignmentId) throws AccessUnauthorizedException, DataNotFoundException, AccessForbiddenException {
         return ResponseEntity.ok(assignmentsServices.getAssignmentsData(userEntity.getPersonalNumber(), assignmentId));
     }
 
     @GetMapping("/detailed")
-    public ResponseEntity<Object> getAssignmentWithSubmission(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer assignmentId) throws AccessForbiddenException, DataNotFoundException, AccessUnauthorizedException {
+    public ResponseEntity<AssignmentDTO> getAssignmentWithSubmission(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer assignmentId) throws AccessForbiddenException, DataNotFoundException, AccessUnauthorizedException {
         var x = assignmentsServices.getAssignmentWithSubmissions(userEntity.getPersonalNumber(), assignmentId);
         return ResponseEntity.ok(x);
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Object> saveAssignment(@AuthenticationPrincipal UserEntity userEntity, Integer courseId, @RequestBody AssignmentDTO data) throws AccessForbiddenException, DataNotFoundException {
+    public ResponseEntity<AssignmentDTO> saveAssignment(@AuthenticationPrincipal UserEntity userEntity, Integer courseId, @RequestBody AssignmentDTO data) throws AccessForbiddenException, DataNotFoundException {
         return ResponseEntity.ok(assignmentsServices.insertOrUpdateAssignment(userEntity.getPersonalNumber(), courseId, data));
     }
 
     @PutMapping("/set-visibility")
-    public ResponseEntity<Object> setAssignmentsVisibility(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer assignmentId, @RequestParam Boolean visibility) throws AccessForbiddenException, DataNotFoundException {
+    public ResponseEntity<AssignmentDTO> setAssignmentsVisibility(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer assignmentId, @RequestParam Boolean visibility) throws AccessForbiddenException, DataNotFoundException {
         return ResponseEntity.ok(assignmentsServices.setVisibility(userEntity.getPersonalNumber(), assignmentId, visibility));
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> deleteAssignment(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer assignmentId) throws AccessForbiddenException, DataNotFoundException {
+    public ResponseEntity<?> deleteAssignment(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer assignmentId) throws AccessForbiddenException, DataNotFoundException {
         assignmentsServices.deleteAssignment(userEntity.getPersonalNumber(), assignmentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/archive")
-    public ResponseEntity<Object> archiveAssignment(@AuthenticationPrincipal UserEntity userEntity, @RequestBody AssignmentDTO assignmentDTO) throws AccessForbiddenException, DataNotFoundException {
+    public ResponseEntity<AssignmentDTO> archiveAssignment(@AuthenticationPrincipal UserEntity userEntity, @RequestBody AssignmentDTO assignmentDTO) throws AccessForbiddenException, DataNotFoundException {
         return ResponseEntity.ok(assignmentsServices.setArchivedStatus(userEntity.getPersonalNumber(), assignmentDTO.getAssignmentId(), assignmentDTO.getArchived()));
     }
 }
