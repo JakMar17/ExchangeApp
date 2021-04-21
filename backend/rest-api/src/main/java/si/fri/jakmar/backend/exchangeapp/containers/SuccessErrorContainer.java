@@ -12,10 +12,10 @@ public class SuccessErrorContainer<S, E> {
     }
 
     public Optional<S> getSuccess() {
-        return Optional.of(success);
+        return Optional.ofNullable(success);
     }
 
     public Optional<E> getError() {
-        return Optional.of(error);
+        return Optional.ofNullable(error);
     }
 }
