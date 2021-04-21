@@ -61,7 +61,12 @@
         </div>
       </div>
 
-      <div *ngIf="assignment.allSubmissions" class="box">
+      <div
+        *ngIf="
+          assignment.allSubmissions && assignment.allSubmissions.length != 0
+        "
+        class="box"
+      >
         <h3 class="title is-4">Pregled oddaj</h3>
         <div class="table-container">
           <table class="table is-fullwidth is-hoverable">
@@ -179,7 +184,7 @@
                   </span>
                 </td>
                 <td>
-                  {{ item | submissionStatusInTable}}
+                  {{ item | submissionStatusInTable }}
                   <!-- <div
                     *ngIf="
                       (item.similarityStatus ===
