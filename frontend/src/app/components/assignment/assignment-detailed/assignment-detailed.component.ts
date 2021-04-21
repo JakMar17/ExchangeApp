@@ -56,7 +56,6 @@ export class AssignmentDetailedComponent implements OnInit, OnDestroy {
         .subscribe(
           (data) => {
             this.assignment = data;
-            console.log(this.assignment);
             this.loading = false;
             this.assignBooleanValuesToActionButtons();
           },
@@ -173,12 +172,11 @@ export class AssignmentDetailedComponent implements OnInit, OnDestroy {
     this.updateWorker = setInterval(() => {
       if (assignment == null || assignment.assignmentId == null) return;
 
-      console.log('posodabljam', assignment);
       this.assignmentService
         .getAssignmentWithSubmissions(assignment)
         .toPromise()
         .then((a) => (this.assignment = a))
-        .catch(() => console.log('error'));
+        .catch(() => {});
     }, 10000);
   }
 

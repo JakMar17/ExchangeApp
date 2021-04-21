@@ -79,7 +79,6 @@ export class ClassComponent implements OnInit {
   private getCourseData(): void {
     this.activatedRoute.params.subscribe((params: Params) => {
       const courseId = params.classID;
-      console.log(courseId)
       if (courseId != null)
         this.coursesService.getCourse(courseId).subscribe(
           (data) => {

@@ -18,7 +18,6 @@ export class WhitelistFileModalComponent implements OnInit {
 
   public handleFileUpload($event: any): void {
     const files: FileList = $event.target.files;
-    console.log(files);
     this.file = files[0];
   }
 
@@ -37,7 +36,6 @@ export class WhitelistFileModalComponent implements OnInit {
         element.includes('@') ? { email: element } : { personalNumber: element }
       );
 
-      console.log(users);
       this.onClose.emit(users);
     };
 

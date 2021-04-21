@@ -49,7 +49,6 @@ export class UserChangePasswordComponent implements OnInit {
           }).then(() => this.closeModal());
         },
         (err: HttpErrorResponse) => {
-          console.log('error', err);
           const error = err.error as ExceptionWrapper;
           this.errorMessage = error.body;
           this.showLoading = false;

@@ -38,8 +38,6 @@ export class SubmissionDetailedModalComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.submission);
-
     this.showError =
       this.submission.correctnessStatus === SubmissionCorrectnessStatus.NOK ||
       this.submission.correctnessStatus === SubmissionCorrectnessStatus.COMPILE_ERROR;
@@ -68,7 +66,6 @@ export class SubmissionDetailedModalComponent implements OnInit, AfterViewInit {
       .getSubmissionsSimilarity(this.submission)
       .subscribe((d) => {
         this.similarities = d;
-        console.log(this.similarities);
       });
   }
 }

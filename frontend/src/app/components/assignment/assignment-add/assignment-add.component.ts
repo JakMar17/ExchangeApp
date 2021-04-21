@@ -55,7 +55,6 @@ export class AssignmentAddComponent implements OnInit {
           this.editing = true;
           assignmentService.getAssignment(this.assignment).subscribe((data) => {
             this.assignment = data;
-            console.log(data);
             submissionService
               .getAllSubmissionsOfAssignment(this.assignment)
               .subscribe((submissions) => {
@@ -102,9 +101,6 @@ export class AssignmentAddComponent implements OnInit {
           return null;
         });
 
-      console.log('this.assignment', this.assignment);
-      console.log('assignment', assignment);
-
       if (assignment == null) return;
 
       if (assignment.testType === SubmissionCheck.AUTOMATIC) {
@@ -121,8 +117,6 @@ export class AssignmentAddComponent implements OnInit {
             this.errorMessage = (err.error as ExceptionWrapper).body;
             return null;
           });
-
-        console.log(sourc);
 
         if (sourc == null) return;
       }

@@ -48,7 +48,6 @@ export class LoginMenuComponent implements OnInit {
     this.userService
       .loginUserIn(this.email, this.password)
       .then((user) => {
-        console.log("navigate");
         this.router.navigate(['/dashboard']);
       })
       .catch((err) => {

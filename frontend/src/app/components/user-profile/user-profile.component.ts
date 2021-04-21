@@ -20,7 +20,6 @@ export class UserProfileComponent implements OnInit {
   }
 
   public onModalClosed($event: any): void {
-    console.log($event);
     this.showPasswordChangeModal = false;
   }
 }

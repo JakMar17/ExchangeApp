@@ -52,8 +52,6 @@ export class UserServiceService implements OnDestroy, CanActivate {
         throw 'Napaka pri pridobivanju podatkov uporabnika';
       });
 
-    console.log(this.userLoggedIn);
-
     this.createTokenRefresher();
     return response.body;
   }
@@ -75,7 +73,6 @@ export class UserServiceService implements OnDestroy, CanActivate {
   }
 
   private async refreshToken(): Promise<void> {
-    console.log('Refreshing token');
     const response = await this.loginRegisterApi
       .refreshToken(this._bearer)
       .toPromise()
