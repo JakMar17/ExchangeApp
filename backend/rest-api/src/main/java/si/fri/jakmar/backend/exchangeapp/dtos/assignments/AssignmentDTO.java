@@ -39,6 +39,7 @@ public class AssignmentDTO {
 
     private List<SubmissionDTO> mySubmissions;
     private List<SubmissionDTO> boughtSubmissions;
+    private List<SubmissionDTO> allSubmissions;
 
     private Integer sourceId;
     private String sourceName;
@@ -89,7 +90,7 @@ public class AssignmentDTO {
         this.sourceTimeout = sourceTimeout;
     }
 
-    private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived, String inputExtension, String outputExtension, SubmissionCheck testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel, List<SubmissionDTO> mySubmissions, List<SubmissionDTO> boughtSubmissions) {
+    private AssignmentDTO(Integer assignmentId, String title, String classroomUrl, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxSubmissionsTotal, Integer maxSubmissionsPerStudent, Integer coinsPerSubmission, Integer coinsPrice, Integer noOfSubmissionsTotal, Integer noOfSubmissionsStudent, Boolean visible, Boolean archived, String inputExtension, String outputExtension, SubmissionCheck testType, Boolean notifyOnEmail, Integer plagiarismWarning, Integer plagiarismLevel, List<SubmissionDTO> mySubmissions, List<SubmissionDTO> boughtSubmissions, List<SubmissionDTO> allSubmissions) {
         this.assignmentId = assignmentId;
         this.title = title;
         this.classroomUrl = classroomUrl;
@@ -112,6 +113,7 @@ public class AssignmentDTO {
         this.plagiarismLevel = plagiarismLevel;
         this.mySubmissions = mySubmissions;
         this.boughtSubmissions = boughtSubmissions;
+        this.allSubmissions = allSubmissions;
     }
 
     public static AssignmentDTO castBasicFromEntity(AssignmentEntity entity, UserEntity user) {
@@ -172,7 +174,12 @@ public class AssignmentDTO {
         );
     }
 
-    public static AssignmentDTO castFromEntityWithSubmissions(AssignmentEntity entity, List<SubmissionDTO> usersSubmissions, List<SubmissionDTO> boughtSubmissions) {
+    public static AssignmentDTO castFromEntityWithSubmissions(
+            AssignmentEntity entity,
+            List<SubmissionDTO> usersSubmissions,
+            List<SubmissionDTO> boughtSubmissions,
+            List<SubmissionDTO> allSubmissions
+    ) {
         return new AssignmentDTO(
                 entity.getId(),
                 entity.getTitle(),
@@ -199,7 +206,8 @@ public class AssignmentDTO {
                 entity.getPlagiarismLevel(),
                 entity.getPlagiarismLevel(),
                 usersSubmissions,
-                boughtSubmissions
+                boughtSubmissions,
+                allSubmissions
         );
     }
 }

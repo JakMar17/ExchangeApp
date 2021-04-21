@@ -180,7 +180,11 @@ public class SubmissionService {
                         .map(PurchaseEntity::getSubmissionBought)
                         .filter(entity -> assignment.equals(entity.getAssignment()))
                         .map(SubmissionDTO::castFromEntity)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+                userAccessServices.userCanEditCourse(user, assignment.getCourse())
+                        ? CollectionUtils.emptyIfNull(allSubmissions).stream()
+                            .map(e -> SubmissionDTO.castFromEntity(e, e.getAuthor())).collect(Collectors.toList())
+                        : null
         );
     }
 

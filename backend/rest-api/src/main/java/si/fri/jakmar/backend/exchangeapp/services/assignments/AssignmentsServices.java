@@ -210,10 +210,17 @@ public class AssignmentsServices {
                         .map(PurchaseEntity::getSubmissionBought)
                         .filter(entity -> entity.getAssignment().equals(assignment));
 
+        // ce je uporabnik skrbnik predmeta, dodaj vse oddaje
+        var allSubmissions = userAccessServices.userCanEditCourse(user, assignment.getCourse())
+                ? assignment.getSubmissions()
+                : null;
+
         return AssignmentDTO.castFromEntityWithSubmissions(
                 assignment,
                 mySubmissions.map(SubmissionDTO::castFromEntity).collect(Collectors.toList()),
-                boughtSubmission.map(SubmissionDTO::castFromEntity).collect(Collectors.toList())
+                boughtSubmission.map(SubmissionDTO::castFromEntity).collect(Collectors.toList()),
+                CollectionUtils.emptyIfNull(allSubmissions).stream()
+                        .map(e -> SubmissionDTO.castFromEntity(e, e.getAuthor())).collect(Collectors.toList())
         );
     }
 

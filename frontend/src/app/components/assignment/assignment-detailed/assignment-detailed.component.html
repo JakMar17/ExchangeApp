@@ -61,6 +61,176 @@
         </div>
       </div>
 
+      <div *ngIf="assignment.allSubmissions" class="box">
+        <h3 class="title is-4">Pregled oddaj</h3>
+        <div class="table-container">
+          <table class="table is-fullwidth is-hoverable">
+            <thead>
+              <tr>
+                <th class="is-narrow"></th>
+                <th>Avtor</th>
+                <th>Vhodna datoteka</th>
+                <th>Izhodna datoteka</th>
+                <th>Test pravilnosti</th>
+                <th>Test podobnosti</th>
+                <th
+                  class="has-tooltip-arrow has-tooltip-left"
+                  data-tooltip="Če status ni OK, za oddajo ne pridobite žetonov"
+                >
+                  Status oddaje
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of assignment.allSubmissions; let i = index">
+                <td class="is-narrow has-text-right">{{ i + 1 }}</td>
+                <td>{{ item.author | userToString }}</td>
+                <td>{{ item.input }}</td>
+                <td>{{ item.output }}</td>
+                <td class="has-text-centered">
+                  <span
+                    [attr.data-tooltip]="
+                      item.correctnessStatus | submissionStatus
+                    "
+                    class="icon has-tooltip-arrow has-tooltip-left"
+                    [ngClass]="{
+                      'has-text-success':
+                        item.correctnessStatus ===
+                        submissionCorrectnessStatus.OK,
+                      'has-text-danger':
+                        item.correctnessStatus ===
+                        submissionCorrectnessStatus.NOK,
+                      'has-text-warning':
+                        item.correctnessStatus ===
+                          submissionCorrectnessStatus.COMPILE_ERROR ||
+                        item.correctnessStatus ===
+                          submissionCorrectnessStatus.TIMEOUT
+                    }"
+                  >
+                    <i
+                      *ngIf="
+                        item.correctnessStatus ===
+                        submissionCorrectnessStatus.OK
+                      "
+                      class="ri-check-line"
+                    ></i>
+                    <i
+                      *ngIf="
+                        item.correctnessStatus ===
+                        submissionCorrectnessStatus.NOK
+                      "
+                      class="ri-close-line"
+                    ></i>
+                    <i
+                      *ngIf="
+                        item.correctnessStatus ===
+                          submissionCorrectnessStatus.COMPILE_ERROR ||
+                        item.correctnessStatus ===
+                          submissionCorrectnessStatus.TIMEOUT
+                      "
+                      class="ri-error-warning-line"
+                    ></i>
+                  </span>
+                </td>
+                <td class="has-text-centered">
+                  <span
+                    [attr.data-tooltip]="getTooltipText(item)"
+                    class="icon has-text-info has-tooltip-arrow has-tooltip-left"
+                    [ngClass]="{
+                      'has-text-success':
+                        item.similarityStatus === submissionSimilarityStatus.OK,
+                      'has-text-danger':
+                        item.similarityStatus ===
+                        submissionSimilarityStatus.NOK,
+                      'has-text-warning':
+                        item.similarityStatus ===
+                        submissionSimilarityStatus.WARNING
+                    }"
+                  >
+                    <i
+                      *ngIf="
+                        item.similarityStatus === submissionSimilarityStatus.OK
+                      "
+                      class="ri-check-line"
+                    ></i>
+                    <i
+                      *ngIf="
+                        item.similarityStatus === submissionSimilarityStatus.NOK
+                      "
+                      class="ri-close-line"
+                    ></i>
+                    <i
+                      *ngIf="
+                        item.similarityStatus ===
+                        submissionSimilarityStatus.WARNING
+                      "
+                      class="ri-error-warning-line"
+                    ></i>
+                    <i
+                      *ngIf="
+                        item.similarityStatus ===
+                          submissionSimilarityStatus.NOT_TESTED ||
+                        item.similarityStatus ===
+                          submissionSimilarityStatus.PENDING_REVIEW
+                      "
+                      class="ri-question-mark"
+                    ></i>
+                  </span>
+                </td>
+                <td>
+                  {{ item | submissionStatusInTable}}
+                  <!-- <div
+                    *ngIf="
+                      (item.similarityStatus ===
+                        submissionSimilarityStatus.OK ||
+                        item.similarityStatus ===
+                          submissionSimilarityStatus.WARNING) &&
+                      item.correctnessStatus === submissionCorrectnessStatus.OK
+                    "
+                  >
+                    Ok
+                  </div>
+                  <div
+                    *ngIf="
+                      (item.similarityStatus !==
+                        submissionSimilarityStatus.OK &&
+                        item.similarityStatus !==
+                          submissionSimilarityStatus.WARNING) ||
+                      item.correctnessStatus !== submissionCorrectnessStatus.OK
+                    "
+                  >
+                    Ni ok
+                  </div> -->
+                </td>
+                <td class="is-narrow">
+                  <div class="columns">
+                    <div class="column is-narrow">
+                      <a
+                        (click)="onTableRowViewPressed(item)"
+                        data-tooltip="Odpri testni primer"
+                        class="has-no-border is-outlined has-text-info has-tooltip-left"
+                      >
+                        <i class="ri-eye-line"></i>
+                      </a>
+                    </div>
+                    <div class="column is-narrow">
+                      <a
+                        (click)="onTableRowDownloadPressed(item)"
+                        data-tooltip="Prenesi testni primer"
+                        class="has-no-border is-outlined has-text-success has-tooltip-left"
+                      >
+                        <i class="ri-download-line"></i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <div class="box">
         <h3 class="title is-4">Moje oddaje</h3>
         <div class="buttons">
@@ -95,6 +265,7 @@
           <table class="table is-fullwidth is-hoverable">
             <thead>
               <tr>
+                <th class="is-narrow"></th>
                 <th>Vhodna datoteka</th>
                 <th>Izhodna datoteka</th>
                 <th>Test pravilnosti</th>
@@ -109,7 +280,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of assignment.mySubmissions">
+              <tr *ngFor="let item of assignment.mySubmissions; let i = index">
+                <td class="is-narrow has-text-right">{{ i + 1 }}</td>
                 <td>{{ item.input }}</td>
                 <td>{{ item.output }}</td>
                 <td class="has-text-centered">
@@ -205,7 +377,10 @@
                 <td>
                   <div
                     *ngIf="
-                      item.similarityStatus === submissionSimilarityStatus.OK &&
+                      (item.similarityStatus ===
+                        submissionSimilarityStatus.OK ||
+                        item.similarityStatus ===
+                          submissionSimilarityStatus.WARNING) &&
                       item.correctnessStatus === submissionCorrectnessStatus.OK
                     "
                   >
@@ -213,7 +388,10 @@
                   </div>
                   <div
                     *ngIf="
-                      item.similarityStatus !== submissionSimilarityStatus.OK ||
+                      (item.similarityStatus !==
+                        submissionSimilarityStatus.OK &&
+                        item.similarityStatus !==
+                          submissionSimilarityStatus.WARNING) ||
                       item.correctnessStatus !== submissionCorrectnessStatus.OK
                     "
                   >
@@ -281,13 +459,17 @@
           <table class="table is-fullwidth is-hoverable">
             <thead>
               <tr>
+                <th class="is-narrow"></th>
                 <th>Vhodna datoteka</th>
                 <th>Izhodna datoteka</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of assignment.boughtSubmissions">
+              <tr
+                *ngFor="let item of assignment.boughtSubmissions; let i = index"
+              >
+                <td class="is-narrow has-text-right">{{ i + 1 }}</td>
                 <td>{{ item.input }}</td>
                 <td>{{ item.output }}</td>
                 <td class="is-narrow">

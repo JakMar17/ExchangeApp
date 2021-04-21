@@ -336,15 +336,17 @@
       </div>
 
       <div class="box">
-        <h1 class="title is-3">Testiranje plagiatorstva oddaje</h1>
+        <h1 class="title is-3">Testiranje podobnosti oddaje</h1>
         <div class="notification is-warning">
-          Pri avtomatskem testiranju plagiatorstva je potrebna pozornost, saj
-          lahko sistem zazna visoko podobnost pri vsebinsko različnih oddajah.
+          Avtomatsko testiranje podobnosti oddaj primerja skupno podobnost
+          vhodne in izhodne datoteke med pravilnimi testnimi primeri. Če
+          podobnost presega nastavljeno opozorilno stopnjo, je uporabnik
+          obveščen o visoki podobnosti. Če podobnost presega nastavljeno stopnjo
+          zavrnitve, je oddaja označena kot neveljavna.
         </div>
         <h2 class="title is-4">Opozorilna stopnja</h2>
         <div class="info-notification">
-          Opozorilna stopnja definira stopnjo podobnosti pri čemer ste kot
-          skrbnik predmeta obveščen o podobnosti.
+          Opozorilna stopnja definira stopnjo podobnosti pri čemer je oddaja označena z opozorilom (vendar je še vedno sprejeta).
         </div>
         <label class="checkbox is-success">
           <input
@@ -369,7 +371,7 @@
         <h2 class="title is-4">Stopnja zavrnitve</h2>
         <div class="info-notification">
           Stopnja zavrnitve definira stopnjo podobnosti pri kateri se oddaja
-          obravnava kot plagiat.
+          obravnava kot napačna zaradi preveli podobnosti.
         </div>
         <label class="checkbox is-success">
           <input

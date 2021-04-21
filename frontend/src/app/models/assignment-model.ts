@@ -23,6 +23,7 @@ export interface Assignment {
   archived?: boolean;
   mySubmissions?: Submission[];
   boughtSubmissions?: Submission[];
+  allSubmissions?: Submission[];
 
   sourceId?: number;
   sourceName?: string;

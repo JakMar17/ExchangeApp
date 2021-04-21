@@ -40,6 +40,7 @@ import { UserChangePasswordComponent } from './components/user-profile/user-chan
 import { GoogleChartsModule } from 'angular-google-charts';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { SubmissionStatusInTablePipe } from './components/assignment/assignment-detailed/submission-status-in-table.pipe';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     PasswordResetComponent,
     SubmissionStatusPipe,
     UserChangePasswordComponent,
+    SubmissionStatusInTablePipe,
   ],
   imports: [
     BrowserModule,

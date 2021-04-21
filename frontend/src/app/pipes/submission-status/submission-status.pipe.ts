@@ -28,7 +28,7 @@ export class SubmissionStatusPipe implements PipeTransform {
         return 'V čakalni vrsti';
 
       case SubmissionSimilarityStatus.NOT_TESTED:
-        return 'OK (brez testa)';
+        return 'Brez testa';
       case SubmissionSimilarityStatus.WARNING:
         return 'Opozorilo';
     }
