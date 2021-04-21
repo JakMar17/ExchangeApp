@@ -132,7 +132,18 @@ export class AssignmentAddComponent implements OnInit {
   }
 
   public exitWithoutSave(): void {
-    this.navigateBackToCourse();
+    Swal.fire({
+      title: 'Spremembe bodo zavržene',
+      text: 'Ali želite nadaljevati?',
+      confirmButtonText: 'Zavrzi spremembe',
+      cancelButtonText: 'Prekliči',
+      showCancelButton: true,
+      icon: 'warning',
+    }).then((res) => {
+      if (res.isConfirmed) {
+        this.navigateBackToCourse();
+      }
+    });
   }
 
   public archiveAssignment(): void {
@@ -146,7 +157,7 @@ export class AssignmentAddComponent implements OnInit {
 
   public deleteAssignment(): void {
     this.assignmentService.deleteAssignment(this.assignment).subscribe(
-      () => this.alertAndExit('Naloga je bila izbrisana', "warning"),
+      () => this.alertAndExit('Naloga je bila izbrisana', 'warning'),
       (err: HttpErrorResponse) =>
         (this.errorMessage = (err.error as ExceptionWrapper).body)
     );

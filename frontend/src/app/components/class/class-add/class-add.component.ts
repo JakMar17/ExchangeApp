@@ -247,6 +247,21 @@ export class ClassAddComponent implements OnInit {
     );
   }
 
+  public onCancelButtonPressed(): void {
+    Swal.fire({
+      title: 'Spremembe bodo zavržene',
+      text: 'Ali želite nadaljevati?',
+      confirmButtonText: 'Zavrzi spremembe',
+      cancelButtonText: 'Prekliči',
+      showCancelButton: true,
+      icon: 'warning',
+    }).then((res) => {
+      if (res.isConfirmed) {
+        this.router.navigate(['/course/' + this.course.courseId]);
+      }
+    });
+  }
+
   public onWhitelistModalClose(data: User[] | null): void {
     if (data != null) {
       if (this.course.studentsWhitelisted == null)
