@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UrlConstants {
+//    za email
     public final String REGISTRATION_CONFIRMATION_EMAIL_URL;
     public final String PASSWORD_RESET_EMAIL_URL;
     public final String TEST_CORRECTNESS_URL;

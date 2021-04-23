@@ -91,7 +91,7 @@ public class RegisterServices {
         if(!resetRequest.isActive() || !email.equals(resetRequest.getUser().getUsername()))
             throw new RequestInvalidException("Napaka pri obdelavi zahteve");
 
-        user.setPassword(newPassword);
+        user.setPassword(bCryptPasswordEncoder.encode(newPassword));
         userRepository.save(user);
         resetRequest.setUsed(true);
         userPasswordResetRepository.save(resetRequest);
