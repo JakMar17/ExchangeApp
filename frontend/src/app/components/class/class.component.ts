@@ -69,7 +69,9 @@ export class ClassComponent implements OnInit {
           switch (err.status) {
             case 401:
               this.showClassPasswordError = true;
+              const id = this.course.courseId;
               this.course = err.error;
+              this.course.courseId = id;
               break;
           }
         }
