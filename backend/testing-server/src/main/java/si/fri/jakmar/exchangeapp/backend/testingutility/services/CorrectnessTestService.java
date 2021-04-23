@@ -93,7 +93,7 @@ public class CorrectnessTestService {
         var results = checkResult(testsBasePath + testId + "/", pairs);
         submissionCorrectnessResultRepository.saveAll(results);
 
-        //testEnvironment.clean(testId);
+        testEnvironment.clean(testId);
         return results.stream()
                 //.peek(e -> submissionEntityRepository.updateWithTestResult(e.getSubmissionId(), e.getTestStatus()))
                 .map(e -> new SubmissionTestResult(e.getSubmissionId(), e.getTestStatus()));
