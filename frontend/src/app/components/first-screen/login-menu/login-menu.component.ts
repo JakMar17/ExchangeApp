@@ -12,8 +12,8 @@ import { LoginPanelEnum } from '../models/login-panel-enum';
 export class LoginMenuComponent implements OnInit {
   @Output()
   registerButtonEvent: EventEmitter<LoginPanelEnum> = new EventEmitter<LoginPanelEnum>();
-  public email: string = 'karleto.spacapan';
-  public password: string = 'geslo';
+  public email: string = '';
+  public password: string = '';
 
   public userLoginError: string | null = null;
 
