@@ -13,53 +13,57 @@ import { UserServiceService } from './services/user-service/user-service.service
 const routes: Routes = [
   {
     path: '',
-    component: FirstScreenComponent
+    component: FirstScreenComponent,
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [UserServiceService]
+    canActivate: [UserServiceService],
   },
   {
     path: 'course/add',
     component: ClassAddComponent,
-    canActivate: [UserServiceService]
+    canActivate: [UserServiceService],
   },
   {
     path: 'course/edit/:classID',
     component: ClassAddComponent,
-    canActivate: [UserServiceService]
+    canActivate: [UserServiceService],
   },
   {
     path: 'course/:classID',
     component: ClassComponent,
-    canActivate: [UserServiceService]
+    canActivate: [UserServiceService],
   },
   {
     path: 'course/:courseId/assignment/add',
     component: AssignmentAddComponent,
-    canActivate: [UserServiceService]
+    canActivate: [UserServiceService],
   },
   {
     path: 'course/:courseId/assignment/edit/:assignmentId',
     component: AssignmentAddComponent,
-    canActivate: [UserServiceService]
+    canActivate: [UserServiceService],
   },
   {
     path: 'course/:courseId/assignment/:assignmentId',
     component: AssignmentDetailedComponent,
-    canActivate: [UserServiceService]
+    canActivate: [UserServiceService],
   },
   {
     path: 'user/profile',
     component: UserProfileComponent,
-    canActivate: [UserServiceService]
+    canActivate: [UserServiceService],
   },
   {
     path: 'course/:courseId/assignment/:assignmentId/submission/:submissionId',
     component: SubmissionViewComponent,
-    canActivate: [UserServiceService]
-  }
+    canActivate: [UserServiceService],
+  },
+  {
+    path: '**',
+    component: FirstScreenComponent,
+  },
 ];
 
 @NgModule({

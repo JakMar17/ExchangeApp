@@ -79,13 +79,13 @@ import { SubmissionStatusInTablePipe } from './components/assignment/assignment-
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     FormsModule,
     HighlightModule,
     HttpClientModule,
     GoogleChartsModule,
     NgxChartsModule,
-    SweetAlert2Module.forRoot()
+    SweetAlert2Module.forRoot(),
+    AppRoutingModule,
   ],
   providers: [
     {
