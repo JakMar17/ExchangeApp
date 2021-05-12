@@ -68,8 +68,15 @@ public class TestEnvironment {
      * @return true if folder is created
      */
     private boolean createFolder(String basePath, String relativePath) {
-        File folder = new File(basePath + relativePath);
-        return folder.mkdir();
+        String fullPath = basePath + relativePath;
+        System.out.println(fullPath);
+        File folder = new File(fullPath);
+        folder.mkdir();
+
+        Path path = Path.of(fullPath);
+        boolean exists = Files.exists(path);
+        System.out.println("Exists (" + fullPath + "): " + exists);
+        return exists;
     }
 
     /**
