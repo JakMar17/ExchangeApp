@@ -69,13 +69,11 @@ public class TestEnvironment {
      */
     private boolean createFolder(String basePath, String relativePath) {
         String fullPath = basePath + relativePath;
-        System.out.println(fullPath);
         File folder = new File(fullPath);
         folder.mkdir();
 
         Path path = Path.of(fullPath);
         boolean exists = Files.exists(path);
-        System.out.println("Exists (" + fullPath + "): " + exists);
         return exists;
     }
 
@@ -112,7 +110,6 @@ public class TestEnvironment {
     private boolean copyFile(File file, String path, String filename) {
         try {
             var fullPath = path + filename;
-            System.out.println(fullPath);
             Files.copy(file.toPath(), Path.of(fullPath));
         } catch (IOException e) {
             e.printStackTrace();
