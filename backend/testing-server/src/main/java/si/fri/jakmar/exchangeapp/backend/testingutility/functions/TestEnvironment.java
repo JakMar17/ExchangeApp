@@ -102,7 +102,9 @@ public class TestEnvironment {
      */
     private boolean copyFile(File file, String path, String filename) {
         try {
-            Files.copy(file.toPath(), Path.of(path + filename));
+            var fullPath = path + filename;
+            System.out.println(fullPath);
+            Files.copy(file.toPath(), Path.of(fullPath));
         } catch (IOException e) {
             e.printStackTrace();
             return false;
