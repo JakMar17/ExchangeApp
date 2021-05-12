@@ -17,6 +17,7 @@ public class ExceptionCather {
     @ExceptionHandler(DataNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ExceptionWrapper<String>> handleDataNotFoundException(DataNotFoundException exception) {
+        exception.printStackTrace();
         log.warning(exception.getMessage());
         return new ResponseEntity(new ExceptionWrapper<>(exception.getMessage()), HttpStatus.NOT_FOUND);
     }
@@ -24,6 +25,7 @@ public class ExceptionCather {
     @ExceptionHandler({FileException.class, CreatingEnvironmentException.class, Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ExceptionWrapper<String>> handleInternalException(Exception exception) {
+        exception.printStackTrace();
         log.warning(exception.getMessage());
         return new ResponseEntity(new ExceptionWrapper<>(exception.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }

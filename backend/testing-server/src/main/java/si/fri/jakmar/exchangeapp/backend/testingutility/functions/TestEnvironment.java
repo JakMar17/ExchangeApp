@@ -104,6 +104,7 @@ public class TestEnvironment {
         try {
             Files.copy(file.toPath(), Path.of(path + filename));
         } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
         return true;
