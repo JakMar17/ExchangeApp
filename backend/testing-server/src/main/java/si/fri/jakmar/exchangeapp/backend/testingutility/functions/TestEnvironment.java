@@ -37,6 +37,8 @@ public class TestEnvironment {
      * @throws CreatingEnvironmentException error while creating environment
      */
     public void create(String testId, FilePairContainer[] inputsOutputs, AssignmentSourceEntity source) throws CreatingEnvironmentException {
+        createFolder(basePath, "");
+
         if (!createFolder(basePath, testId))
             throw new CreatingEnvironmentException("Cannot create base directory");
 
