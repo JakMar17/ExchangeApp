@@ -58,6 +58,26 @@ export class FilesApiService {
       );
   }
 
+  public downloadBoughtSubmissions(
+    Authorization: string,
+    assignmentId: number
+  ): void {
+    const headers = new HttpHeaders({ Authorization });
+    const options: Object = { headers, responseType: 'blob' };
+
+    this.http
+      .get<any>(
+        this.baseUrl + '/bought-submissions?assignmentId=' + assignmentId,
+        options
+      )
+      .subscribe(
+        (data) => {
+          this.downloadZip(data);
+        },
+        (err) => console.error(err)
+      );
+  }
+
   public downloadSubmission(Authorization: string, submissionId: number): void {
     const headers = new HttpHeaders({ Authorization });
     const options: Object = { headers, responseType: 'blob' };

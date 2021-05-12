@@ -343,6 +343,25 @@ public class SubmissionService {
         return ZipperFunction.createZip(inputFiles, assignment.getInputDataType(), outputFiles, assignment.getOutputDataType());
     }
 
+    public ByteArrayInputStream getAllUserBoughtSubmissionFiles(String personalNumber, Integer assignmentId) throws DataNotFoundException, IOException {
+        var user = userServices.getUserByPersonalNumber(personalNumber);
+        var assignment = assignmentsServices.getAssignmentById(assignmentId);
+
+        var inputFiles = CollectionUtils.emptyIfNull(user.getPurchases()).stream()
+                .map(PurchaseEntity::getSubmissionBought)
+                .filter(e -> e.getAssignment().equals(assignment))
+                .map(e -> fileStorageService.getFile("input_" + e.getFileKey()))
+                .collect(Collectors.toList());
+
+        var ooutputFiles = CollectionUtils.emptyIfNull(user.getPurchases()).stream()
+                .map(PurchaseEntity::getSubmissionBought)
+                .filter(e -> e.getAssignment().equals(assignment))
+                .map(e -> fileStorageService.getFile("output_" + e.getFileKey()))
+                .collect(Collectors.toList());
+
+        return ZipperFunction.createZip(inputFiles, assignment.getInputDataType(), ooutputFiles, assignment.getOutputDataType());
+    }
+
     public ByteArrayInputStream getSubmissionFiles(String personalNumber, Integer submissionId) throws DataNotFoundException, AccessForbiddenException, IOException {
         var user = userServices.getUserByPersonalNumber(personalNumber);
         var submission = submissionRepository.findById(submissionId).orElseThrow(() -> new DataNotFoundException("Ne najdem oddaje"));

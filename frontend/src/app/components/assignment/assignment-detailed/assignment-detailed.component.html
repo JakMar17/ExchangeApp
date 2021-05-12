@@ -141,7 +141,10 @@
                 <td class="has-text-centered">
                   <span
                     [attr.data-tooltip]="getTooltipText(item)"
-                    class="icon has-text-info has-tooltip-arrow has-tooltip-left"
+                    class="
+                      icon
+                      has-text-info has-tooltip-arrow has-tooltip-left
+                    "
                     [ngClass]="{
                       'has-text-success':
                         item.similarityStatus === submissionSimilarityStatus.OK,
@@ -214,7 +217,11 @@
                       <a
                         (click)="onTableRowViewPressed(item)"
                         data-tooltip="Odpri testni primer"
-                        class="has-no-border is-outlined has-text-info has-tooltip-left"
+                        class="
+                          has-no-border
+                          is-outlined
+                          has-text-info has-tooltip-left
+                        "
                       >
                         <i class="ri-eye-line"></i>
                       </a>
@@ -223,7 +230,11 @@
                       <a
                         (click)="onTableRowDownloadPressed(item)"
                         data-tooltip="Prenesi testni primer"
-                        class="has-no-border is-outlined has-text-success has-tooltip-left"
+                        class="
+                          has-no-border
+                          is-outlined
+                          has-text-success has-tooltip-left
+                        "
                       >
                         <i class="ri-download-line"></i>
                       </a>
@@ -337,7 +348,10 @@
                 <td class="has-text-centered">
                   <span
                     [attr.data-tooltip]="getTooltipText(item)"
-                    class="icon has-text-info has-tooltip-arrow has-tooltip-left"
+                    class="
+                      icon
+                      has-text-info has-tooltip-arrow has-tooltip-left
+                    "
                     [ngClass]="{
                       'has-text-success':
                         item.similarityStatus === submissionSimilarityStatus.OK,
@@ -409,7 +423,11 @@
                       <a
                         (click)="onTableRowViewPressed(item)"
                         data-tooltip="Odpri testni primer"
-                        class="has-no-border is-outlined has-text-info has-tooltip-left"
+                        class="
+                          has-no-border
+                          is-outlined
+                          has-text-info has-tooltip-left
+                        "
                       >
                         <i class="ri-eye-line"></i>
                       </a>
@@ -418,7 +436,11 @@
                       <a
                         (click)="onTableRowDownloadPressed(item)"
                         data-tooltip="Prenesi testni primer"
-                        class="has-no-border is-outlined has-text-success has-tooltip-left"
+                        class="
+                          has-no-border
+                          is-outlined
+                          has-text-success has-tooltip-left
+                        "
                       >
                         <i class="ri-download-line"></i>
                       </a>
@@ -445,6 +467,7 @@
             <span>Kupi oddaje</span>
           </button>
           <button
+            (click)="downloadBoughtSubmissions()"
             *ngIf="showDownloadBoughtSubmissionsButton"
             class="button is-outlined is-info"
           >
@@ -483,7 +506,11 @@
                       <a
                         (click)="onTableRowViewPressed(item)"
                         data-tooltip="Odpri testni primer"
-                        class="has-no-border is-outlined has-text-info has-tooltip-left"
+                        class="
+                          has-no-border
+                          is-outlined
+                          has-text-info has-tooltip-left
+                        "
                       >
                         <i class="ri-eye-line"></i>
                       </a>
@@ -492,7 +519,11 @@
                       <a
                         (click)="onTableRowDownloadPressed(item)"
                         data-tooltip="Prenesi testni primer"
-                        class="has-no-border is-outlined has-text-success has-tooltip-left"
+                        class="
+                          has-no-border
+                          is-outlined
+                          has-text-success has-tooltip-left
+                        "
                       >
                         <i class="ri-download-line"></i>
                       </a>

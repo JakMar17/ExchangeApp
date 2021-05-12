@@ -57,6 +57,13 @@ export class SubmissionService {
     );
   }
 
+  public downloadBoughtSubmissions(assignment: Assignment): void {
+    this.fileApi.downloadBoughtSubmissions(
+      this.userService.bearer,
+      assignment.assignmentId
+    );
+  }
+
   public downloadSubmission(submission: Submission): void {
     this.fileApi.downloadSubmission(
       this.userService.bearer,

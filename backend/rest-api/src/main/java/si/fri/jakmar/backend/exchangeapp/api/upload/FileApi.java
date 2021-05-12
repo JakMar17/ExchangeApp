@@ -90,4 +90,13 @@ public class FileApi {
                 .header("Content-Disposition", "attachment; filename=\"testi.zip\"")
                 .body(resource);
     }
+
+    @GetMapping("/bought-submissions")
+    public ResponseEntity<InputStreamResource> getBoughtSubmissions(@AuthenticationPrincipal UserEntity userEntity, @RequestParam Integer assignmentId) throws IOException, DataNotFoundException {
+        InputStreamResource resource = new InputStreamResource(submissionService.getAllUserBoughtSubmissionFiles(userEntity.getPersonalNumber(), assignmentId));
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=\"testi.zip\"")
+                .body(resource);
+    }
 }

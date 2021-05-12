@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SubmissionApiService } from 'src/app/api/submission-api/submission-api.service';
 import { Assignment } from 'src/app/models/assignment-model';
 import { Course } from 'src/app/models/class-model';
 import { ExceptionWrapper } from 'src/app/models/error/http-response-error';
@@ -161,6 +162,10 @@ export class AssignmentDetailedComponent implements OnInit, OnDestroy {
 
   public downloadMySubmissions(): void {
     this.submissionService.downloadMySubmissions(this.assignment);
+  }
+
+  public downloadBoughtSubmissions(): void {
+    this.submissionService.downloadBoughtSubmissions(this.assignment);
   }
 
   public onSubmissionAddModalClosed(
